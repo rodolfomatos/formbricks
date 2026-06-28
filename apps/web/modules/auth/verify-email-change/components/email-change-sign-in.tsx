@@ -18,6 +18,7 @@ interface EmailChangeSignInProps {
  * Sign-out on success is intentional — the old session is tied to the
  * previous email, and the user must log in with the new email.
  */
+export const EmailChangeSignIn = ({ token }: EmailChangeSignInProps) => {
   const { t } = useTranslation();
   const [status, setStatus] = useState<"success" | "error" | "loading">("loading");
 

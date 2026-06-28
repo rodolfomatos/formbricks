@@ -38,10 +38,11 @@ import { SignupForm } from "./components/signup-form";
  * SAML props are passed through for the SSOOptions component even
  * though SAML is not implemented — they are rendered inertly.
  */
+export const SignupPage = async ({
   searchParams: searchParamsProps,
-}: {
+}: Readonly<{
   searchParams: Promise<Record<string, string>>;
-}) => {
+}>) => {
   const searchParams = await searchParamsProps;
   const inviteToken = searchParams["inviteToken"] ?? null;
   const [isMultOrgEnabled, isSsoEnabled, isSamlSsoEnabled] = await Promise.all([

@@ -16,6 +16,11 @@ import { VerificationMessage } from "@/modules/auth/verification-requested/compo
  * error message (invalid email / invalid token).  The callbackUrl is
  * resolved from search params or cookie for post-verification redirect.
  */
+export const VerificationRequestedPage = async ({
+  searchParams,
+}: Readonly<{
+  searchParams: Promise<{ token: string; callbackUrl?: string | string[] }>;
+}>) => {
   const t = await getTranslate();
   const [params, cookieStore] = await Promise.all([searchParams, cookies()]);
   const { token, callbackUrl } = params;
