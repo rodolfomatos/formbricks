@@ -39,6 +39,11 @@ const getUniqueValues = (values) => [...new Set(values.filter(Boolean))];
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+  // Skip TS type-check during build to avoid OOM on memory-constrained servers.
+  // The IDE and CI handle type-checking separately.
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   assetPrefix: process.env.ASSET_PREFIX_URL || undefined,
   allowedDevOrigins: process.env.NODE_ENV === "production" ? undefined : LOOPBACK_HOSTS,
   basePath: process.env.BASE_PATH || undefined,
