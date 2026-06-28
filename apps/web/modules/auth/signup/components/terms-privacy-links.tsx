@@ -8,7 +8,13 @@ interface TermsPrivacyLinksProps {
   privacyUrl?: string;
 }
 
-export const TermsPrivacyLinks = ({ termsUrl, privacyUrl }: TermsPrivacyLinksProps) => {
+/**
+ * Renders links to the Terms of Service and Privacy Policy pages below the
+ * sign-up form. Both URLs are optional — if neither is configured the
+ * component renders nothing. The URLs are configured via env vars so that
+ * self-hosted instances can link to their own legal pages.
+ */
+export const TermsPrivacyLinks = ({ termsUrl, privacyUrl }: Readonly<TermsPrivacyLinksProps>) => {
   const { t } = useTranslation();
 
   if (!termsUrl && !privacyUrl) return null;

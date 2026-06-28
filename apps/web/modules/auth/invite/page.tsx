@@ -18,6 +18,19 @@ interface InvitePageProps {
   searchParams: Promise<{ token: string }>;
 }
 
+/**
+ * Invite-acceptance page.  Verifies the invite JWT, checks expiry,
+ * and handles three states:
+ *   - No session  → show Sign Up / Login buttons
+ *   - Wrong email → show "email doesn't match"
+ *   - Authenticated + matching email → accept invite via after()
+ *
+ * The after() callback creates the membership and team memberships,
+ * deletes the invite, sends the accepted-email notification, and
+ * updates notification settings to mute alerts for this org.
+ *
+ * Throws 404 for invalid/expired tokens.
+ */
 export const InvitePage = async (props: InvitePageProps) => {
   const searchParams = await props.searchParams;
   const t = await getTranslate();

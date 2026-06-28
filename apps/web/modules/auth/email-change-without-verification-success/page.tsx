@@ -6,6 +6,12 @@ import { BackToLoginButton } from "@/modules/auth/components/back-to-login-butto
 import { FormWrapper } from "@/modules/auth/components/form-wrapper";
 import { authOptions } from "@/modules/auth/lib/authOptions";
 
+/**
+ * Success page shown after an email change when verification is
+ * disabled.  Redirects authenticated users to `/` and shows the
+ * success message with a "Back to Login" button for unauthenticated
+ * users.
+ */
 export const EmailChangeWithoutVerificationSuccessPage = async () => {
   const t = await getTranslate();
   const session: Session | null = await getServerSession(authOptions);

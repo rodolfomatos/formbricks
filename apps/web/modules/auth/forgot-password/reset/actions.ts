@@ -13,6 +13,12 @@ const ZResetPasswordAction = z.object({
   password: ZUserPassword,
 });
 
+/**
+ * Server action that completes a password reset.  Guards against usage
+ * when PASSWORD_RESET_DISABLED is set, delegates to the service layer,
+ * and enriches the audit log with a passwordResetMarker flag on the
+ * old/new objects.
+ */
 export const resetPasswordAction = actionClient.inputSchema(ZResetPasswordAction).action(
   withAuditLogging("updated", "user", async ({ ctx, parsedInput }) => {
     if (PASSWORD_RESET_DISABLED) {

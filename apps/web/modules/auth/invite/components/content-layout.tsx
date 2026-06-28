@@ -4,6 +4,11 @@ interface ContentLayoutProps {
   children?: React.ReactNode;
 }
 
+/**
+ * Shared layout for invite pages: centered headline + description
+ * with optional children (action buttons).  Used for all invite
+ * states (not found, expired, wrong email, success).
+ */
 export const ContentLayout = ({ headline, description, children }: ContentLayoutProps) => {
   return (
     <div className="flex h-screen">

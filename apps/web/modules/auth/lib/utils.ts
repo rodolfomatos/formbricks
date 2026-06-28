@@ -8,10 +8,25 @@ import { hashSecret, verifySecret } from "@/lib/crypto";
 import { queueAuditEventBackground } from "@/modules/ee/audit-logs/lib/handler";
 import { TAuditAction, TAuditStatus, UNKNOWN_DATA } from "@/modules/ee/audit-logs/types/audit-log";
 
+/**
+ * Hashes a password using bcrypt with cost factor 12.
+ * Uses a constant-time comparison compatible hash so callers can verify
+ * passwords without timing side channels.
+ *
+ * @param password - Plain-text password to hash
+ * @returns Bcrypt hash string
+ */
 export const hashPassword = async (password: string) => {
   return await hashSecret(password, 12);
 };
 
+/**
+ * Verifies a password against a bcrypt hash using constant-time comparison.
+ *
+ * @param password       - Plain-text password to verify
+ * @param hashedPassword - Bcrypt hash to compare against
+ * @returns true if the password matches the hash
+ */
 export const verifyPassword = async (password: string, hashedPassword: string) => {
   return await verifySecret(password, hashedPassword);
 };
@@ -35,6 +50,17 @@ export const createAuditIdentifier = (identifier: string, prefix: string = "acto
   return `${prefix}_${hash.substring(0, 32)}`; // Use first 32 chars for better uniqueness
 };
 
+/**
+ * Logs an authentication event to the audit trail and Sentry (for failures in production).
+ * Hashes PII via createAuditIdentifier before sending to Sentry to avoid leaking emails.
+ * The audit trail entry is queued as a background job so it does not block the auth flow.
+ *
+ * @param action         - The audit action type (authenticationAttempted, emailVerified, etc.)
+ * @param status         - success or failure
+ * @param userId         - The user ID (or UNKNOWN_DATA if not identifiable)
+ * @param email          - User email (used only for hashed identifier, never stored raw)
+ * @param additionalData - Extra context (provider, authMethod, failureReason, etc.)
+ */
 export const logAuthEvent = (
   action: TAuditAction,
   status: TAuditStatus,

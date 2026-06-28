@@ -9,11 +9,13 @@ import { getAuthCallbackUrlFromCookies, resolveAuthCallbackUrl } from "@/modules
 import { RequestVerificationEmail } from "@/modules/auth/verification-requested/components/request-verification-email";
 import { VerificationMessage } from "@/modules/auth/verification-requested/components/verification-message";
 
-export const VerificationRequestedPage = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ token: string; callbackUrl?: string | string[] }>;
-}) => {
+/**
+ * Post-signup verification landing page.  Parses the email from the JWT
+ * token in search params, validates it against the ZUserEmail schema,
+ * and renders either the success message with a resend button or an
+ * error message (invalid email / invalid token).  The callbackUrl is
+ * resolved from search params or cookie for post-verification redirect.
+ */
   const t = await getTranslate();
   const [params, cookieStore] = await Promise.all([searchParams, cookies()]);
   const { token, callbackUrl } = params;

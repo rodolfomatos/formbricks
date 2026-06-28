@@ -12,7 +12,7 @@ import { TVerificationRequestPurpose } from "@/modules/auth/lib/verification-lin
 import { applyIPRateLimit } from "@/modules/core/rate-limit/helpers";
 import { rateLimitConfigs } from "@/modules/core/rate-limit/rate-limit-configs";
 import { withAuditLogging } from "@/modules/ee/audit-logs/lib/handler";
-import { SSO_RECOVERY_COMPLETION_PATH } from "@/modules/ee/sso/lib/constants";
+import { SSO_RECOVERY_COMPLETION_PATH } from "@/modules/auth/sso/lib/constants";
 import { sendVerificationEmail } from "@/modules/email";
 
 const ZResendVerificationEmailAction = z.object({
@@ -20,6 +20,20 @@ const ZResendVerificationEmailAction = z.object({
   callbackUrl: z.string().max(2000).optional(),
 });
 
+/**
+ * Determines whether the verification email request is for standard
+ * email verification or for SSO recovery (re-linking an OIDC account
+ * after a provider mismatch).  Checks the callbackUrl path against
+ * SSO_RECOVERY_COMPLETION_PATH and validates the intent JWT.
+ *
+ * Falls back to "email_verification" for all invalid/missing inputs
+ * to avoid revealing any information about the recovery attempt.
+ *
+ * @param callbackUrl - The URL to redirect to after verification
+ * @param userEmail   - The user's email (must match intent JWT for
+ *                     sso_recovery)
+ * @returns "sso_recovery" or "email_verification"
+ */
 const getVerificationRequestPurpose = ({
   callbackUrl,
   userEmail,
@@ -50,6 +64,13 @@ const getVerificationRequestPurpose = ({
   }
 };
 
+/**
+ * Resends the verification email for a given user.  IP rate-limited.
+ * If the user's email is already verified and the purpose is not
+ * sso_recovery, returns success without sending (idempotent).
+ * Purpose-detection via callbackUrl allows this action to serve both
+ * standard email verification and SSO recovery flows.
+ */
 export const resendVerificationEmailAction = actionClient.inputSchema(ZResendVerificationEmailAction).action(
   withAuditLogging("verificationEmailSent", "user", async ({ ctx, parsedInput }) => {
     await applyIPRateLimit(rateLimitConfigs.auth.verifyEmail);

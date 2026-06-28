@@ -7,6 +7,12 @@ import { updateBrevoCustomer } from "@/modules/auth/lib/brevo";
 import { getUser, updateUser } from "@/modules/auth/lib/user";
 import { withAuditLogging } from "@/modules/ee/audit-logs/lib/handler";
 
+/**
+ * Server action that verifies an email-change JWT token, updates the
+ * user record with the new email, marks emailVerified = now, syncs
+ * the change to Brevo, and audits the operation.  Throws if the
+ * token is invalid/expired or the DB update fails.
+ */
 export const verifyEmailChangeAction = actionClient.inputSchema(z.object({ token: z.string() })).action(
   withAuditLogging("updated", "user", async ({ ctx, parsedInput }) => {
     const { id, email } = await verifyEmailChangeToken(parsedInput.token);

@@ -623,10 +623,10 @@ describe("authOptions", () => {
           POSTHOG_KEY: "phc_test_key",
         };
       });
-      vi.doMock("@/modules/ee/sso/lib/providers", () => ({
+      vi.doMock("@/modules/auth/sso/lib/providers", () => ({
         getSSOProviders: vi.fn(() => []),
       }));
-      vi.doMock("@/modules/ee/sso/lib/sso-handlers", () => ({
+      vi.doMock("@/modules/auth/sso/lib/sso-handlers", () => ({
         handleSsoCallback: mockHandleSsoCallback,
       }));
       vi.doMock("@/modules/auth/lib/user", () => ({
@@ -677,10 +677,10 @@ describe("authOptions", () => {
           POSTHOG_KEY: "phc_test_key",
         };
       });
-      vi.doMock("@/modules/ee/sso/lib/providers", () => ({
+      vi.doMock("@/modules/auth/sso/lib/providers", () => ({
         getSSOProviders: vi.fn(() => []),
       }));
-      vi.doMock("@/modules/ee/sso/lib/sso-handlers", () => ({
+      vi.doMock("@/modules/auth/sso/lib/sso-handlers", () => ({
         handleSsoCallback: mockHandleSsoCallback,
       }));
       vi.doMock("@/modules/auth/lib/user", () => ({
@@ -733,10 +733,10 @@ describe("authOptions", () => {
           POSTHOG_KEY: "phc_test_key",
         };
       });
-      vi.doMock("@/modules/ee/sso/lib/providers", () => ({
+      vi.doMock("@/modules/auth/sso/lib/providers", () => ({
         getSSOProviders: vi.fn(() => []),
       }));
-      vi.doMock("@/modules/ee/sso/lib/sso-handlers", () => ({
+      vi.doMock("@/modules/auth/sso/lib/sso-handlers", () => ({
         handleSsoCallback: mockHandleSsoCallback,
       }));
       vi.doMock("@/modules/auth/lib/user", () => ({
@@ -813,10 +813,10 @@ describe("authOptions", () => {
           POSTHOG_KEY: "phc_test_key",
         };
       });
-      vi.doMock("@/modules/ee/sso/lib/providers", () => ({
+      vi.doMock("@/modules/auth/sso/lib/providers", () => ({
         getSSOProviders: vi.fn(() => []),
       }));
-      vi.doMock("@/modules/ee/sso/lib/sso-handlers", () => ({
+      vi.doMock("@/modules/auth/sso/lib/sso-handlers", () => ({
         handleSsoCallback: mockHandleSsoCallback,
       }));
       vi.doMock("@/modules/auth/lib/user", () => ({

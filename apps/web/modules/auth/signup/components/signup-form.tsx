@@ -14,7 +14,7 @@ import { getFormattedErrorMessage } from "@/lib/utils/helper";
 import { buildVerificationRequestedPath } from "@/modules/auth/lib/verification-links";
 import { createUserAction } from "@/modules/auth/signup/actions";
 import { TermsPrivacyLinks } from "@/modules/auth/signup/components/terms-privacy-links";
-import { SSOOptions } from "@/modules/ee/sso/components/sso-options";
+import { SSOOptions } from "@/modules/auth/sso/components/sso-options";
 import { Button } from "@/modules/ui/components/button";
 import { Checkbox } from "@/modules/ui/components/checkbox";
 import { FormControl, FormError, FormField, FormItem } from "@/modules/ui/components/form";
@@ -23,6 +23,12 @@ import { PasswordInput } from "@/modules/ui/components/password-input";
 import { createEmailTokenAction } from "../../../auth/actions";
 import { PasswordChecks } from "./password-checks";
 
+/**
+ * Zod schema for the sign-up form. Name, email, and password are all required.
+ * The password field uses ZUserPassword (shared across the app) to enforce
+ * consistent minimum-strength rules whether the user signs up via this form
+ * or via API.
+ */
 const ZSignupInput = z.object({
   name: ZUserName,
   email: z.email(),
@@ -31,6 +37,16 @@ const ZSignupInput = z.object({
 
 type TSignupInput = z.infer<typeof ZSignupInput>;
 
+/**
+ * Sign-up form with two-phase UX: SSO provider buttons shown first,
+ * then the email/password registration form revealed on click.
+ *
+ * Handles Cloudflare Turnstile captcha for bot protection when configured,
+ * and conditionally renders security-updates vs product-updates checkboxes
+ * depending on whether the deployment is Formbricks Cloud or self-hosted.
+ * The invite token from the URL is threaded through to createUserAction
+ * so invited users are auto-associated with their target organisation.
+ */
 interface SignupFormProps {
   webAppUrl: string;
   privacyUrl: string | undefined;
@@ -102,6 +118,16 @@ export const SignupForm = ({
     resolver: zodResolver(ZSignupInput),
   });
 
+  /**
+   * Creates the user via server action, then triggers an email verification
+   * token. After sign-up the user is redirected either to the verification-
+   * requested page (default) or directly to the success page if email
+   * verification is disabled on this instance.
+   *
+   * Turnstile token is validated before submission — the form cannot be
+   * submitted until the captcha challenge passes. On captcha or creation
+   * errors, Turnstile is reset so the user can retry.
+   */
   const handleSubmit = async (data: TSignupInput) => {
     try {
       if (isTurnstileConfigured && !turnstileToken) {

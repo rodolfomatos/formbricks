@@ -2,6 +2,10 @@ import { getTranslate } from "@/lingodotdev/server";
 import { BackToLoginButton } from "@/modules/auth/components/back-to-login-button";
 import { FormWrapper } from "@/modules/auth/components/form-wrapper";
 
+/**
+ * Success page shown after a completed password reset.  Displays a
+ * confirmation message and a "Back to Login" button.
+ */
 export const ResetPasswordSuccessPage = async () => {
   const t = await getTranslate();
   return (

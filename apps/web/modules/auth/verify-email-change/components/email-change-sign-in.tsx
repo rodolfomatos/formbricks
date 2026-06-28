@@ -9,7 +9,15 @@ interface EmailChangeSignInProps {
   token: string;
 }
 
-export const EmailChangeSignIn = ({ token }: EmailChangeSignInProps) => {
+/**
+ * Client component that validates an email-change token on mount by
+ * calling verifyEmailChangeAction.  On success, signs the user out
+ * (forcing re-authentication with the new email).  Shows loading,
+ * success, or error state based on the result.
+ *
+ * Sign-out on success is intentional — the old session is tied to the
+ * previous email, and the user must log in with the new email.
+ */
   const { t } = useTranslation();
   const [status, setStatus] = useState<"success" | "error" | "loading">("loading");
 

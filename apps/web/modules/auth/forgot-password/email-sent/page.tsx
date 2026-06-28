@@ -2,6 +2,12 @@ import { getTranslate } from "@/lingodotdev/server";
 import { BackToLoginButton } from "@/modules/auth/components/back-to-login-button";
 import { FormWrapper } from "@/modules/auth/components/form-wrapper";
 
+/**
+ * Confirmation page shown after requesting a password reset email.
+ * Displays a generic "check your email" message regardless of
+ * whether the email actually exists in the system (enumeration
+ * prevention) and a "Back to Login" button.
+ */
 export const EmailSentPage = async () => {
   const t = await getTranslate();
   return (

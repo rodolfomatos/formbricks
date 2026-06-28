@@ -29,6 +29,17 @@ import {
 } from "@/modules/ee/license-check/lib/utils";
 import { LoginForm } from "./components/login-form";
 
+/**
+ * Server-rendered login page. Resolves the callback URL from search params
+ * or cookies (fallback for OAuthAccountNotLinked errors), extracts invite
+ * tokens, and passes all provider flags to LoginForm.
+ *
+ * Callback URL resolution priority:
+ *   1. searchParam callbackUrl (highest priority)
+ *   2. cookie callbackUrl (only on OAuthAccountNotLinked)
+ *   3. WEBAPP_URL (fallback)
+ */
+
 export const metadata: Metadata = {
   title: "Login",
   description: "Open-source Experience Management. Free & open source.",

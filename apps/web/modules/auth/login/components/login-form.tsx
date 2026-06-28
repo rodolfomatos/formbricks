@@ -14,7 +14,7 @@ import { FORMBRICKS_LOGGED_IN_WITH_LS } from "@/lib/localStorage";
 import { getFormattedErrorMessage } from "@/lib/utils/helper";
 import { createEmailTokenAction } from "@/modules/auth/actions";
 import { buildVerificationRequestedPath } from "@/modules/auth/lib/verification-links";
-import { SSOOptions } from "@/modules/ee/sso/components/sso-options";
+import { SSOOptions } from "@/modules/auth/sso/components/sso-options";
 import { TwoFactor } from "@/modules/ee/two-factor-auth/components/two-factor";
 import { TwoFactorBackup } from "@/modules/ee/two-factor-auth/components/two-factor-backup";
 import { Alert, AlertDescription, AlertTitle } from "@/modules/ui/components/alert";
@@ -22,6 +22,12 @@ import { Button } from "@/modules/ui/components/button";
 import { FormControl, FormError, FormField, FormItem } from "@/modules/ui/components/form";
 import { PasswordInput } from "@/modules/ui/components/password-input";
 
+/**
+ * Zod schema for login form fields.
+ * Password must be 8-128 characters; totpCode and backupCode are optional
+ * because they are only required after the first credentials step reveals
+ * that 2FA is enabled on the account.
+ */
 const ZLoginForm = z.object({
   email: z.email(),
   password: z
@@ -38,6 +44,20 @@ const ZLoginForm = z.object({
 
 type TLoginForm = z.infer<typeof ZLoginForm>;
 
+/**
+ * Login form component with two-phase UX: SSO provider buttons shown first,
+ * then email/password form revealed on click. This progressive disclosure
+ * reduces visual noise for users who authenticate via OIDC/Google/GitHub
+ * while keeping email/password accessible with one extra tap.
+ *
+ * Handles three auth sub-flows:
+ * - Email/password → credentials signIn with optional 2FA chaining
+ * - SSO provider → delegated to SSOOptions sub-component
+ * - OAuthAccountNotLinked → shows error alert with recovery instructions
+ *
+ * The `showLogin` state toggle keeps the password form hidden initially so
+ * SSO-only users are never shown a password field they will not use.
+ */
 interface LoginFormProps {
   emailAuthEnabled: boolean;
   publicSignUpEnabled: boolean;
@@ -94,6 +114,19 @@ export const LoginForm = ({
     resolver: zodResolver(ZLoginForm),
   });
 
+  /**
+   * Handles email/password form submission. Uses NextAuth credentials provider
+   * with `redirect: false` so we can inspect the response for special errors:
+   *
+   * - "second factor required" → advance to 2FA totpCode input
+   * - "Email Verification is Pending" → create email token, redirect to
+   *   verification-requested page so the user can verify their inbox
+   * - Any other error → show as toast
+   * - No error → redirect to the resolved callback path
+   *
+   * Also persists login method to localStorage so the next visit can
+   * show a "last used" hint on the matching button.
+   */
   const onSubmit: SubmitHandler<TLoginForm> = async (data) => {
     if (typeof window !== "undefined") {
       localStorage.setItem(FORMBRICKS_LOGGED_IN_WITH_LS, "Email");

@@ -18,6 +18,15 @@ const handleDatabaseError = (error: unknown): never => {
   throw error;
 };
 
+/**
+ * Deletes all database sessions for a user. Used when the user changes their
+ * password, enables/disables 2FA, or when an admin deactivates the account.
+ * Returns the count of deleted sessions so callers can log it.
+ *
+ * @param userId - User whose sessions to delete
+ * @param tx     - Optional Prisma transaction client
+ * @returns Number of deleted session rows
+ */
 export const deleteSessionsByUserId = async (
   userId: string,
   tx?: Prisma.TransactionClient
@@ -37,6 +46,15 @@ export const deleteSessionsByUserId = async (
   }
 };
 
+/**
+ * Deletes a single session by its session token. Used on explicit sign-out
+ * to invalidate the current session immediately rather than waiting for
+ * the session to expire naturally.
+ *
+ * @param sessionToken - The NextAuth session token to delete
+ * @param tx           - Optional Prisma transaction client
+ * @returns Number of deleted session rows (0 or 1)
+ */
 export const deleteSessionBySessionToken = async (
   sessionToken: string,
   tx?: Prisma.TransactionClient

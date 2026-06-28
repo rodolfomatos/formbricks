@@ -5,6 +5,16 @@ import { DatabaseError } from "@formbricks/types/errors";
 import { getAccessFlags } from "@/lib/membership/utils";
 import { CreateMembershipInvite } from "@/modules/auth/invite/types/invites";
 
+/**
+ * Creates team memberships during invite acceptance using the invite page
+ * flow (separate from the sign-up flow version in signup/lib/team.ts).
+ * The key difference is that this version also collects workspace IDs for
+ * potential post-processing, whereas the sign-up version only creates
+ * TeamUser rows.
+ *
+ * @param invite - Invite data with organisation ID, role, and team IDs
+ * @param userId - User ID to create memberships for
+ */
 export const createTeamMembership = async (invite: CreateMembershipInvite, userId: string): Promise<void> => {
   const teamIds = invite.teamIds || [];
   const userMembershipRole = invite.role;

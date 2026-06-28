@@ -29,7 +29,15 @@ import {
 } from "@/modules/ee/license-check/lib/utils";
 import { SignupForm } from "./components/signup-form";
 
-export const SignupPage = async ({
+/**
+ * Server-rendered sign-up page. Validates invite tokens (if present),
+ * checks whether sign-up / multi-org is enabled, and passes all auth
+ * provider flags to the SignupForm component. If sign-up is disabled
+ * and there is no valid invite token, returns 404.
+ *
+ * SAML props are passed through for the SSOOptions component even
+ * though SAML is not implemented — they are rendered inertly.
+ */
   searchParams: searchParamsProps,
 }: {
   searchParams: Promise<Record<string, string>>;

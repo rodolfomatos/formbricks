@@ -77,6 +77,11 @@ class PasswordResetSessionRevocationError extends Error {
     this.cause = cause;
   }
 }
+/**
+ * Returns the configured password-reset token lifetime in minutes.
+ * Centralised so that callers (email templates, token validation) always
+ * read from the same env-var rather than duplicating the constant.
+ */
 export const getPasswordResetTokenLifetimeInMinutes = (): number => PASSWORD_RESET_TOKEN_LIFETIME_MINUTES;
 
 const buildPasswordResetLink = (token: string): string =>
@@ -261,6 +266,19 @@ const sendPasswordResetNotification = async ({
   }
 };
 
+/**
+ * Initiates the password reset flow: generates a crypto-random token,
+ * persists it (hashing the token so the raw value is never stored),
+ * and sends the reset link email. If email sending fails, the issued
+ * token is revoked to prevent dangling, usable reset tokens.
+ *
+ * For "public" source (forgot-password page), failures are logged but
+ * not thrown — the caller returns success:true regardless. For "profile"
+ * source (settings page), failures are propagated to the caller.
+ *
+ * @param user   - The user requesting the reset (must have id, email, locale)
+ * @param source - "public" (forgot-password form) or "profile" (settings)
+ */
 export const requestPasswordReset = async (
   user: TPasswordResetRecipient,
   source: TPasswordResetRequestSource
@@ -300,6 +318,20 @@ export const requestPasswordReset = async (
   }
 };
 
+/**
+ * Consumes a password reset token and updates the user's password.
+ * Rejects legacy JWT-format tokens (isLegacyPasswordResetToken) because
+ * they lack single-use replay protection. On success, invalidates all
+ * existing sessions and sends a notification email to the user.
+ *
+ * The entire update is wrapped in a Prisma transaction that consumes the
+ * token, updates the password, and revokes sessions atomically.
+ *
+ * @param rawToken - The raw (unhashed) token from the reset link
+ * @param password - The new plain-text password (hashed before storage)
+ * @returns Object with userId, oldUser, and updatedUser
+ * @throws InvalidPasswordResetTokenError for expired, replayed, or superseded tokens
+ */
 export const completePasswordReset = async (
   rawToken: string,
   password: string

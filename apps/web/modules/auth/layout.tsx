@@ -5,7 +5,12 @@ import { getIsFreshInstance } from "@/lib/instance/service";
 import { authOptions } from "@/modules/auth/lib/authOptions";
 import { getIsMultiOrgEnabled } from "@/modules/ee/license-check/lib/utils";
 
-export const AuthLayout = async ({ children }: { children: React.ReactNode }) => {
+/**
+ * Shared auth layout: redirects authenticated users to `/`, redirects
+ * fresh (unconfigured) single-org instances to `/setup/intro`, and wraps
+ * all auth pages in a centered card layout with toast support.
+ */
+export const AuthLayout = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
   const [session, isFreshInstance, isMultiOrgEnabled] = await Promise.all([
     getServerSession(authOptions),
     getIsFreshInstance(),

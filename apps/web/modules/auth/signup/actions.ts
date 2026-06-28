@@ -59,6 +59,11 @@ const ZCreateUserAction = z.object({
   subscribeToProductUpdates: z.boolean().optional(),
 });
 
+/**
+ * Validates the Cloudflare Turnstile captcha token if Turnstile is
+ * configured for this instance. No-op if Turnstile is not configured.
+ * Throws if the token is missing or verification fails.
+ */
 async function verifyTurnstileIfConfigured(turnstileToken: string | undefined): Promise<void> {
   if (!IS_TURNSTILE_CONFIGURED) return;
 
@@ -72,6 +77,11 @@ async function verifyTurnstileIfConfigured(turnstileToken: string | undefined): 
   }
 }
 
+/**
+ * Creates a user in the database, catching InvalidInputError (email taken)
+ * as a non-fatal outcome so the caller can distinguish between "new user"
+ * and "already exists" without throwing.
+ */
 async function createUserSafely(
   email: string,
   name: string,
@@ -99,6 +109,11 @@ async function createUserSafely(
   return { user, userAlreadyExisted };
 }
 
+/**
+ * Processes an invite acceptance during sign-up. Verifies the invite token,
+ * creates the membership, handles team memberships, sends the invite-accepted
+ * email, and deletes the used invite.
+ */
 async function handleInviteAcceptance(
   ctx: ActionClientCtx,
   inviteToken: string,
@@ -154,6 +169,11 @@ async function handleInviteAcceptance(
   await deleteInvite(invite.id);
 }
 
+/**
+ * Creates a new organisation + workspace for the user (multi-org enabled).
+ * Stripe setup is fire-and-forget (not awaited) so the sign-up response is
+ * not blocked by billing synchronisation.
+ */
 async function handleOrganizationCreation(ctx: ActionClientCtx, user: TCreatedUser): Promise<void> {
   const isMultiOrgEnabled = await getIsMultiOrgEnabled();
   if (!isMultiOrgEnabled) return;
@@ -216,6 +236,10 @@ async function handleOrganizationCreation(ctx: ActionClientCtx, user: TCreatedUs
   });
 }
 
+/**
+ * After user creation, either accepts an invite or creates an organisation,
+ * then sends a verification email (unless email verification is disabled).
+ */
 async function handlePostUserCreation(
   ctx: ActionClientCtx,
   user: TCreatedUser,
@@ -245,6 +269,19 @@ async function handlePostUserCreation(
   }
 }
 
+/**
+ * Server action for user registration. Creates the user, handles invite
+ * acceptance or organisation creation, sends verification email, and
+ * captures analytics events. Rate-limited per IP via applyIPRateLimit.
+ *
+ * @param name       - User display name
+ * @param email      - User email (lowercased before storage)
+ * @param password   - Plain-text password (hashed with bcrypt before storage)
+ * @param inviteToken - Optional invite token (skips organisation creation)
+ * @param userLocale - Optional user locale
+ * @param turnstileToken - Cloudflare Turnstile captcha token (if configured)
+ * @returns { success: true } on success
+ */
 export const createUserAction = actionClient.inputSchema(ZCreateUserAction).action(
   withAuditLogging("created", "user", async ({ ctx, parsedInput }) => {
     await applyIPRateLimit(rateLimitConfigs.auth.signup);

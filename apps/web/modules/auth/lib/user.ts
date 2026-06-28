@@ -11,6 +11,17 @@ type TUserDbClient = PrismaClient | Prisma.TransactionClient;
 
 const getDbClient = (tx?: Prisma.TransactionClient): TUserDbClient => tx ?? prisma;
 
+/**
+ * Updates selected user fields. Returns id, email, locale, and emailVerified.
+ * Supports an optional transaction client so callers can bundle this update
+ * with other operations (e.g. user creation + SSO identity sync).
+ *
+ * @param id   - User ID to update
+ * @param data - Partial user fields (validated by ZUserUpdateInput)
+ * @param tx   - Optional Prisma transaction client
+ * @returns Updated user with selected fields
+ * @throws ResourceNotFoundError if the user ID does not exist
+ */
 export const updateUser = async (id: string, data: TUserUpdateInput, tx?: Prisma.TransactionClient) => {
   validateInputs([id, ZId], [data, ZUserUpdateInput.partial()]);
 
@@ -40,6 +51,15 @@ export const updateUser = async (id: string, data: TUserUpdateInput, tx?: Prisma
   }
 };
 
+/**
+ * Updates lastLoginAt for the user with the given email, using SELECT FOR UPDATE
+ * to prevent concurrent sign-ins from racing on the same row. Returns the previous
+ * lastLoginAt value so callers can check if this is the user's first login.
+ *
+ * @param email - User email (validated by ZUserEmail)
+ * @returns Previous lastLoginAt value, or null if this is the first recorded login
+ * @throws ResourceNotFoundError if no user with that email exists
+ */
 export const updateUserLastLoginAt = async (email: string) => {
   validateInputs([email, ZUserEmail]);
 
@@ -83,6 +103,15 @@ export const updateUserLastLoginAt = async (email: string) => {
   }
 };
 
+/**
+ * Looks up a user by email. Cached with React's cache() so multiple lookups
+ * within the same request hit the in-memory cache instead of the database.
+ * Returns selected fields only — not the full user row.
+ *
+ * @param email - User email
+ * @returns User with selected lookup fields, or null
+ * @throws DatabaseError on Prisma client errors
+ */
 export const getUserByEmail = reactCache(async (email: string) => {
   validateInputs([email, ZUserEmail]);
 
@@ -111,6 +140,14 @@ export const getUserByEmail = reactCache(async (email: string) => {
   }
 });
 
+/**
+ * Looks up a user by ID. Cached with React's cache(). Only returns the id
+ * field — this is used for existence checks, not for reading user profiles.
+ *
+ * @param id - User ID
+ * @returns User with id field, or null
+ * @throws DatabaseError on Prisma client errors
+ */
 export const getUser = reactCache(async (id: string) => {
   validateInputs([id, ZId]);
 
@@ -137,6 +174,17 @@ export const getUser = reactCache(async (id: string) => {
   }
 });
 
+/**
+ * Creates a new user record. Supports an optional transaction client so
+ * callers (e.g. provisionNewSsoUser) can bundle user creation with SSO
+ * identity linking in a single atomic transaction.
+ *
+ * @param data - User creation input (validated by ZUserUpdateInput)
+ * @param tx   - Optional Prisma transaction client
+ * @returns Created user with selected fields
+ * @throws InvalidInputError if a user with this email already exists
+ * @throws DatabaseError on other Prisma client errors
+ */
 export const createUser = async (data: TUserCreateInput, tx?: Prisma.TransactionClient) => {
   validateInputs([data, ZUserUpdateInput]);
   try {

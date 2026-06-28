@@ -4,9 +4,26 @@ import { POSTHOG_KEY } from "@/lib/constants";
 import { capturePostHogEvent } from "@/lib/posthog";
 import { updateUserLastLoginAt } from "@/modules/auth/lib/user";
 
+/**
+ * Checks whether the user's lastLoginAt is on a different calendar day than
+ * today in UTC. Used to distinguish first-login-of-day (a common product
+ * analytics signal) from repeated same-day sign-ins.
+ */
 const getIsFirstLoginToday = (lastLoginAt: Date | null | undefined) =>
   lastLoginAt?.toISOString().slice(0, 10) !== new Date().toISOString().slice(0, 10);
 
+/**
+ * Sends a PostHog "user_signed_in" event with auth provider, organisation
+ * count, and whether this is the user's first login today. No-op if PostHog
+ * is not configured.
+ *
+ * The previousLastLoginAt param avoids an extra DB query when the caller has
+ * already fetched it (e.g. from updateUserLastLoginAt's return value).
+ *
+ * @param userId              - User ID for the event
+ * @param provider            - Auth provider used (credentials, openid, google, etc.)
+ * @param previousLastLoginAt - Pre-fetched lastLoginAt (fetched from DB if absent)
+ */
 export const captureSignIn = async ({
   userId,
   provider,
@@ -43,6 +60,16 @@ export const captureSignIn = async ({
   }
 };
 
+/**
+ * Completes the sign-in process after a successful auth: updates the
+ * lastLoginAt timestamp and fires a PostHog analytics event (fire-and-forget).
+ * Intended to be called from authOptions callbacks after the auth decision
+ * has been made.
+ *
+ * @param userId   - User ID
+ * @param email    - User email (for lastLoginAt update lookup)
+ * @param provider - Auth provider used
+ */
 export const finalizeSuccessfulSignIn = async ({
   userId,
   email,

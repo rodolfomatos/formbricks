@@ -3,19 +3,28 @@ import type { Awaitable } from "next-auth";
 import type { Adapter, AdapterAccount } from "next-auth/adapters";
 import type { PrismaClient } from "@formbricks/database/prisma";
 import { logger } from "@formbricks/logger";
-import { resolveAccountProvider } from "@/modules/ee/sso/lib/provider-normalization";
+import { resolveAccountProvider } from "@/modules/auth/sso/lib/provider-normalization";
 
 type TProviderAccountKey = Pick<AdapterAccount, "provider" | "providerAccountId">;
 
+/**
+ * Normalises the provider field on an adapter key object so the Prisma adapter
+ * looks up Account rows with the canonical IdentityProvider value (e.g.
+ * "azuread") instead of the raw NextAuth driver name (e.g. "azure-ad").
+ */
 const normalizeProviderKey = <T extends { provider: string }>(value: T): T => ({
   ...value,
   provider: resolveAccountProvider(value.provider),
 });
 
 /**
- * Wraps an adapter method so any failure is logged with context before being re-thrown.
- * NextAuth turns the re-thrown error into the relevant auth error page, so we keep the
- * original behaviour while making adapter-level failures observable.
+ * Wraps an adapter method so failures are logged with context before re-throwing.
+ * NextAuth converts thrown errors to auth error pages, so this preserves the
+ * default behaviour while making adapter-level failures observable in logs.
+ *
+ * @param method  - Name of the adapter method (for log context)
+ * @param handler - The original adapter method to wrap
+ * @returns A wrapped function with the same signature
  */
 const withAdapterErrorLogging =
   <TArgs extends unknown[], TResult>(method: string, handler: (...args: TArgs) => Awaitable<TResult>) =>
@@ -29,14 +38,18 @@ const withAdapterErrorLogging =
   };
 
 /**
- * NextAuth resolves accounts by each provider's NextAuth `id` — Microsoft's is "azure-ad" — but
- * Formbricks persists the canonical `IdentityProvider` value ("azuread") in `Account.provider`.
- * Left unreconciled, the adapter's native lookup misses the stored row, falls back to matching by
- * email, and rejects the sign-in with `OAuthAccountNotLinked`.
+ * Builds a NextAuth PrismaAdapter that normalises provider names at the boundary.
+ * Without normalisation, the adapter's native linkAccount stores "azure-ad" while the
+ * SSO handler stores "azuread" — subsequent lookups via getUserByAccount miss the row
+ * and NextAuth falls back to matching by email, triggering OAuthAccountNotLinked.
  *
- * Normalizing the provider at the adapter boundary keeps the native lookup/link/unlink aligned with
- * both the stored rows and the custom SSO sign-in handler for every provider, without leaking
- * provider-specific naming into the call sites.
+ * The adapter wraps three account methods (getUserByAccount, linkAccount, unlinkAccount)
+ * with provider-name normalisation and error logging, and delegates everything else
+ * to the stock PrismaAdapter.
+ *
+ * @param prismaClient - The Prisma client instance
+ * @returns A NextAuth Adapter with normalised account methods
+ * @throws If PrismaAdapter is missing account methods required for SSO sign-in
  */
 export const getNextAuthAdapter = (prismaClient: PrismaClient): Adapter => {
   const baseAdapter = PrismaAdapter(prismaClient as unknown as Parameters<typeof PrismaAdapter>[0]);

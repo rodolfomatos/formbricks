@@ -12,6 +12,11 @@ type TTeamMembershipTarget = Pick<Team, "id">;
 
 const getDbClient = (tx?: Prisma.TransactionClient): TTeamDbClient => tx ?? prisma;
 
+/**
+ * Uncached team lookup scoped to an organisation. Uses the organisation ID
+ * in the WHERE clause to prevent cross-organisation team access (a user
+ * invited to team "X" in org "A" should not match team "X" in org "B").
+ */
 const getTeamForOrganizationUncached = async (
   teamId: string,
   organizationId: string,
@@ -38,6 +43,17 @@ const getTeamForOrganizationCached = reactCache(async (teamId: string, organizat
   getTeamForOrganizationUncached(teamId, organizationId)
 );
 
+/**
+ * Creates team memberships during invite acceptance. For each team ID in the
+ * invite, verifies the team exists under the target organisation, then upserts
+ * a TeamUser row with admin role for owner/manager invites or contributor for
+ * others. If a team has been deleted since the invite was sent, it is silently
+ * skipped (logged as a warning).
+ *
+ * @param invite - Invite data with organisation ID, role, and team IDs
+ * @param userId - User ID to create memberships for
+ * @param tx     - Optional Prisma transaction client
+ */
 export const createTeamMembership = async (
   invite: CreateMembershipInvite,
   userId: string,
@@ -86,6 +102,16 @@ export const createTeamMembership = async (
   }
 };
 
+/**
+ * Looks up a team scoped to an organisation. Uses React cache for non-transaction
+ * lookups (cached per request) and the uncached path when inside an existing
+ * transaction to respect the transaction boundary.
+ *
+ * @param teamId         - Team ID to look up
+ * @param organizationId - Organisation ID for scoping
+ * @param tx             - Optional Prisma transaction client
+ * @returns Team id, or null
+ */
 export const getTeamForOrganization = async (
   teamId: string,
   organizationId: string,

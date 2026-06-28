@@ -8,11 +8,16 @@ interface PasswordChecksProps {
   password: string | null;
 }
 
+/** Regex rules used for password-strength validation during sign-up. */
 const PASSWORD_REGEX = {
   UPPER_AND_LOWER: /^(?=.*[A-Z])(?=.*[a-z])/,
   NUMBER: /\d/,
 };
 
+/**
+ * Icon showing either a checkmark (passed) or a bullet (pending) for each
+ * password requirement. Keeps the validation list visually scannable.
+ */
 const ValidationIcon = ({ state }: { state: boolean }) =>
   state ? (
     <CheckIcon className="size-5" />
@@ -22,6 +27,12 @@ const ValidationIcon = ({ state }: { state: boolean }) =>
     </span>
   );
 
+/**
+ * Real-time password strength indicator for the sign-up form.
+ * Shows three requirements (mixed case, length 8-128, at least one number)
+ * that update as the user types. Null password means the form is hidden
+ * (no checks shown).
+ */
 export const PasswordChecks = ({ password }: PasswordChecksProps) => {
   const { t } = useTranslation();
 

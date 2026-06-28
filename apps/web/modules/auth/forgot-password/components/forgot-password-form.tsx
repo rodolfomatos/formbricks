@@ -18,6 +18,13 @@ const ZForgotPasswordForm = z.object({
 
 type TForgotPasswordForm = z.infer<typeof ZForgotPasswordForm>;
 
+/**
+ * Forgot-password form client component.  Accepts an email via
+ * react-hook-form with Zod validation.  On submit, calls the
+ * forgotPasswordAction server action which always returns
+ * { success: true } (to prevent user enumeration) and redirects
+ * to /auth/forgot-password/email-sent on success.
+ */
 export const ForgotPasswordForm = () => {
   const router = useRouter();
   const { t } = useTranslation();

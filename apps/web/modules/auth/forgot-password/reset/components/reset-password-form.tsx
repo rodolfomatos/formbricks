@@ -30,6 +30,15 @@ const passwordInputProps = {
     "focus:border-brand-dark focus:ring-brand-dark mt-2 block w-full rounded-md border-slate-300 shadow-sm sm:text-sm",
 };
 
+/**
+ * Reset-password form client component.  Reads the token from search
+ * params, accepts a new password + confirmation, validates both match,
+ * and calls resetPasswordAction.  On success, redirects to the success
+ * page; on failure, displays the error (with a friendlier message for
+ * expired tokens via INVALID_PASSWORD_RESET_TOKEN_ERROR_CODE).
+ *
+ * Uses PasswordChecks to give real-time feedback on password strength.
+ */
 export const ResetPasswordForm = () => {
   const { t } = useTranslation();
   const searchParams = useSearchParams();

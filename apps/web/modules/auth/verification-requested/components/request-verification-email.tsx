@@ -12,6 +12,12 @@ interface RequestVerificationEmailProps {
   callbackUrl?: string | null;
 }
 
+/**
+ * Resend-verification-email button with auto-reload on tab focus.
+ * When the user switches back to this tab (visibilitychange → visible),
+ * the page reloads to pick up the just-confirmed email state.
+ * The resend button calls resendVerificationEmailAction on click.
+ */
 export const RequestVerificationEmail = ({ email, callbackUrl }: RequestVerificationEmailProps) => {
   const { t } = useTranslation();
   useEffect(() => {

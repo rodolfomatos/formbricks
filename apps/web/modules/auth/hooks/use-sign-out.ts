@@ -24,9 +24,13 @@ interface SessionUser {
 }
 
 /**
- * Custom hook to handle sign out with audit logging
- * @param sessionUser - The current user session data (optional)
- * @returns {Object} - An object containing the signOutWithAudit function
+ * Client-side hook that wraps NextAuth's signOut with audit logging
+ * and optional workspace/environment ID cleanup from localStorage.
+ * The audit event is sent via server action before the session is destroyed.
+ * If audit logging fails, sign-out proceeds anyway (non-blocking).
+ *
+ * @param sessionUser - Current user (if known) for audit log context
+ * @returns Object with typed signOut function
  */
 export const useSignOut = (sessionUser?: SessionUser | null) => {
   const signOutWithAudit = async (options?: UseSignOutOptions) => {

@@ -8,7 +8,6 @@ import {
   CONTROL_HASH,
   EMAIL_VERIFICATION_DISABLED,
   ENCRYPTION_KEY,
-  ENTERPRISE_LICENSE_KEY,
   SESSION_MAX_AGE,
   WEBAPP_URL,
 } from "@/lib/constants";
@@ -34,8 +33,8 @@ import {
   verifyPassword,
 } from "@/modules/auth/lib/utils";
 import { UNKNOWN_DATA } from "@/modules/ee/audit-logs/types/audit-log";
-import { getSSOProviders } from "@/modules/ee/sso/lib/providers";
-import { handleSsoCallback } from "@/modules/ee/sso/lib/sso-handlers";
+import { getSSOProviders } from "@/modules/auth/sso/lib/providers";
+import { handleSsoCallback } from "@/modules/auth/sso/lib/sso-handlers";
 import { getNextAuthAdapter } from "./adapter";
 import { createBrevoCustomer } from "./brevo";
 
@@ -44,19 +43,41 @@ type TSignInUser = TSignInCallbackParams["user"];
 type TSignInAccount = TSignInCallbackParams["account"];
 type TCredentialsOrTokenAccount = NonNullable<TSignInAccount> & { provider: "credentials" | "token" };
 
+/**
+ * Reads the callback URL from the auth flow cookie, validates it against
+ * WEBAPP_URL to prevent open-redirect attacks, and returns a safe URL.
+ * Returns empty string if no valid callback is found so the caller can
+ * fall back to the default post-auth redirect.
+ */
 const getValidatedAuthCallbackUrl = async () => {
   const cookieStore = await cookies();
   return getValidatedCallbackUrl(getAuthCallbackUrlFromCookies(cookieStore), WEBAPP_URL) ?? "";
 };
 
+/**
+ * Extracts the `authFlowPurpose` property from the user object if present.
+ * This property is set by the token provider to distinguish between regular
+ * email verification and SSO recovery flows.
+ */
 const getAuthFlowPurpose = (user: TSignInUser) => {
   const authFlowPurpose = "authFlowPurpose" in user ? user.authFlowPurpose : undefined;
   return typeof authFlowPurpose === "string" ? authFlowPurpose : undefined;
 };
 
+/**
+ * Type guard that checks whether the sign-in account is an internal provider
+ * (credentials or token) rather than an external OAuth/OIDC provider. Internal
+ * providers use a different sign-in path that skips SSO callback handling.
+ */
 const isCredentialsOrTokenProvider = (account: TSignInAccount): account is TCredentialsOrTokenAccount =>
   account?.provider === "credentials" || account?.provider === "token";
 
+/**
+ * Guards credentials-provider sign-in by checking that the user has verified
+ * their email address. If email verification is required (not disabled) and
+ * the user has not verified, throws so the login form can redirect to the
+ * verification-requested flow.
+ */
 const assertCredentialsUserCanSignIn = (user: TSignInUser) => {
   if ("emailVerified" in user && !user.emailVerified && !EMAIL_VERIFICATION_DISABLED) {
     logger.error("Email Verification is Pending");
@@ -64,6 +85,15 @@ const assertCredentialsUserCanSignIn = (user: TSignInUser) => {
   }
 };
 
+/**
+ * Handles sign-in for internal providers (credentials and token).
+ * For regular credentials sign-in, asserts email verification and records
+ * the successful sign-in. For SSO recovery (token + sso_recovery purpose),
+ * these checks are skipped because recovery links are single-use and were
+ * already validated by completeSsoRecovery.
+ *
+ * @returns Always returns true (internal providers never redirect externally)
+ */
 const handleCredentialsOrTokenSignIn = async ({
   account,
   user,
@@ -90,6 +120,15 @@ const handleCredentialsOrTokenSignIn = async ({
   return true;
 };
 
+/**
+ * Handles sign-in for SSO providers (OIDC, Google, GitHub, Azure AD).
+ * Delegates to handleSsoCallback which resolves the auth flow into four branches
+ * (linked account, legacy match, recovery, new user). If the sign-in also
+ * carries an account-deletion re-authentication intent, validates and completes
+ * that flow around the SSO callback.
+ *
+ * @returns true to allow sign-in, false to deny, or a redirect URL string
+ */
 const handleEnterpriseSsoSignIn = async ({
   account,
   callbackUrl,
@@ -106,7 +145,7 @@ const handleEnterpriseSsoSignIn = async ({
   userId: string;
 }) => {
   if (intentToken) {
-    await validateAccountDeletionSsoReauthenticationCallback({
+    await validateAccountDeletionSsoReauthCallback({
       account,
       intentToken,
     });
@@ -136,6 +175,23 @@ const handleEnterpriseSsoSignIn = async ({
   return result;
 };
 
+/**
+ * NextAuth configuration for the Formbricks AGPL fork.
+ *
+ * **Providers** — Credentials (email/password + 2FA), Token (email verification
+ * links + SSO recovery), and SSO providers (OIDC, Google, GitHub, Azure AD)
+ * sourced from `getSSOProviders()` based on env vars.
+ *
+ * **Sign-in callback routing** — Routes through handleCredentialsOrTokenSignIn
+ * for internal providers and handleEnterpriseSsoSignIn for OAuth providers,
+ * which delegates to the SSO module's handleSsoCallback.
+ *
+ * **Session strategy** — database-backed (not JWT), with configurable max age.
+ *
+ * The adapter uses getNextAuthAdapter which normalises provider names at the
+ * boundary so the Prisma adapter's native account lookups match the canonical
+ * IdentityProvider values stored by the SSO module.
+ */
 export const authOptions: NextAuthOptions = {
   adapter: getNextAuthAdapter(prisma),
   providers: [
@@ -419,8 +475,8 @@ export const authOptions: NextAuthOptions = {
         return user;
       },
     }),
-    // Conditionally add enterprise SSO providers
-    ...(ENTERPRISE_LICENSE_KEY ? getSSOProviders() : []),
+    // SSO providers (OIDC, Google, GitHub, Azure AD) — enabled via env vars
+    ...getSSOProviders(),
   ],
   session: {
     strategy: "database",
@@ -453,7 +509,7 @@ export const authOptions: NextAuthOptions = {
         });
       }
 
-      if (ENTERPRISE_LICENSE_KEY && account) {
+      if (account) {
         try {
           return await handleEnterpriseSsoSignIn({
             account,
