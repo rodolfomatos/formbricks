@@ -2414,6 +2414,7 @@
         "workspace": "工作區"
       },
       "enterprise": {
+        "ai_smart_tools": "AI 智慧工具",
         "audit_logs": "稽核記錄",
         "coming_soon": "即將推出",
         "contacts_and_segments": "聯絡人管理和區隔",
@@ -2463,8 +2464,7 @@
         "unify_feedback_inbox": "統一回饋收件匣",
         "unlock_the_full_power_of_formbricks_free_for_30_days": "免費解鎖 Formbricks 的全部功能，為期 30 天。",
         "white_glove_onboarding": "專屬引導服務",
-        "whitelabel_email_follow_ups": "白標電子郵件追蹤",
-        "ai_smart_tools": "AI 智慧工具"
+        "whitelabel_email_follow_ups": "白標電子郵件追蹤"
       },
       "feedback_directories": {
         "archive": "封存",

@@ -158,8 +158,8 @@ module.exports = {
         width: "width",
       },
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'sans-serif'],
-        mono: ['"SF Mono"', '"Fira Code"', 'monospace'],
+        sans: ["Inter", "-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "sans-serif"],
+        mono: ['"SF Mono"', '"Fira Code"', "monospace"],
       },
       maxWidth: {
         "8xl": "88rem",

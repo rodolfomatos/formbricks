@@ -1310,18 +1310,18 @@ model FeedbackDirectoryWorkspace {
 /// @property status - Whether the action succeeded or failed
 /// @property metadata - Additional structured data about the action
 model AuditLog {
-  id             String        @id @default(cuid())
-  createdAt      DateTime      @default(now()) @map(name: "created_at")
+  id             String       @id @default(cuid())
+  createdAt      DateTime     @default(now()) @map(name: "created_at")
   organizationId String
-  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   userId         String?
-  user           User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
   apiKeyId       String?
   action         String
   target         String
   targetId       String?
   description    String?
-  status         String        @default("success")
+  status         String       @default("success")
   metadata       Json?
 
   @@index([organizationId, createdAt(sort: Desc)])
