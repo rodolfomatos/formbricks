@@ -1,3 +1,7 @@
+/**
+ * Popover for inserting/editing a hyperlink in the Lexical editor.
+ * Validates the URL before applying the link toggle command.
+ */
 "use client";
 
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";

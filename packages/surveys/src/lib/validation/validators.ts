@@ -1,3 +1,4 @@
+/** Validators — per-element-type response validation rules (required, min/max length, pattern, file type/size, date range, selection count, etc.) with i18n-aware error messages. */
 import type { TFunction } from "i18next";
 import type { TResponseDataValue } from "@formbricks/types/responses";
 import type { TSurveyElement } from "@formbricks/types/surveys/elements";

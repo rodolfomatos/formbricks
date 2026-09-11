@@ -1,3 +1,4 @@
+/** Dropdown to select a sub-field (address line, city, email, phone, etc.) for address/contact-info element validation rules. */
 "use client";
 
 import { useTranslation } from "react-i18next";

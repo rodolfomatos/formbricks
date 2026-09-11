@@ -2,6 +2,12 @@ import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
 import { err, ok } from "@formbricks/types/error-handlers";
 
+/**
+ * Cached retrieval of a single response by ID.
+ *
+ * @param responseId — The response ID
+ * @returns — The response if found
+ */
 export const getResponse = reactCache(async (contactId: string, surveyId: string) => {
   try {
     const response = await prisma.response.findFirst({

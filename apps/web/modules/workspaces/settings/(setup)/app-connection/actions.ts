@@ -115,7 +115,7 @@ export const getActiveInactiveSurveysAction = authenticatedActionClient
 
 const getLatestStableFbRelease = async (): Promise<string | null> => {
   try {
-    const res = await fetch("https://api.github.com/repos/formbricks/formbricks/releases/latest");
+    const res = await fetch("https://api.github.com/repos/rodolfomatos/formbricks/releases/latest");
     const release = await res.json();
 
     if (release?.tag_name) {

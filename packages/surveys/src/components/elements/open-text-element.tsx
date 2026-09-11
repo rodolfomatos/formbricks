@@ -1,3 +1,4 @@
+/** Open text element — renders a single/multi-line free-text survey question using the survey-ui OpenText component with TTC tracking. */
 import { useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { OpenText } from "@formbricks/survey-ui";

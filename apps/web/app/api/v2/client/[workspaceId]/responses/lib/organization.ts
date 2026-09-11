@@ -3,6 +3,10 @@ import { prisma } from "@formbricks/database";
 import { logger } from "@formbricks/logger";
 import { TOrganizationBilling } from "@formbricks/types/organizations";
 
+/**
+ * Fetches billing info for the organization associated with a workspace.
+ * Cached per request via react cache.
+ */
 export const getOrganizationBillingByWorkspaceId = reactCache(
   async (workspaceId: string): Promise<TOrganizationBilling | null> => {
     try {

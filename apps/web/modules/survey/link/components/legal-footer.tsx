@@ -13,6 +13,7 @@ interface LegalFooterProps {
   isInFlow?: boolean;
 }
 
+/** Footer bar with links to imprint, privacy policy, terms of service, and a "Report survey" link on Formbricks Cloud. */
 export const LegalFooter = ({
   IMPRINT_URL,
   PRIVACY_URL,

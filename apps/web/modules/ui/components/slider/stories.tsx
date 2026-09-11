@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the Slider component.
+ * Covers default, disabled, and custom-styling variants.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Slider } from "./index";

@@ -32,7 +32,7 @@ import {
 import { extractLanguageCodes, getLocalizedValue } from "@/lib/i18n/utils";
 import { checkForEmptyFallBackValue } from "@/lib/utils/recall";
 
-// Utility function to check if label is valid for all required languages
+/** Checks whether a localized label has non-empty content for every enabled survey language (or at least "default"). Used to ensure all languages are translated before publishing. */
 export const isLabelValidForAllLanguages = (
   label: TI18nString,
   surveyLanguages: TSurveyLanguage[]
@@ -45,7 +45,7 @@ export const isLabelValidForAllLanguages = (
   return languages.every((language) => label?.[language] && getTextContent(label[language]).length > 0);
 };
 
-// Validation logic for multiple choice elements
+/** Validates that all choices in a multiple-choice element have valid labels across all languages (no duplicates, non-empty). */
 const handleI18nCheckForMultipleChoice = (
   element: TSurveyMultipleChoiceElement,
   languages: TSurveyLanguage[]
@@ -62,6 +62,7 @@ const handleI18nCheckForMultipleChoice = (
   return element.choices.every((choice) => isLabelValidForAllLanguages(choice.label, languages));
 };
 
+/** Validates matrix rows and columns labels across all languages (no duplicates, non-empty). */
 const handleI18nCheckForMatrixLabels = (
   element: TSurveyMatrixElement,
   languages: TSurveyLanguage[]
@@ -84,6 +85,7 @@ const handleI18nCheckForMatrixLabels = (
   return rowsAndColumns.every((choice) => isLabelValidForAllLanguages(choice.label, languages));
 };
 
+/** Validates that visible placeholder fields for contact-info and address elements have valid translations. */
 const handleI18nCheckForContactAndAddressFields = (
   element: TSurveyContactInfoElement | TSurveyAddressElement,
   languages: TSurveyLanguage[]
@@ -165,7 +167,7 @@ export const validationRules = {
   },
 };
 
-// Main validation function
+/** Runs both default (headline/subheader) and element-type-specific validations. Returns true only if all pass. */
 export const validateElement = (element: TSurveyElement, surveyLanguages: TSurveyLanguage[]): boolean => {
   const specificValidation = (
     validationRules as Record<
@@ -182,6 +184,7 @@ export const validateElement = (element: TSurveyElement, surveyLanguages: TSurve
   return specificValidationResult && defaultValidationResult;
 };
 
+/** Incrementally validates an element against the current list of invalid element IDs. Adds/removes the element ID from the list as needed. Used when validating elements one at a time in the editor. */
 export const validateSurveyElementsInBatch = (
   element: TSurveyElement,
   invalidElements: string[] | null,
@@ -200,10 +203,12 @@ export const validateSurveyElementsInBatch = (
   return invalidElements;
 };
 
+/** Returns true if content is undefined (optional field) or has valid translations for all languages. */
 const isContentValid = (content: Record<string, string> | undefined, surveyLanguages: TSurveyLanguage[]) => {
   return !content || isLabelValidForAllLanguages(content, surveyLanguages);
 };
 
+/** Ensures the survey-closed message has a non-empty heading for link surveys. */
 const hasValidSurveyClosedMessageHeading = (survey: TSurvey): boolean => {
   if (survey.type !== "link" || !survey.surveyClosedMessage) {
     return true;
@@ -214,10 +219,12 @@ const hasValidSurveyClosedMessageHeading = (survey: TSurvey): boolean => {
   return heading.length > 0;
 };
 
+/** Validates that the welcome card's headline and subheader are fully translated. */
 export const isWelcomeCardValid = (card: TSurveyWelcomeCard, surveyLanguages: TSurveyLanguage[]): boolean => {
   return isContentValid(card.headline, surveyLanguages) && isContentValid(card.subheader, surveyLanguages);
 };
 
+/** Validates an ending card (end-screen or redirect) including button URL validity, label presence, and translations. */
 export const isEndingCardValid = (
   card: TSurveyEndScreenCard | TSurveyRedirectUrlCard,
   surveyLanguages: TSurveyLanguage[]
@@ -252,6 +259,7 @@ export const isEndingCardValid = (
   }
 };
 
+/** Runs all pre-publish validations: recall fallbacks, targeting segment filters, auto-complete limits, and closed-message heading. Shows toast errors for each failure. */
 export const isSurveyValid = (
   survey: TSurvey,
   selectedLanguageCode: string,
@@ -305,6 +313,7 @@ export const isSurveyValid = (
   return true;
 };
 
+/** Returns a localized error message string for a validation error on a hidden field or question ID. */
 export const getValidateIdErrorMessage = (
   error: TValidateIdError,
   type: "hiddenField" | "question",

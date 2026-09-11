@@ -1,3 +1,4 @@
+/** File upload types — config, response, and parameter shapes used by the SDK's file upload feature. */
 export interface TUploadFileConfig {
   allowedFileExtensions?: string[];
   surveyId?: string;

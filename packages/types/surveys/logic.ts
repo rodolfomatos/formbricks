@@ -1,3 +1,4 @@
+/** Survey logic schemas — condition groups, operators, and action definitions for conditional survey branching and variable calculation. */
 import { z } from "zod";
 import { ZId } from "../common";
 

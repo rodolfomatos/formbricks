@@ -14,6 +14,7 @@ export interface InviteWithCreator extends Pick<Invite, "email"> {
   };
 }
 
+/** Zod schema for a single invitee input — email, role, team IDs, and name. */
 export const ZInvitee = ZInvite.pick({
   email: true,
   role: true,

@@ -7,6 +7,7 @@ import { getTranslate } from "@/lingodotdev/server";
 import { Button } from "@/modules/ui/components/button";
 import footerLogo from "../lib/footerlogo.svg";
 
+/** Full-screen status page for paused, completed, link invalid, response submitted, or link expired surveys. Shows contextual icon, heading, description, and optional Formbricks CTA. */
 export const SurveyInactive = async ({
   status,
   isScheduled = false,

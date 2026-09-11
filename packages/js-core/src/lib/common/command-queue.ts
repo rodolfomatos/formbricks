@@ -1,3 +1,4 @@
+/** Command queue — serialises SDK API calls (setup, user actions, general commands) so they execute in order, even if called before setup completes. */
 /* eslint-disable @typescript-eslint/no-explicit-any -- required for command queue */
 /* eslint-disable no-console -- we need to log global errors */
 import { checkSetup } from "@/lib/common/status";

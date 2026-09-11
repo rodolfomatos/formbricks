@@ -1,3 +1,4 @@
+/** Stacked cards container — renders survey questions as a stack of overlapping cards with swipe/tap-to-advance and card arrangement modes (casual/straight/straightRandom). */
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import type { JSX } from "react";
 import { type TPlacement } from "@formbricks/types/common";

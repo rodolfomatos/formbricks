@@ -1,3 +1,4 @@
+/** File storage schemas — allowed extensions, MIME types, upload/delete requests, and S3 integration types. */
 import { z } from "zod";
 import { ZStorageUrl } from "./common";
 

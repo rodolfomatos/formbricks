@@ -1,40 +1,37 @@
-import { z } from "zod";
-
-const ZEnterpriseLicenseStatus = z.enum(["active", "expired"]);
-
-export type TEnterpriseLicenseStatus = z.infer<typeof ZEnterpriseLicenseStatus>;
-
-const ZEnterpriseLicenseFeatures = z.object({
-  isMultiOrgEnabled: z.boolean(),
-  contacts: z.boolean(),
-  workspaces: z.number().nullable(),
-  whitelabel: z.boolean(),
-  removeBranding: z.boolean(),
-  twoFactorAuth: z.boolean(),
-  sso: z.boolean(),
-  saml: z.boolean(),
-  spamProtection: z.boolean(),
-  aiSmartTools: z.boolean(),
-  auditLogs: z.boolean(),
-  accessControl: z.boolean(),
-  quotas: z.boolean(),
-  feedbackDirectories: z.boolean().default(false),
-  dashboards: z.boolean().default(false),
-});
-
-export type TEnterpriseLicenseFeatures = z.infer<typeof ZEnterpriseLicenseFeatures>;
-
-export const ZEnterpriseLicenseDetails = z.object({
-  status: ZEnterpriseLicenseStatus,
-  features: ZEnterpriseLicenseFeatures,
-});
-
-export type TEnterpriseLicenseDetails = z.infer<typeof ZEnterpriseLicenseDetails>;
+export interface TEnterpriseLicenseFeatures {
+  isMultiOrgEnabled: boolean;
+  twoFactorAuth: boolean;
+  sso: boolean;
+  whitelabel: boolean;
+  removeBranding: boolean;
+  contacts: boolean;
+  aiSmartTools: boolean;
+  saml: boolean;
+  spamProtection: boolean;
+  auditLogs: boolean;
+  accessControl: boolean;
+  quotas: boolean;
+  feedbackDirectories: boolean;
+  dashboards: boolean;
+  workspaces: number;
+}
 
 export type TLicenseStatus =
   | "active"
   | "expired"
+  | "inactive"
   | "instance_mismatch"
-  | "unreachable"
   | "invalid_license"
-  | "no-license";
+  | "no-license"
+  | "pending"
+  | "unreachable";
+
+export interface TEnterpriseLicenseResult {
+  active: boolean;
+  features: TEnterpriseLicenseFeatures;
+  workspaces: number | null;
+  lastChecked: Date;
+  isPendingDowngrade: boolean;
+  fallbackLevel: string;
+  status: TLicenseStatus;
+}

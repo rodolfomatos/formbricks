@@ -1,8 +1,4 @@
-/**
- * Validates that a string is a safe identifier.
- * Safe identifiers can only contain lowercase letters, numbers, and underscores.
- * They cannot start with a number.
- */
+/** Validates that a string is a safe identifier (lowercase letters, digits, underscores, no leading digit). */
 export const isSafeIdentifier = (value: string): boolean => {
   // Must start with a lowercase letter
   if (!/^[a-z]/.test(value)) {
@@ -12,11 +8,7 @@ export const isSafeIdentifier = (value: string): boolean => {
   return /^[a-z0-9_]+$/.test(value);
 };
 
-/**
- * Converts a free-form string to a safe identifier candidate.
- * The output only contains lowercase letters, numbers, and underscores.
- * It also ensures the identifier starts with a lowercase letter by stripping invalid leading chars.
- */
+/** Normalises any string to a safe identifier (lowercase letters, digits, underscores). Strips invalid leading chars. */
 export const toSafeIdentifier = (value: string): string => {
   const normalized = value.trim().toLowerCase();
   let safeIdentifier = "";
@@ -50,12 +42,7 @@ export const toSafeIdentifier = (value: string): string => {
   return "";
 };
 
-/**
- * Converts a snake_case string to Title Case for display as a label.
- * Example: "job_description" -> "Job Description"
- *          "api_key" -> "Api Key"
- *          "signup_date" -> "Signup Date"
- */
+/** Converts a snake_case string to Title Case for display (e.g. "job_title" → "Job Title"). */
 export const formatSnakeCaseToTitleCase = (key: string): string => {
   return key
     .split("_")

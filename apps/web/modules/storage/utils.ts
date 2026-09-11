@@ -81,6 +81,12 @@ const extractFileExtension = (fileName: string): string | null => {
  * @param fileName The name of the file to validate
  * @returns {boolean} True if the file extension is allowed, false otherwise
  */
+/**
+ * Check whether the file's extension is in the globally allowed set.
+ *
+ * @param fileName — the file name to validate
+ * @returns — true if the extension is permitted
+ */
 export const isAllowedFileExtension = (fileName: string): boolean => {
   const extension = extractFileExtension(fileName);
   if (!extension) return false;
@@ -89,6 +95,14 @@ export const isAllowedFileExtension = (fileName: string): boolean => {
   return Object.values(ZAllowedFileExtension.enum).includes(extension as TAllowedFileExtension);
 };
 
+/**
+ * Validate that a single file URL references a file whose extension is
+ * in the allowed list (or that no list was specified).
+ *
+ * @param fileUrl — the storage file URL
+ * @param allowedFileExtensions — optional per-question allowed list
+ * @returns — true if the file passes extension validation
+ */
 export const validateSingleFile = (
   fileUrl: string,
   allowedFileExtensions?: TAllowedFileExtension[]
@@ -100,6 +114,14 @@ export const validateSingleFile = (
   return !allowedFileExtensions || allowedFileExtensions.includes(extension as TAllowedFileExtension);
 };
 
+/**
+ * Validate all file-upload responses in a response data object against
+ * their respective question-level allowed-extension lists.
+ *
+ * @param data — the full response data
+ * @param questions — survey questions to find FileUpload configs
+ * @returns — true if all file uploads are valid
+ */
 export const validateFileUploads = (data?: TResponseData, questions?: TSurveyQuestion[]): boolean => {
   if (!data) return true;
   for (const key of Object.keys(data)) {
@@ -151,6 +173,16 @@ const getSurveyFileUploadConfigs = ({
   ] as TSurveyFileUploadElement[];
 };
 
+/**
+ * Check that the survey (via blocks or legacy questions) has a FileUpload
+ * element matching elementId and that the file's extension is permitted.
+ *
+ * @param fileName — the file name being uploaded
+ * @param elementId — the question/element ID
+ * @param blocks — survey blocks (modern structure)
+ * @param questions — legacy survey questions
+ * @returns — { ok: true } or { ok: false, reason }
+ */
 export const validateSurveyAllowsFileUpload = ({
   fileName,
   elementId,
@@ -214,6 +246,18 @@ type TParsedStorageFileUrl = {
   fileName: string;
 };
 
+/**
+ * Parse a storage URL into its components: storageId, accessType, fileName.
+ *
+ * @param fileUrl — a relative (/storage/...) or absolute URL
+ * @returns — the parsed components or null if the URL is not a valid storage URL
+ *
+ * @example
+ * ```typescript
+ * parseStorageFileUrl("/storage/ws1/public/report.pdf")
+ * // => { storageId: "ws1", accessType: "public", fileName: "report.pdf" }
+ * ```
+ */
 export const parseStorageFileUrl = (fileUrl: string): TParsedStorageFileUrl | null => {
   let pathname: string;
 
@@ -281,6 +325,18 @@ const isScopedPrivateUploadUrl = ({
   );
 };
 
+/**
+ * Client-side validation that all file-upload URLs in a response are:
+ * 1. Allowed extensions
+ * 2. Properly scoped under the correct workspace/survey/element path
+ *
+ * @param data — the response data
+ * @param workspaceId — expected workspace scope
+ * @param surveyId — expected survey scope
+ * @param blocks — survey blocks
+ * @param questions — legacy survey questions
+ * @returns — true if all file uploads are valid and correctly scoped
+ */
 export const validateClientFileUploads = ({
   data,
   workspaceId,
@@ -322,6 +378,13 @@ export const validateClientFileUploads = ({
   return true;
 };
 
+/**
+ * Check whether a stored file URL points to a recognised image format
+ * (png, jpeg, jpg, webp, heic).
+ *
+ * @param fileUrl — the storage file URL
+ * @returns — true if it appears to be an image
+ */
 export const isValidImageFile = (fileUrl: string): boolean => {
   const fileName = getOriginalFileNameFromUrl(fileUrl);
   if (!fileName || fileName.endsWith(".")) return false;
@@ -333,6 +396,14 @@ export const isValidImageFile = (fileUrl: string): boolean => {
   return imageExtensions.includes(extension);
 };
 
+/**
+ * Convert a StorageError (from @formbricks/storage) into the appropriate
+ * HTTP Response with status code and error message.
+ *
+ * @param error — the storage error
+ * @param details — optional extra context for the response body
+ * @returns — a Next.js-compatible Response object
+ */
 export const getErrorResponseFromStorageError = (
   error: StorageError,
   details?: Record<string, string>
@@ -366,6 +437,20 @@ export const getErrorResponseFromStorageError = (
  * @param accessType The access type to determine which base URL to use (defaults to "public")
  * @returns The resolved absolute URL, or empty string if url is falsy
  */
+/**
+ * Resolve a potentially relative storage URL to an absolute URL.
+ * Already-absolute URLs are returned as-is.
+ *
+ * @param url — the storage URL (relative like /storage/... or absolute)
+ * @param accessType — "public" uses the public domain, "private" uses WEBAPP_URL
+ * @returns — the fully resolved absolute URL, or empty string if url is falsy
+ *
+ * @example
+ * ```typescript
+ * resolveStorageUrl("/storage/ws1/public/report.pdf")
+ * // => "https://app.formbricks.com/storage/ws1/public/report.pdf"
+ * ```
+ */
 export const resolveStorageUrl = (
   url: string | undefined | null,
   accessType: "public" | "private" = "public"
@@ -391,6 +476,13 @@ const STORAGE_URL_PATTERN = /^\/storage\/[^/]+\/(public|private)\/.+/;
 
 const isStorageUrl = (value: string): boolean => STORAGE_URL_PATTERN.test(value);
 
+/**
+ * Resolve a storage URL to absolute, auto-detecting the access type from
+ * the path segment (public vs private).
+ *
+ * @param url — the storage URL
+ * @returns — the absolute URL, or the original string if it is not a storage URL
+ */
 export const resolveStorageUrlAuto = (url: string): string => {
   if (!isStorageUrl(url)) return url;
   const accessType = url.includes("/private/") ? "private" : "public";
@@ -400,6 +492,20 @@ export const resolveStorageUrlAuto = (url: string): string => {
 /**
  * Recursively walks an object/array and resolves all relative storage URLs
  * Preserves the original structure; skips Date instances and non-object primitives.
+ */
+/**
+ * Recursively walk an object/array and resolve every relative storage URL
+ * to an absolute URL. Preserves the original structure; Date instances and
+ * non-object primitives are left untouched.
+ *
+ * @param obj — the input (object, array, or primitive)
+ * @returns — the same structure with all storage URLs resolved
+ *
+ * @example
+ * ```typescript
+ * resolveStorageUrlsInObject({ avatar: "/storage/ws1/public/photo.jpg" })
+ * // => { avatar: "https://app.formbricks.com/storage/ws1/public/photo.jpg" }
+ * ```
  */
 export const resolveStorageUrlsInObject = <T>(obj: T): T => {
   if (obj === null || obj === undefined) return obj;

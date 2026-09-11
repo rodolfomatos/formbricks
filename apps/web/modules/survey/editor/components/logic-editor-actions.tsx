@@ -1,3 +1,4 @@
+/** Actions editor for a single logic item — manages action rows (jump-to-block, require-answer, calculate) with objective/target/value comboboxes and add/remove/duplicate controls. */
 "use client";
 
 import { createId } from "@paralleldrive/cuid2";

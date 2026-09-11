@@ -1,3 +1,4 @@
+/** Element label validation — multi-language label completeness checking for blocks-based survey elements. */
 import { type z } from "zod";
 import type { TI18nString } from "../i18n";
 import type { TSurveyLanguage } from "./types";

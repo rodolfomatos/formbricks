@@ -1,3 +1,7 @@
+/**
+ * Zod schemas for Survey entities — validates the full survey model including
+ * styling, card arrangement, placement, triggers, and metadata.
+ */
 /* eslint-disable import/no-relative-packages -- Need to import from parent package */
 import { z } from "zod";
 import { ZOverlay } from "../../types/common";

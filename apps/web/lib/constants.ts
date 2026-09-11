@@ -1,3 +1,11 @@
+/**
+ * Central registry of all application-wide configuration constants.
+ *
+ * Every value is derived from environment variables (via `lib/env`) with
+ * sensible defaults so the app can start without every variable set.
+ * Consumers across the codebase import from here rather than reading
+ * `process.env` or `env.*` directly, giving a single source of truth.
+ */
 import "server-only";
 import { TUserLocale } from "@formbricks/types/user";
 import { env } from "./env";
@@ -15,6 +23,7 @@ export const E2E_TESTING = env.E2E_TESTING === "1";
 export const WEBAPP_URL = env.WEBAPP_URL?.trim() || "http://localhost:3000";
 
 // encryption keys
+export const ENTERPRISE_LICENSE_REQUEST_FORM_URL = "";
 export const ENCRYPTION_KEY = env.ENCRYPTION_KEY;
 
 // Other
@@ -38,7 +47,7 @@ export const GOOGLE_OAUTH_ENABLED = !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT
 export const GITHUB_OAUTH_ENABLED = !!(env.GITHUB_ID && env.GITHUB_SECRET);
 export const AZURE_OAUTH_ENABLED = !!(env.AZUREAD_CLIENT_ID && env.AZUREAD_CLIENT_SECRET);
 export const OIDC_OAUTH_ENABLED = !!(env.OIDC_CLIENT_ID && env.OIDC_CLIENT_SECRET && env.OIDC_ISSUER);
-export const SAML_OAUTH_ENABLED = !!env.SAML_DATABASE_URL;
+export const SAML_OAUTH_ENABLED = !!(env.SAML_IDP_SSO_URL && env.SAML_IDP_CERT);
 export const SAML_XML_DIR = "./saml-connection";
 
 export const GITHUB_ID = env.GITHUB_ID;
@@ -64,6 +73,11 @@ export const SAML_TENANT = "formbricks.com";
 export const SAML_PRODUCT = "formbricks";
 export const SAML_AUDIENCE = "https://saml.formbricks.com";
 export const SAML_PATH = "/api/auth/saml/callback";
+export const SAML_ACS_URL = `${WEBAPP_URL}${SAML_PATH}`;
+export const SAML_IDP_SSO_URL = env.SAML_IDP_SSO_URL;
+export const SAML_IDP_ENTITY_ID = env.SAML_IDP_ENTITY_ID ?? SAML_IDP_SSO_URL;
+export const SAML_IDP_CERT = env.SAML_IDP_CERT;
+export const SAML_IDP_METADATA_URL = env.SAML_IDP_METADATA_URL;
 
 export const SIGNUP_ENABLED = IS_FORMBRICKS_CLOUD || IS_DEVELOPMENT || E2E_TESTING;
 export const EMAIL_AUTH_ENABLED = env.EMAIL_AUTH_DISABLED !== "1";
@@ -154,12 +168,6 @@ export const SURVEY_BG_COLORS = [
 ];
 
 export const DEBUG = env.DEBUG === "1";
-
-// Enterprise License constant
-export const ENTERPRISE_LICENSE_KEY = env.ENTERPRISE_LICENSE_KEY;
-
-export const ENTERPRISE_LICENSE_REQUEST_FORM_URL =
-  "https://app.formbricks.com/s/trvp8tzy5uvsps9rc9qi9l9w?delivery=onpremise&source=ce";
 
 export const REDIS_URL = env.REDIS_URL;
 export const RATE_LIMITING_DISABLED = env.RATE_LIMITING_DISABLED === "1";

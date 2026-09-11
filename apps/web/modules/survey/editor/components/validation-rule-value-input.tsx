@@ -1,3 +1,4 @@
+/** Value input for a single validation rule — renders date range pickers, option selectors, file-extension multi-select, or a plain text/number input depending on the rule type. */
 "use client";
 
 import { useTranslation } from "react-i18next";

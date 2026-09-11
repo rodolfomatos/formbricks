@@ -1,3 +1,4 @@
+/** Surveys package entry — renders inline, modal, and fullscreen surveys via Preact into the host DOM, initializing i18n, styles, and event bindings. */
 import { h, render } from "preact";
 import { SurveyContainerProps } from "@formbricks/types/formbricks-surveys";
 import { RenderSurvey } from "@/components/general/render-survey";

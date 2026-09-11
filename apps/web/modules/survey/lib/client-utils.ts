@@ -1,6 +1,7 @@
 import { TSurveyBlock } from "@formbricks/types/surveys/blocks";
 import { TSurveyElement } from "@formbricks/types/surveys/elements";
 
+/** Appends a single-use ID parameter to a survey URL if one is provided. */
 export const copySurveyLink = (surveyUrl: string, singleUseId?: string): string => {
   return singleUseId ? `${surveyUrl}?suId=${singleUseId}` : surveyUrl;
 };

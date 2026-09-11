@@ -10,6 +10,7 @@ interface SortOptionProps {
   handleSortChange: (option: TSortOption) => void;
 }
 
+/** Single sort-by option in the sort dropdown, shows a radio-style indicator. */
 export const SortOption = ({ option, sortBy, handleSortChange }: SortOptionProps) => {
   return (
     <DropdownMenuItem

@@ -4,6 +4,13 @@ import { TContactAttributes } from "@formbricks/types/contact-attribute";
 import { Result, err, ok } from "@formbricks/types/error-handlers";
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 
+/**
+ * Looks up a contact by their userId attribute within a workspace.
+ *
+ * @param workspaceId — The workspace to search in
+ * @param userId — The user identifier to match
+ * @returns — The matching contact with attributes, or null
+ */
 export const getContactByUserId = async (
   workspaceId: string,
   userId: string

@@ -5,6 +5,10 @@ import { TTemplateFilter } from "@formbricks/types/templates";
 import { cn } from "@/lib/cn";
 import { getChannelMapping, getIndustryMapping, getRoleMapping } from "../lib/utils";
 
+/**
+ * Row of filter button groups (channel, industry, role) that narrow down the displayed templates.
+ * Each group has an "all" option plus individual values; multiple groups work as AND filters.
+ */
 interface TemplateFiltersProps {
   selectedFilter: TTemplateFilter[];
   setSelectedFilter: (filter: TTemplateFilter[]) => void;

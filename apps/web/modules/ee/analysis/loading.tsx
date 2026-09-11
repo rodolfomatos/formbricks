@@ -1,31 +1,13 @@
-"use client";
-
-import { useParams } from "next/navigation";
-import { useTranslation } from "react-i18next";
-import { AnalysisSecondaryNavigation } from "@/modules/ee/analysis/components/analysis-secondary-navigation";
-import { DashboardsListSkeleton } from "@/modules/ee/analysis/dashboards/components/dashboards-list-skeleton";
-import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper";
-import { PageHeader } from "@/modules/ui/components/page-header";
-
-export const AnalysisListLoading = () => {
-  const { t } = useTranslation();
-  const params = useParams();
-  const workspaceId = params?.workspaceId as string;
-
+export function AnalysisListLoading() {
   return (
-    <PageContentWrapper>
-      <PageHeader pageTitle={t("common.analysis")}>
-        {workspaceId ? <AnalysisSecondaryNavigation workspaceId={workspaceId} /> : null}
-      </PageHeader>
-      <DashboardsListSkeleton
-        columnHeaders={[
-          t("common.title"),
-          t("common.charts"),
-          t("common.created_by"),
-          t("common.created"),
-          t("common.updated"),
-        ]}
-      />
-    </PageContentWrapper>
+    <div className="space-y-4 p-6">
+      <div className="h-8 w-48 animate-pulse rounded bg-slate-200" />
+      <div className="h-4 w-72 animate-pulse rounded bg-slate-200" />
+      <div className="mt-6 grid grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="h-32 animate-pulse rounded-lg bg-slate-200" />
+        ))}
+      </div>
+    </div>
   );
-};
+}

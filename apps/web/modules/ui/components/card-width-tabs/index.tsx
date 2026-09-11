@@ -1,3 +1,7 @@
+/**
+ * Tab selector for link survey card width: narrow, default, or wide.
+ * Used inside CardStylingSettings for link survey configuration.
+ */
 "use client";
 
 import { ChevronsLeftRight, ChevronsLeftRightEllipsis, ChevronsRightLeft } from "lucide-react";

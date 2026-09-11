@@ -1,10 +1,32 @@
+/**
+ * i18n utility functions for survey content localisation.
+ *
+ * Survey content (headlines, descriptions, labels) is stored as `TI18nString` — a
+ * `Record<languageCode, string>`. These helpers handle creating, reading, and
+ * migrating those objects across language sets so multi-language surveys render
+ * correctly without empty or stale language keys.
+ */
 import { iso639Languages } from "@formbricks/i18n-utils/src/utils";
 import { TI18nString } from "@formbricks/types/i18n";
 import { TSurveyLanguage } from "@formbricks/types/surveys/types";
 import { TLanguage } from "@formbricks/types/workspace";
 import { structuredClone } from "@/lib/pollyfills/structuredClone";
 
-// Helper function to create an i18nString from a regular string.
+/**
+ * Normalises a plain string or existing TI18nString into a TI18nString for the given language set.
+ * When an existing object is passed, unknown language keys are dropped and missing keys are added
+ * as empty strings so downstream code never encounters undefined.
+ *
+ * @param text — plain string (converted to target language) or existing i18n object
+ * @param languages — list of language codes the object should cover
+ * @param targetLanguageCode — the language this text corresponds to (default "default")
+ * @returns — a complete TI18nString with all language keys present
+ *
+ * @example
+ * ```typescript
+ * createI18nString("Hello", ["en-US", "de-DE"]) // => { default: "Hello", "de-DE": "" }
+ * ```
+ */
 export const createI18nString = (
   text: string | TI18nString,
   languages: string[],
@@ -45,15 +67,34 @@ export const createI18nString = (
   }
 };
 
-// Type guard to check if an object is an I18nString
+/**
+ * Type guard that checks whether a value is a TI18nString (has a "default" key).
+ *
+ * @param obj — the value to check
+ * @returns — true if it is an i18n object
+ */
 export const isI18nObject = (obj: unknown): obj is TI18nString => {
   return typeof obj === "object" && obj !== null && Object.keys(obj).includes("default");
 };
 
+/**
+ * Checks whether an i18n label has a non-empty value in every required language.
+ *
+ * @param label — the i18n string to validate
+ * @param languages — the language codes that must be filled
+ * @returns — true if all languages have content
+ */
 export const isLabelValidForAllLanguages = (label: TI18nString, languages: string[]): boolean => {
   return languages.every((language) => label[language] && label[language].trim() !== "");
 };
 
+/**
+ * Safely extracts a value from an i18n string for a given language, falling back to "".
+ *
+ * @param value — the i18n string (may be undefined)
+ * @param languageId — the language code to read
+ * @returns — the localised string, or ""
+ */
 export const getLocalizedValue = (value: TI18nString | undefined, languageId: string): string => {
   if (!value) {
     return "";
@@ -67,6 +108,13 @@ export const getLocalizedValue = (value: TI18nString | undefined, languageId: st
   return "";
 };
 
+/**
+ * Extracts the language code for each survey language, using "default" for the default language.
+ * Used when building i18n strings from a survey's language configuration.
+ *
+ * @param surveyLanguages — the survey's language associations
+ * @returns — array of language codes
+ */
 export const extractLanguageCodes = (surveyLanguages: TSurveyLanguage[]): string[] => {
   if (!surveyLanguages) return [];
   return surveyLanguages.map((surveyLanguage) =>
@@ -74,14 +122,34 @@ export const extractLanguageCodes = (surveyLanguages: TSurveyLanguage[]): string
   );
 };
 
+/**
+ * Filters a survey's language associations to only those that are enabled.
+ *
+ * @param surveyLanguages — full list of survey-language associations
+ * @returns — enabled languages only
+ */
 export const getEnabledLanguages = (surveyLanguages: TSurveyLanguage[]) => {
   return surveyLanguages.filter((surveyLanguage) => surveyLanguage.enabled);
 };
 
+/**
+ * Extracts just the codes from a list of Language objects.
+ *
+ * @param languages — Language objects from Prisma
+ * @returns — array of language codes
+ */
 export const extractLanguageIds = (languages: TLanguage[]): string[] => {
   return languages.map((language) => language.code);
 };
 
+/**
+ * Resolves a language code from a response against the survey's language config.
+ * If the code matches the default language (case-insensitive), "default" is returned.
+ *
+ * @param surveyLanguages — the survey's language associations
+ * @param languageCode — the code from the response (may be null)
+ * @returns — the resolved language code
+ */
 export const getLanguageCode = (surveyLanguages: TSurveyLanguage[], languageCode: string | null) => {
   if (!surveyLanguages?.length || !languageCode) return "default";
   const language = surveyLanguages.find(
@@ -92,8 +160,15 @@ export const getLanguageCode = (surveyLanguages: TSurveyLanguage[], languageCode
 
 export const iso639Identifiers = iso639Languages.map((language) => language.code);
 
-// Helper function to add language keys to a multi-language object (e.g. survey or question)
-// Iterates over the object recursively and adds empty strings for new language keys
+/**
+ * Recursively walks a survey/question object and ensures every `{ default: string, ... }`
+ * i18n node has keys for all provided languages, adding empty strings for missing ones.
+ * This prevents rendering `undefined` when a new language is added to a workspace.
+ *
+ * @param object — the survey or question object to migrate
+ * @param languageSymbols — complete set of language codes to ensure
+ * @returns — the mutated object (same reference)
+ */
 export const addMultiLanguageLabels = (object: unknown, languageSymbols: string[]): any => {
   // Helper function to add language keys to a multi-language object
   function addLanguageKeys(obj: { default: string; [key: string]: string }) {

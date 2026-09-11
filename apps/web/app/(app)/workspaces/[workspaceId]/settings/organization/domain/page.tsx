@@ -13,6 +13,10 @@ import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper
 import { PageHeader } from "@/modules/ui/components/page-header";
 import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
 
+/**
+ * Route: `/workspaces/[workspaceId]/settings/organization/domain` (authenticated, self-hosted only).
+ * Domain configuration page with custom favicon settings and a table of survey pretty URLs.
+ */
 const Page = async (props: Readonly<{ params: Promise<{ workspaceId: string }> }>) => {
   const params = await props.params;
   await redirectBillingRoleFromRestrictedSettings(params.workspaceId);

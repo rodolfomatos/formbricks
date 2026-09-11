@@ -1,3 +1,7 @@
+/**
+ * A small colored label/tag for displaying status or metadata.
+ * Supports warning, success, error, gray, and info variants in tiny/normal/large sizes.
+ */
 import { cn } from "@/lib/cn";
 
 interface BadgeProps {

@@ -1,27 +1,28 @@
-import { TSurveyQuota, TSurveyQuotaAction } from "@formbricks/types/quota";
+import { prisma } from "@formbricks/database";
 
-type QuotaFull =
-  | {
-      quotaFull: true;
-      quota: {
-        id: string;
-        action: TSurveyQuotaAction;
-        endingCardId?: string;
-      };
-    }
-  | {
-      quotaFull: false;
-    };
+interface QuotaFullObject {
+  id: string;
+  surveyId: string;
+  name: string | null;
+  limit: number;
+  current: number;
+}
 
-export const createQuotaFullObject = (quota?: TSurveyQuota): QuotaFull => {
-  if (!quota) return { quotaFull: false };
-
-  return {
-    quotaFull: true,
-    quota: {
-      id: quota.id,
-      action: quota.action,
-      ...(quota.endingCardId ? { endingCardId: quota.endingCardId } : {}),
+export async function createQuotaFullObject(surveyId: string): Promise<QuotaFullObject[]> {
+  const quotas = await prisma.surveyQuota.findMany({
+    where: { surveyId },
+    include: {
+      _count: {
+        select: { quotaLinks: true },
+      },
     },
-  };
-};
+  });
+
+  return quotas.map((q) => ({
+    id: q.id,
+    surveyId: q.surveyId,
+    name: q.name,
+    limit: q.limit,
+    current: q._count.quotaLinks,
+  }));
+}

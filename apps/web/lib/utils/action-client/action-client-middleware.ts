@@ -1,3 +1,11 @@
+/**
+ * Authorisation middleware for the safe action client.
+ *
+ * Provides `checkAuthorizationUpdated` which enforces organisation-level roles
+ * (owner/manager/member) or workspace-team permissions with optional Zod input
+ * extraction. Uses NextAuth session for identity and runs each access check
+ * independently so failures are reported per entity.
+ */
 import { returnValidationErrors } from "next-safe-action";
 import { ZodIssue, z } from "zod";
 import { AuthorizationError } from "@formbricks/types/errors";
@@ -7,6 +15,7 @@ import { getTeamRoleByTeamIdUserId, getWorkspacePermissionByUserId } from "@/mod
 import { type TTeamRole } from "@/modules/ee/teams/team-list/types/team";
 import { type TTeamPermission } from "@/modules/ee/teams/workspace-teams/types/team";
 
+/** Converts Zod issues into the next-safe-action validation error format. */
 export const formatErrors = (issues: ZodIssue[]): Record<string, { _errors: string[] }> => {
   return {
     ...issues.reduce<Record<string, { _errors: string[] }>>((acc, issue) => {

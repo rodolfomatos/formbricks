@@ -4,6 +4,12 @@ import { err, ok } from "@formbricks/types/error-handlers";
 import { TOrganizationBilling } from "@formbricks/types/organizations";
 import { getBillingUsageCycleWindow } from "@/lib/utils/billing";
 
+/**
+ * Cached lookup of the organization ID that owns a workspace.
+ *
+ * @param workspaceId — The workspace ID
+ * @returns — The owning organization ID
+ */
 export const getOrganizationIdFromWorkspaceId = reactCache(async (workspaceId: string) => {
   try {
     const organization = await prisma.organization.findFirst({
@@ -34,6 +40,12 @@ export const getOrganizationIdFromWorkspaceId = reactCache(async (workspaceId: s
   }
 });
 
+/**
+ * Cached lookup of billing info for an organization.
+ *
+ * @param organizationId — The organization ID
+ * @returns — The billing details including Stripe customer ID, limits, and usage cycle
+ */
 export const getOrganizationBilling = reactCache(async (organizationId: string) => {
   try {
     const organization = await prisma.organization.findFirst({
@@ -72,6 +84,12 @@ export const getOrganizationBilling = reactCache(async (organizationId: string) 
   }
 });
 
+/**
+ * Cached lookup of all workspace IDs belonging to an organization.
+ *
+ * @param organizationId — The organization ID
+ * @returns — Array of workspace IDs
+ */
 export const getAllWorkspaceIdsFromOrganizationId = reactCache(async (organizationId: string) => {
   try {
     const organization = await prisma.organization.findUnique({
@@ -104,6 +122,12 @@ export const getAllWorkspaceIdsFromOrganizationId = reactCache(async (organizati
   }
 });
 
+/**
+ * Counts the number of responses across all workspaces in an organization for the current billing cycle.
+ *
+ * @param organizationId — The organization ID
+ * @returns — Total response count in the current billing cycle
+ */
 export const getMonthlyOrganizationResponseCount = reactCache(async (organizationId: string) => {
   try {
     const billing = await getOrganizationBilling(organizationId);

@@ -1,3 +1,4 @@
+/** Integration type registry — discriminated union of all supported integrations (Google Sheets, Airtable, Notion, Slack, n8n) with base types and config shapes. */
 import { z } from "zod";
 import { type TIntegrationAirtable, ZIntegrationAirtableConfig, ZIntegrationAirtableInput } from "./airtable";
 import {

@@ -4,6 +4,10 @@ import type { AIProviderAdapter } from "../registry";
 import { normalizeValue } from "../shared";
 import type { AIEnvironment } from "../types";
 
+/**
+ * AWS Bedrock provider adapter. Requires AI_AWS_REGION, AI_AWS_ACCESS_KEY_ID,
+ * and AI_AWS_SECRET_ACCESS_KEY.
+ */
 export const awsProviderAdapter: AIProviderAdapter = {
   validate: (environment: AIEnvironment) => {
     const missingFields: string[] = [];

@@ -41,6 +41,7 @@ const DefaultTextCell = ({
   return <div className="text-sm text-slate-700">{text}</div>;
 };
 
+/** Table row in the translation modal showing the default text and an input/rich-text editor for the translation. */
 export const TranslationRow = ({
   s,
   value,

@@ -1,3 +1,4 @@
+/** Styling view for the survey editor — form-based theme override toggle with collapsible sections for form styling, card styling, background, and logo; supports suggest-colors and reset-to-theme workflows. */
 "use client";
 
 import { RotateCcwIcon } from "lucide-react";

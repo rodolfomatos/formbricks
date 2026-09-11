@@ -1,3 +1,11 @@
+/**
+ * Integration service for Slack.
+ *
+ * Discovers accessible Slack channels (public + private) via paginated API calls,
+ * and posts survey response data as richly-formatted Slack messages with
+ * Q&A blocks. If the token has expired, the integration record is deleted so
+ * the user can re-authorise.
+ */
 import { Prisma } from "@formbricks/database/prisma";
 import { DatabaseError, UnknownError } from "@formbricks/types/errors";
 import { TIntegration, TIntegrationItem } from "@formbricks/types/integration";
@@ -6,6 +14,13 @@ import { SLACK_MESSAGE_LIMIT } from "../constants";
 import { deleteIntegration, getIntegrationByType } from "../integration/service";
 import { truncateText } from "../utils/strings";
 
+/**
+ * Fetches all Slack channels the bot has access to, handling pagination.
+ * If the token has expired, the integration record is auto-deleted.
+ *
+ * @param slackIntegration — the Slack integration config with OAuth credentials
+ * @returns — array of channel { name, id } items
+ */
 export const fetchChannels = async (slackIntegration: TIntegration): Promise<TIntegrationItem[]> => {
   let channels: TIntegrationItem[] = [];
   // `nextCursor` is a pagination token returned by the Slack API. It indicates the presence of additional pages of data.
@@ -55,6 +70,12 @@ export const fetchChannels = async (slackIntegration: TIntegration): Promise<TIn
   return channels;
 };
 
+/**
+ * Lists all Slack channels available to the workspace's Slack integration.
+ *
+ * @param workspaceId — the workspace whose Slack integration to use
+ * @returns — array of Slack channels
+ */
 export const getSlackChannels = async (workspaceId: string): Promise<TIntegrationItem[]> => {
   let channels: TIntegrationItem[] = [];
   try {
@@ -72,6 +93,16 @@ export const getSlackChannels = async (workspaceId: string): Promise<TIntegratio
   }
 };
 
+/**
+ * Posts a survey response to a Slack channel as a series of Q&A blocks.
+ * Long responses are truncated to the Slack message limit.
+ *
+ * @param credentials — the OAuth credentials
+ * @param channelId — the target Slack channel
+ * @param responses — response values, one per element
+ * @param elements — question headlines
+ * @param surveyName — the survey title (displayed at the top)
+ */
 export const writeDataToSlack = async (
   credentials: TIntegrationSlackCredential,
   channelId: string,

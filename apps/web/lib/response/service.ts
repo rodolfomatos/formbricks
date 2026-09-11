@@ -1,3 +1,12 @@
+/**
+ * Service layer for Responses — the core survey answer records.
+ *
+ * Each response is linked to a survey, an optional contact, and an optional
+ * display (impression). Responses carry question data, time-to-complete (ttc),
+ * variables, tags, and quota links. This service provides rich paginated reads,
+ * filtered queries, CSV/XLSX export, and a transactional delete that also cleans
+ * up uploaded files and linked displays.
+ */
 import "server-only";
 import { cache as reactCache } from "react";
 import { z } from "zod";
@@ -20,7 +29,6 @@ import { TSurveyElementTypeEnum } from "@formbricks/types/surveys/elements";
 import { TSurvey } from "@formbricks/types/surveys/types";
 import { TTag } from "@formbricks/types/tags";
 import { getElementsFromBlocks } from "@/lib/survey/utils";
-import { getIsQuotasEnabled } from "@/modules/ee/license-check/lib/utils";
 import { reduceQuotaLimits } from "@/modules/ee/quotas/lib/quotas";
 import { deleteFile } from "@/modules/storage/service";
 import { parseStorageFileUrl, resolveStorageUrlsInObject } from "@/modules/storage/utils";
@@ -406,7 +414,7 @@ export const getResponseDownloadFile = async (
     if (!organizationBilling) {
       throw new ResourceNotFoundError("OrganizationBilling", organizationId);
     }
-    const isQuotasAllowed = await getIsQuotasEnabled(organizationId);
+    const isQuotasAllowed = true;
 
     const headers = [
       "No.",

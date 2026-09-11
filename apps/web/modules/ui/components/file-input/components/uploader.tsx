@@ -1,3 +1,7 @@
+/**
+ * Drag-and-drop file upload zone with click-to-browse fallback.
+ * Handles drag events, displays instructions, and triggers file upload callbacks.
+ */
 import { ArrowUpFromLineIcon } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";

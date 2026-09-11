@@ -1,3 +1,4 @@
+/** Collapsible card to choose the survey delivery type (link vs. in-app) — manages segment creation/cleanup and warns if the SDK is not connected. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

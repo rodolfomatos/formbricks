@@ -9,8 +9,13 @@ type TQuestionWithOtherOptionValidation = {
 };
 
 /**
- * Helper function to check if a string value is a valid "other" option
- * @returns BadRequestResponse if the value exceeds the limit, undefined otherwise
+ * Checks if a response value exceeds the maximum length for free-form 'other' options.
+ *
+ * @param value — The submitted value to check
+ * @param choices — The predefined choices for comparison
+ * @param questionId — The question ID for error context
+ * @param language — The response language for localized comparison
+ * @returns — The questionId if validation fails, undefined otherwise
  */
 export const validateOtherOptionLength = (
   value: string,
@@ -35,6 +40,12 @@ export const validateOtherOptionLength = (
   }
 };
 
+/**
+ * Validates that all multiple-choice 'other' option responses in a dataset are within length limits.
+ *
+ * @param options — Object containing responseData, surveyQuestions, and responseLanguage
+ * @returns — The questionId of the first violation, or undefined if all pass
+ */
 export const validateOtherOptionLengthForMultipleChoice = ({
   responseData,
   surveyQuestions,

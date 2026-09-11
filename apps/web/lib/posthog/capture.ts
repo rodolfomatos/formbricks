@@ -1,3 +1,10 @@
+/**
+ * PostHog server-side event capture functions.
+ *
+ * Wraps the PostHog Node client so callers can fire events and group-identify
+ * without importing or checking for the client themselves. Events include source
+ * metadata and optional group context (organisation + workspace).
+ */
 import "server-only";
 import { logger } from "@formbricks/logger";
 import { posthogServerClient } from "./server";
@@ -17,6 +24,15 @@ const buildGroups = (context?: PostHogGroupContext): Record<string, string> | un
   return Object.keys(groups).length > 0 ? groups : undefined;
 };
 
+/**
+ * Captures a custom event in PostHog with optional group association.
+ * Silently no-ops if the PostHog client is not initialised (no key configured).
+ *
+ * @param distinctId — the user identifier
+ * @param eventName — the event name (e.g. "survey_created")
+ * @param properties — event properties
+ * @param groupContext — organisation/workspace group association
+ */
 export function capturePostHogEvent(
   distinctId: string,
   eventName: string,
@@ -43,6 +59,14 @@ export function capturePostHogEvent(
 
 type PostHogGroupType = "organization" | "workspace";
 
+/**
+ * Associates a group (organisation or workspace) with properties in PostHog.
+ * Used for group-level analytics (e.g. "how many responses per workspace").
+ *
+ * @param groupType — "organization" or "workspace"
+ * @param groupKey — the group identifier
+ * @param properties — group properties
+ */
 export function groupIdentifyPostHog(
   groupType: PostHogGroupType,
   groupKey: string,

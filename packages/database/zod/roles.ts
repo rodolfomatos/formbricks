@@ -1,3 +1,6 @@
+/**
+ * Zod schema for organization roles enumeration.
+ */
 import { z } from "zod";
 
 export const ZRoles = z.object({

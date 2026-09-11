@@ -34,6 +34,7 @@ interface ViewPermissionModalProps {
   isUpdating: boolean;
 }
 
+/** Modal for viewing and editing an API key's label and permissions (read-only workspace/org access display). */
 export const ViewPermissionModal = ({
   open,
   setOpen,

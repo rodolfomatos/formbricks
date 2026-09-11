@@ -27,6 +27,13 @@ import {
   ZMcpValidateSurveyInput,
 } from "./schemas";
 
+/**
+ * Convert a TMcpListSurveysInput into URL search params suitable for the
+ * v3 surveys list API.
+ *
+ * @param input — the MCP tool input
+ * @returns — URLSearchParams ready to pass to listV3Surveys
+ */
 export function buildListSurveysSearchParams(input: TMcpListSurveysInput): URLSearchParams {
   const searchParams = new URLSearchParams();
 
@@ -60,6 +67,12 @@ export function buildListSurveysSearchParams(input: TMcpListSurveysInput): URLSe
   return searchParams;
 }
 
+/**
+ * Register all survey-related MCP tools (list, get, create, patch,
+ * validate, delete) on the provided server instance.
+ *
+ * @param server — the MCP server to register tools on
+ */
 export function registerSurveyTools(server: McpServer): void {
   server.registerTool(
     "list_surveys",

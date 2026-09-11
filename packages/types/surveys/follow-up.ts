@@ -1,3 +1,4 @@
+/** Follow-up schemas — survey follow-up triggers (response-based or ending-based) for automated post-survey actions. */
 import { z } from "zod";
 
 export const ZSurveyFollowUpTrigger = z

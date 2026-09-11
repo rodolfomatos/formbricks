@@ -5,6 +5,10 @@ export interface VersionInfo {
   prerelease?: string;
 }
 
+/**
+ * Parses a semver string (with optional 'v' prefix) into its components.
+ * Supports 2-part (1.2) and 3-part (1.2.3) versions with optional prerelease suffix.
+ */
 export const parseVersion = (version: string): VersionInfo | null => {
   // Remove 'v' prefix if present
   const cleanVersion = version.replace(/^v/, "");
@@ -52,6 +56,10 @@ const comparePrereleaseVersions = (current: string, latest: string): number => {
   return 0;
 };
 
+/**
+ * Compares two semver strings. Returns >0 if latest is newer, <0 if current is newer, 0 if equal.
+ * Handles prerelease comparison according to semver spec.
+ */
 export const compareVersions = (current: string, latest: string): number => {
   const currentVersion = parseVersion(current);
   const latestVersion = parseVersion(latest);
@@ -88,6 +96,9 @@ export const compareVersions = (current: string, latest: string): number => {
   return comparePrereleaseVersions(currentVersion.prerelease!, latestVersion.prerelease!);
 };
 
+/**
+ * Returns true if the latest version is strictly newer than the current version.
+ */
 export const isNewerVersion = (current: string, latest: string): boolean => {
   return compareVersions(current, latest) > 0;
 };

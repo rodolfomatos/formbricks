@@ -19,6 +19,7 @@ import {
 import { buildSurvey, getDefaultSurveyPreset, hiddenFieldsDefault } from "@/app/lib/survey-builder";
 import { createI18nString } from "@/lib/i18n/utils";
 
+/** Sentinel ID used to identify the blank "custom" template. */
 export const CUSTOM_SURVEY_TEMPLATE_ID = "custom";
 
 const cartAbandonmentSurvey = (t: TFunction): TTemplate => {
@@ -4791,6 +4792,9 @@ const supportiveWorkCulture = (t: TFunction): TTemplate => {
   );
 };
 
+/**
+ * Returns the full list of built-in survey templates.
+ */
 export const templates = (t: TFunction): TTemplate[] => [
   cartAbandonmentSurvey(t),
   siteAbandonmentSurvey(t),
@@ -4846,6 +4850,9 @@ export const templates = (t: TFunction): TTemplate[] => [
   careerDevelopmentSurvey(t),
 ];
 
+/**
+ * Returns the blank "custom" template with a single open-text question.
+ */
 export const customSurveyTemplate = (t: TFunction): TTemplate => {
   return {
     id: CUSTOM_SURVEY_TEMPLATE_ID,
@@ -4879,6 +4886,9 @@ export const customSurveyTemplate = (t: TFunction): TTemplate => {
   };
 };
 
+/**
+ * Retrieves a template by its ID, or null if not found.
+ */
 export const getTemplateById = (templateId: string, t: TFunction): TTemplate | null => {
   if (templateId === CUSTOM_SURVEY_TEMPLATE_ID) {
     return customSurveyTemplate(t);
@@ -4887,6 +4897,9 @@ export const getTemplateById = (templateId: string, t: TFunction): TTemplate | n
   return templates(t).find((template) => template.id === templateId) ?? null;
 };
 
+/**
+ * Returns a hard-coded survey object used for preview/onboarding demos.
+ */
 export const previewSurvey = (workspaceName: string, t: TFunction): TSurvey => {
   return {
     id: "cltxxaa6x0000g8hacxdxejeu",

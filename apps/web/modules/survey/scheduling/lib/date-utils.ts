@@ -119,15 +119,18 @@ const createLocalCalendarDate = ({
 }: Pick<TimeZoneDateParts, "day" | "month" | "year">): Date =>
   new Date(year, month - 1, day, LOCAL_CALENDAR_NOON_HOUR, 0, 0, 0);
 
+/** Normalizes a Date to a UTC noon representation suitable for date-only pickers. */
 export const toDateOnlySelection = (date: Date): Date =>
   new Date(
     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), DATE_ONLY_SELECTION_UTC_HOUR, 0, 0, 0)
   );
 
+/** Converts a Date to a local calendar date (noon in the configured scheduling time zone). */
 export const toCalendarDate = (date: Date): Date => {
   return createLocalCalendarDate(getTimeZoneDateParts(date));
 };
 
+/** Returns the earliest selectable scheduling date. If today's scheduling time has passed, returns tomorrow. */
 export const getMinimumSurveySchedulingCalendarDate = (now: Date = new Date()): Date => {
   const currentSchedulingDateParts = getTimeZoneDateParts(now);
   const minimumSchedulingDate = createLocalCalendarDate(currentSchedulingDateParts);
@@ -146,6 +149,7 @@ export const getMinimumSurveySchedulingCalendarDate = (now: Date = new Date()): 
   return nextSchedulingDate;
 };
 
+/** Converts a date-only picker value to the exact scheduled DateTime in the configured time zone. */
 export const normalizeDateOnlySelectionToSurveySchedulingDateTime = (date: Date | null): Date | null => {
   if (!date) {
     return null;
@@ -156,5 +160,6 @@ export const normalizeDateOnlySelectionToSurveySchedulingDateTime = (date: Date 
   return createSurveySchedulingDateTime(year, month - 1, day);
 };
 
+/** Returns true if the given date is in the past (or exactly now). */
 export const isDateDue = (date: Date | null, now: Date = new Date()): boolean =>
   date !== null && date.getTime() <= now.getTime();

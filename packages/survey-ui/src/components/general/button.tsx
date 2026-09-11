@@ -1,3 +1,4 @@
+/** Button — survey-themed button component with variants (default, destructive, outline, secondary, ghost, link, custom) and sizes via class-variance-authority. */
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
 import * as React from "react";

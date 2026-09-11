@@ -8,6 +8,11 @@ interface ClientWorkspaceRedirectProps {
   userWorkspaceIds: string[];
 }
 
+/**
+ * Client component that redirects to the last-visited workspace (stored in
+ * localStorage) or the first available workspace. Used on the root page when
+ * the user has multiple workspaces across organizations.
+ */
 const ClientWorkspaceRedirect = ({ userWorkspaceIds }: ClientWorkspaceRedirectProps) => {
   const router = useRouter();
 

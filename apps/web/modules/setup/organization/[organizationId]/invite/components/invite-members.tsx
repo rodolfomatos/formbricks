@@ -23,10 +23,13 @@ import { Input } from "@/modules/ui/components/input";
 const MAX_INVITE_MEMBERS = 10;
 
 interface InviteMembersProps {
+  /** Whether SMTP credentials have been configured so invitation emails can be sent. */
   IS_SMTP_CONFIGURED: boolean;
+  /** The ID of the organization to invite members into. */
   organizationId: string;
 }
 
+/** Client-side multi-member invitation form shown during the organization onboarding flow. */
 export const InviteMembers = ({ IS_SMTP_CONFIGURED, organizationId }: InviteMembersProps) => {
   const { t } = useTranslation();
   const [membersCount, setMembersCount] = useState(1);

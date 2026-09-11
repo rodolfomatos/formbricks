@@ -1,3 +1,7 @@
+/**
+ * Renders selected picture-choice responses as thumbnail images with optional ID badges.
+ * Used in the response data display for picture-selection survey questions.
+ */
 "use client";
 
 import Image from "next/image";

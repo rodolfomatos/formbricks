@@ -1,6 +1,5 @@
-export type { TAIUnavailableReason } from "@/lib/ai/service";
-export {
-  getAIUnavailableAction,
-  type TAIUnavailableAction,
-  type TAIUnavailableActionType,
-} from "@/lib/ai/availability";
+export type TAIUnavailableReason =
+  | "no_openai_key"
+  | "rate_limited"
+  | "feature_disabled"
+  | "organization_not_eligible";

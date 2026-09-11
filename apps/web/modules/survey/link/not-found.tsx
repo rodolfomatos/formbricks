@@ -1,5 +1,6 @@
 import { HelpCircleIcon } from "lucide-react";
 
+/** 404 page shown when a survey with the given ID does not exist. */
 export const LinkSurveyNotFound = () => {
   return (
     <div className="flex h-full flex-col items-center justify-center bg-gradient-to-br from-slate-200 to-slate-50 py-8 text-center">

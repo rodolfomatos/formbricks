@@ -1,3 +1,11 @@
+/**
+ * Handles importing CSV data into Hub feedback records via the FeedbackSource pipeline.
+ *
+ * Validates that the feedback source is CSV-type, that all mapped columns exist in the
+ * uploaded data, and then transforms each row into a `FeedbackRecordCreateParams` batch.
+ * Duplicate records (same tenant_id + submission_id + field_id) are counted as skipped
+ * rather than failures.
+ */
 import "server-only";
 import { InvalidInputError } from "@formbricks/types/errors";
 import { TFeedbackSourceWithMappings } from "@formbricks/types/feedback-source";
@@ -13,6 +21,14 @@ import {
 
 const CSV_BATCH_SIZE = 50;
 
+/**
+ * Transforms and imports CSV rows into Hub feedback records in batches.
+ * Returns counts of successes, failures, and skips (duplicates).
+ *
+ * @param feedbackSource — the CSV-type feedback source with field mappings
+ * @param csvRows — the parsed CSV rows as key-value records
+ * @returns — import statistics
+ */
 export const importCsvData = async (
   feedbackSource: TFeedbackSourceWithMappings,
   csvRows: Record<string, string>[]

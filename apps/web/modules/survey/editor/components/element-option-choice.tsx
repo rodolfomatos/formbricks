@@ -1,3 +1,4 @@
+/** Sortable row for a single choice option in MultipleChoiceSingle, MultipleChoiceMulti, or Ranking elements — supports drag-reorder, inline label editing, keyboard navigation, and add/delete actions. */
 "use client";
 
 import { useSortable } from "@dnd-kit/sortable";

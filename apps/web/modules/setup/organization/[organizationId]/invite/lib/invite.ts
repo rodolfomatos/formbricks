@@ -4,6 +4,7 @@ import { DatabaseError, InvalidInputError } from "@formbricks/types/errors";
 import { getMembershipByUserIdOrganizationId } from "@/lib/membership/service";
 import { TInvitee } from "@/modules/setup/organization/[organizationId]/invite/types/invites";
 
+/** Creates an invite record in the database for a new organization member, checking for duplicates and existing memberships. */
 export const inviteUser = async ({
   invitee,
   organizationId,

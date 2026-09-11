@@ -30,6 +30,7 @@ import { TLogicRuleOption, getLogicRules } from "./logic-rule-engine";
 
 export const MAX_STRING_LENGTH = 2000;
 
+/** Smoothly scrolls an element card into the center of the viewport. Uses double rAF to wait for React state and DOM layout. */
 export const scrollElementCardIntoView = (elementId: string) => {
   if (typeof window === "undefined") return;
   // Double rAF: first frame flushes React state + DOM mutations (new card mounted, Collapsible opened);
@@ -42,6 +43,7 @@ export const scrollElementCardIntoView = (elementId: string) => {
   });
 };
 
+/** Splits text into parts at `/...\` delimiters, extracting highlighted segments. Returns the plain text and highlighted portions as separate array elements. */
 export const extractParts = (text: string): string[] => {
   const parts: string[] = [];
   let i = 0;
@@ -252,6 +254,7 @@ export const getConditionValueOptions = (
   return groupedOptions;
 };
 
+/** Resolves recall placeholders in ending card headlines for the given language, returning a new survey object. */
 export const replaceEndingCardHeadlineRecall = (survey: TSurvey, language: string) => {
   const modifiedSurvey = structuredClone(survey);
   modifiedSurvey.endings.forEach((ending) => {
@@ -262,16 +265,19 @@ export const replaceEndingCardHeadlineRecall = (survey: TSurvey, language: strin
   return modifiedSurvey;
 };
 
+/** Returns the available logic-action objective options (calculate, requireAnswer, jumpToBlock) for the editor combobox. */
 export const getActionObjectiveOptions = (t: TFunction): TComboboxOption[] => [
   { label: t("workspace.surveys.edit.calculate"), value: "calculate" },
   { label: t("workspace.surveys.edit.require_answer"), value: "requireAnswer" },
   { label: t("workspace.surveys.edit.jump_to_block"), value: "jumpToBlock" },
 ];
 
+/** Returns true if any of the given actions has a "jumpToBlock" objective. */
 export const hasJumpToBlockAction = (actions: TSurveyBlockLogicAction[]): boolean => {
   return actions.some((action) => action.objective === "jumpToBlock");
 };
 
+/** Returns the available comparison operators for a given element type (e.g., equals, includesOneOf, isSkipped). Filters out isSkipped if the element is required. */
 export const getElementOperatorOptions = (
   element: TSurveyElement,
   t: TFunction,
@@ -297,6 +303,7 @@ export const getElementOperatorOptions = (
   return options;
 };
 
+/** Returns the first (default) operator for an element's operator list. */
 export const getDefaultOperatorForElement = (
   element: TSurveyElement,
   t: TFunction
@@ -306,6 +313,7 @@ export const getDefaultOperatorForElement = (
   return options[0].value.toString() as TSurveyLogicConditionsOperator;
 };
 
+/** Formats a condition's left operand value, appending the matrix row index if the operand targets a matrix row. */
 export const getFormatLeftOperandValue = (condition: TSingleCondition, localSurvey: TSurvey): string => {
   if (condition.leftOperand.type === "element") {
     const elements = getElementsFromBlocks(localSurvey.blocks);
@@ -319,6 +327,7 @@ export const getFormatLeftOperandValue = (condition: TSingleCondition, localSurv
   return condition.leftOperand.value;
 };
 
+/** Returns the available operator options for a condition based on its left operand type (variable, hiddenField, or element). */
 export const getConditionOperatorOptions = (
   condition: TSingleCondition,
   localSurvey: TSurvey,
@@ -349,6 +358,7 @@ export const getConditionOperatorOptions = (
   return [];
 };
 
+/** Returns the UI props (show, inputType, options) for the match-value input in a logic condition, based on the condition's left operand type and operator. Handles elements, variables, and hidden fields. */
 export const getMatchValueProps = (
   condition: TSingleCondition,
   localSurvey: TSurvey,
@@ -978,6 +988,7 @@ export const getMatchValueProps = (
   return { show: false, options: [] };
 };
 
+/** Returns target options (elements after block for requireAnswer, subsequent blocks + ending cards for jumpToBlock) for action configuration. */
 export const getActionTargetOptions = (
   action: TSurveyBlockLogicAction,
   localSurvey: TSurvey,
@@ -1048,6 +1059,7 @@ export const getActionTargetOptions = (
   return [...blockOptions, ...endingCardOptions];
 };
 
+/** Returns all variables as combobox options for the action variable picker. */
 export const getActionVariableOptions = (localSurvey: TSurvey): TComboboxOption[] => {
   const variables = localSurvey.variables ?? [];
 
@@ -1063,6 +1075,7 @@ export const getActionVariableOptions = (localSurvey: TSurvey): TComboboxOption[
   });
 };
 
+/** Returns the available math/string operators for a variable action based on the variable type (number: add/subtract/multiply/divide/assign, text: assign/concat). */
 export const getActionOperatorOptions = (
   t: TFunction,
   variableType?: TSurveyVariable["type"]
@@ -1105,6 +1118,7 @@ export const getActionOperatorOptions = (
   return [];
 };
 
+/** Returns value options (elements, variables, hidden fields) for the action value picker, filtered by the selected variable's type. */
 export const getActionValueOptions = (
   variableId: string,
   localSurvey: TSurvey,
@@ -1301,6 +1315,7 @@ const isUsedInRightOperand = (
   }
 };
 
+/** Finds the index of the first element that references the given elementId in its logic conditions or fallback. Returns -1 if not used. */
 export const findElementUsedInLogic = (survey: TSurvey, elementId: string): number => {
   const { block } = findElementLocation(survey, elementId);
 
@@ -1357,6 +1372,7 @@ export const findElementUsedInLogic = (survey: TSurvey, elementId: string): numb
   });
 };
 
+/** Finds the index of the first element that references the given blockId via jumpToBlock action or logic fallback. Also checks if any element within the target block is used elsewhere in logic. */
 export const findBlockUsedInLogic = (survey: TSurvey, blockId: string): number => {
   const targetBlock = survey.blocks.find((b) => b.id === blockId);
   if (!targetBlock) return -1;
@@ -1396,6 +1412,7 @@ export const findBlockUsedInLogic = (survey: TSurvey, blockId: string): number =
   return -1;
 };
 
+/** Checks whether an element, hidden field, variable, or ending card is referenced in a quota's logic conditions. */
 export const isUsedInQuota = (
   quota: TSurveyQuota,
   {
@@ -1483,6 +1500,7 @@ const checkEndingCardsForRecall = (endings: TSurveyEndings | undefined, recallPa
   });
 };
 
+/** Finds the index of the first element (or special sentinel -2 for welcome card, elements.length for ending cards) that uses a recall pattern for the given ID. Returns -1 if not found. */
 export const isUsedInRecall = (survey: TSurvey, id: string): number => {
   const recallPattern = `#recall:${id}/fallback:`;
 
@@ -1506,6 +1524,7 @@ export const isUsedInRecall = (survey: TSurvey, id: string): number => {
   return -1; // Not found
 };
 
+/** Finds the index of the first element that references the given optionId in its logic conditions (as a static right-operand value or left-operand meta). */
 export const findOptionUsedInLogic = (
   survey: TSurvey,
   elementId: string,
@@ -1560,6 +1579,7 @@ export const findOptionUsedInLogic = (
   });
 };
 
+/** Finds the index of the first element that uses the given variableId in its logic conditions or calculate actions. */
 export const findVariableUsedInLogic = (survey: TSurvey, variableId: string): number => {
   const isUsedInCondition = (condition: TSingleCondition | TConditionGroup): boolean => {
     if (isConditionGroup(condition)) {
@@ -1595,6 +1615,7 @@ export const findVariableUsedInLogic = (survey: TSurvey, variableId: string): nu
   });
 };
 
+/** Finds the index of the first element that uses the given hiddenFieldId in its logic conditions. */
 export const findHiddenFieldUsedInLogic = (survey: TSurvey, hiddenFieldId: string): number => {
   const isUsedInCondition = (condition: TSingleCondition | TConditionGroup): boolean => {
     if (isConditionGroup(condition)) {
@@ -1627,12 +1648,14 @@ export const findHiddenFieldUsedInLogic = (survey: TSurvey, hiddenFieldId: strin
   });
 };
 
+/** Returns the default follow-up email body, localized and stripped of zero-width unicode characters. */
 export const getSurveyFollowUpActionDefaultBody = (t: TFunction): string => {
   return t("templates.follow_ups_modal_action_body")
     .replaceAll(/[\u200B-\u200D\uFEFF]/g, "")
     .trim();
 };
 
+/** Finds the index of the first element that references the given endingCardId via jumpToBlock or logic fallback. */
 export const findEndingCardUsedInLogic = (survey: TSurvey, endingCardId: string): number => {
   const isUsedInAction = (action: TSurveyBlockLogicAction): boolean => {
     // jumpToBlock can target ending card IDs as well as block IDs

@@ -10,6 +10,10 @@ interface WidgetStatusIndicatorProps {
   workspace: { appSetupCompleted: boolean };
 }
 
+/**
+ * Shows the SDK connection status for a workspace (running or not connected).
+ * Displays a recheck button when the SDK is not implemented yet.
+ */
 export const WidgetStatusIndicator = ({ workspace }: WidgetStatusIndicatorProps) => {
   const { t } = useTranslation();
   const router = useRouter();

@@ -1,3 +1,11 @@
+/**
+ * Imports historical Formbricks survey responses into Hub feedback records.
+ *
+ * Walks through all existing responses for a survey in batches and transforms
+ * each one into the Hub's `FeedbackRecord` format using the configured mappings.
+ * Used when a user connects a new Formbricks feedback source and wants to
+ * backfill existing data.
+ */
 import "server-only";
 import { InvalidInputError } from "@formbricks/types/errors";
 import {
@@ -11,6 +19,7 @@ import { transformResponseToFeedbackRecords } from "./transform";
 
 const IMPORT_BATCH_SIZE = 50;
 
+/** Result of an import operation, tracking how many records succeeded, failed, or were skipped (e.g. duplicates). */
 export type TImportResult = { successes: number; failures: number; skipped: number };
 
 const processBatch = async (
@@ -39,6 +48,14 @@ const processBatch = async (
   return { successes, failures, skipped: unmappedSkipped + duplicates };
 };
 
+/**
+ * Iterates over all responses of a survey in batches and creates Hub feedback records.
+ * Stops when fewer records than the batch size are returned (end of data).
+ *
+ * @param feedbackSource — the Formbricks-survey feedback source with mappings
+ * @param survey — the source survey
+ * @returns — aggregate import statistics
+ */
 export const importHistoricalResponses = async (
   feedbackSource: TFeedbackSourceWithMappings,
   survey: TSurvey

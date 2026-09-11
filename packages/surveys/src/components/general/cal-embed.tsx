@@ -1,3 +1,4 @@
+/** Cal.com embed — renders a Cal.com booking snippet iframe for survey calendar-booking elements, calling `onSuccessfulBooking` when the event fires. */
 import snippet from "@calcom/embed-snippet";
 import { useEffect, useMemo } from "preact/hooks";
 import { type TSurveyCalElement } from "@formbricks/types/surveys/elements";

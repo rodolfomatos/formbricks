@@ -1,3 +1,4 @@
+/** Picture select — image-based single/multi selection with radio or checkbox behaviour, responsive grid layout, and survey styling. */
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import * as React from "react";
 import { Checkbox } from "@/components/general/checkbox";

@@ -32,6 +32,10 @@ export interface WorkspaceStateData {
  * Single optimized query that fetches all required data
  * Replaces multiple separate service calls with one efficient database operation
  */
+/**
+ * Fetches surveys, action classes, and workspace settings in a single
+ * optimised query for the workspace state endpoint.
+ */
 export const getWorkspaceStateData = async (workspaceId: string): Promise<WorkspaceStateData> => {
   validateInputs([workspaceId, ZId]);
 

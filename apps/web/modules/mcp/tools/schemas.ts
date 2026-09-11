@@ -2,6 +2,10 @@ import { z } from "zod";
 import { ZId } from "@formbricks/types/common";
 import { ZSurveyFilters, ZSurveyStatus, ZSurveyType } from "@formbricks/types/surveys/types";
 
+/**
+ * Zod schema for the list_surveys MCP tool input. Supports pagination,
+ * filtering by name/status/type, and sorting.
+ */
 export const ZMcpListSurveysInput = z.object({
   workspaceId: ZId.describe("Workspace ID whose surveys should be listed."),
   limit: z

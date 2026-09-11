@@ -2,18 +2,21 @@ import { TFunction } from "i18next";
 import { TTemplateRole } from "@formbricks/types/templates";
 import { TWorkspaceConfigChannel, TWorkspaceConfigIndustry } from "@formbricks/types/workspace";
 
+/** i18n-label map of survey channel options for the template filter dropdown. */
 export const getChannelMapping = (t: TFunction): { value: TWorkspaceConfigChannel; label: string }[] => [
   { value: "website", label: t("common.website_survey") },
   { value: "app", label: t("common.app_survey") },
   { value: "link", label: t("common.link_survey") },
 ];
 
+/** i18n-label map of workspace industry options for the template filter dropdown. */
 export const getIndustryMapping = (t: TFunction): { value: TWorkspaceConfigIndustry; label: string }[] => [
   { value: "eCommerce", label: t("common.e_commerce") },
   { value: "saas", label: t("common.saas") },
   { value: "other", label: t("common.other") },
 ];
 
+/** i18n-label map of user role options for the template filter dropdown. */
 export const getRoleMapping = (t: TFunction): { value: TTemplateRole; label: string }[] => [
   { value: "productManager", label: t("common.product_manager") },
   { value: "customerSuccess", label: t("common.customer_success") },

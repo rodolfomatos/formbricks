@@ -1,3 +1,4 @@
+/** Link icon — inline SVG link/chain icon for external URL buttons in surveys. */
 interface LinkIconProps {
   className?: string;
 }

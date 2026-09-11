@@ -1,3 +1,4 @@
+/** Dropdown search — hook and UI for filtering multi-select dropdown options with a search input, "none" option, and "other" option support. */
 import { Search } from "lucide-react";
 import * as React from "react";
 

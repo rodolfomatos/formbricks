@@ -1,3 +1,8 @@
+/**
+ * A full-page connect screen showing Formbricks logo + integration logo with a
+ * "Connect" button. Handles authorization flow and displays configuration docs link
+ * when the integration is not yet configured.
+ */
 "use client";
 
 import Image, { StaticImageData } from "next/image";

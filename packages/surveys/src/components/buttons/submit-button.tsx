@@ -1,3 +1,4 @@
+/** Submit button — primary survey submit/next button with auto-focus, loading spinner, keyboard shortcut hint, and i18n label. */
 import { type ButtonHTMLAttributes } from "preact";
 import { useRef } from "preact/compat";
 import { useCallback, useEffect, useState } from "preact/hooks";

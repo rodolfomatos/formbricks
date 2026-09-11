@@ -1,3 +1,7 @@
+/**
+ * A clickable card for selecting between options (e.g. in a survey-creation flow).
+ * Supports loading, disabled, link (Next Link), and button modes. Sizes: sm/md/lg.
+ */
 import Link from "next/link";
 import React from "react";
 import { LoadingSpinner } from "@/modules/ui/components/loading-spinner";

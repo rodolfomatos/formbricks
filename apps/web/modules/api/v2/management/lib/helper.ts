@@ -2,6 +2,13 @@ import { Result, ok } from "@formbricks/types/error-handlers";
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { fetchWorkspaceId, fetchWorkspaceIdFromSurveyIds } from "./services";
 
+/**
+ * Resolves a survey or response ID to its parent workspace ID.
+ *
+ * @param id — The survey or response ID
+ * @param isResponseId — Whether the ID belongs to a response (true) or survey (false)
+ * @returns — The resolved workspace ID
+ */
 export const getWorkspaceId = async (
   id: string,
   isResponseId: boolean
@@ -19,6 +26,12 @@ export const getWorkspaceId = async (
  * Validates that all surveys are in the same workspace and return the workspace id
  * @param surveyIds array of survey ids from the same workspace
  * @returns the common workspace id
+ */
+/**
+ * Validates that all given survey IDs belong to the same workspace and returns that workspace ID.
+ *
+ * @param surveyIds — Array of survey IDs to validate
+ * @returns — The common workspace ID, or an error if surveys span multiple workspaces
  */
 export const getWorkspaceIdFromSurveyIds = async (
   surveyIds: string[]

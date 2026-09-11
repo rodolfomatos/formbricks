@@ -1,3 +1,7 @@
+/**
+ * Select dropdown for choosing the shuffle option of a survey element (none, all, exceptLast, etc.).
+ * Dynamically shows/hides options based on the element type.
+ */
 "use client";
 
 import { useTranslation } from "react-i18next";

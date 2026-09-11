@@ -1,3 +1,8 @@
+/**
+ * Displays an ID in a styled badge with optional copy-to-clipboard functionality.
+ * Supports row (label + badge) and column layouts. Shows a tooltip and check
+ * animation after copying.
+ */
 "use client";
 
 import React, { useEffect, useState } from "react";

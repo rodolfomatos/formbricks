@@ -1,3 +1,7 @@
+/**
+ * Client IP detection from request headers.
+ * Tries Cloudflare (cf-connecting-ip), X-Forwarded-For, and X-Real-IP in order.
+ */
 import { headers } from "next/headers";
 import { logger } from "@formbricks/logger";
 

@@ -1,3 +1,4 @@
+/** Ranking element — renders a drag-to-rank survey question using the survey-ui Ranking component, with shuffled choices and TTC tracking. */
 import { useMemo, useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { Ranking, type RankingOption } from "@formbricks/survey-ui";

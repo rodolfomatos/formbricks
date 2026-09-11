@@ -26,6 +26,10 @@ interface OrganizationBreadcrumbProps {
   currentWorkspaceId?: string;
 }
 
+/**
+ * Breadcrumb dropdown for switching between organizations.
+ * Hidden for single-org setups. Lazy-loads the organization list when the dropdown opens.
+ */
 export const OrganizationBreadcrumb = ({
   currentOrganizationId,
   currentOrganizationName,

@@ -1,3 +1,8 @@
+/**
+ * Placeholder display for empty data views. Has two variants:
+ * - "default": shows a skeleton-like placeholder with three blocks
+ * - "simple": shows just a text message in a bordered box
+ */
 "use client";
 
 interface EmptyStateProps {

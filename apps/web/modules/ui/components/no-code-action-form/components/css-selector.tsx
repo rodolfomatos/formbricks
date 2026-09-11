@@ -1,3 +1,7 @@
+/**
+ * Advanced-option toggle for CSS class/ID selector input in click-action forms.
+ * Collapses/expands a text input for the CSS selector value.
+ */
 "use client";
 
 import { UseFormReturn } from "react-hook-form";

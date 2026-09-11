@@ -1,3 +1,6 @@
+/**
+ * Formbricks logo SVG (icon + wordmark). Used in the main navigation header.
+ */
 export const Logo = (props: any) => {
   return (
     <svg viewBox="0 0 697 150" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

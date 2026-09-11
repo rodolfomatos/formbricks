@@ -18,6 +18,10 @@ interface WorkspaceAndOrgSwitchProps {
   isMembershipPending: boolean;
 }
 
+/**
+ * Breadcrumb bar showing the current organization and workspace hierarchy.
+ * Each segment is a dropdown switcher for navigating between orgs/workspaces.
+ */
 export const WorkspaceAndOrgSwitch = ({
   currentOrganizationId,
   currentOrganizationName,

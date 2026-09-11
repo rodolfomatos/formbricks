@@ -1,3 +1,4 @@
+/** Cardless survey layout — renders survey questions in a scrollable single-column layout without card containers, with optional back-to-top and progress bar. */
 import { type JSX } from "preact";
 import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";

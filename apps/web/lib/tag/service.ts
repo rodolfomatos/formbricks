@@ -1,3 +1,9 @@
+/**
+ * Tag service — simple workspace-scoped tags that can be applied to responses.
+ *
+ * Tags are identified by name within a workspace (unique constraint) and are
+ * linked to responses through a many-to-many relation (TagsOnResponses).
+ */
 import "server-only";
 import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
@@ -10,6 +16,12 @@ import { TagError } from "../../modules/workspaces/settings/types/tag";
 import { ITEMS_PER_PAGE } from "../constants";
 import { validateInputs } from "../utils/validate";
 
+/**
+ * Lists all tags in a workspace, paginated.
+ *
+ * @param workspaceId — the owning workspace
+ * @param page — page number (1-based)
+ */
 export const getTagsByWorkspaceId = reactCache(
   async (workspaceId: string, page?: number): Promise<TTag[]> => {
     validateInputs([workspaceId, ZId], [page, ZOptionalNumber]);
@@ -30,6 +42,7 @@ export const getTagsByWorkspaceId = reactCache(
   }
 );
 
+/** Retrieves a single tag by ID. */
 export const getTag = reactCache(async (id: string): Promise<TTag | null> => {
   validateInputs([id, ZId]);
 
@@ -46,6 +59,13 @@ export const getTag = reactCache(async (id: string): Promise<TTag | null> => {
   }
 });
 
+/**
+ * Creates a tag within a workspace.
+ * Returns an error result with TagError.TAG_NAME_ALREADY_EXISTS on name collision.
+ *
+ * @param workspaceId — the workspace
+ * @param name — the tag name
+ */
 export const createTag = async (
   workspaceId: string,
   name: string

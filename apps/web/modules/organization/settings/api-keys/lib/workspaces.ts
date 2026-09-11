@@ -4,6 +4,7 @@ import { Prisma } from "@formbricks/database/prisma";
 import { DatabaseError } from "@formbricks/types/errors";
 import { TOrganizationWorkspace } from "@/modules/organization/settings/api-keys/types/api-keys";
 
+/** Fetches all workspaces for an organization (id + name only). */
 export const getWorkspacesByOrganizationId = reactCache(
   async (organizationId: string): Promise<TOrganizationWorkspace[]> => {
     try {

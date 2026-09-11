@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+/** Schema for the create/edit survey follow-up form. Validates name, trigger type, ending IDs, email fields, and content. */
 export const ZCreateSurveyFollowUpFormSchema = z.object({
   followUpName: z.string().trim().min(1, "Name is required"),
   triggerType: z.enum(["response", "endings"]),

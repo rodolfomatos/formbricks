@@ -1,5 +1,6 @@
 import { TResponseDataValue } from "@formbricks/types/responses";
 
+/** Checks whether a response data value is non-empty (string with content, non-empty array, number, or non-empty object). */
 export const isValidValue = (value: TResponseDataValue) => {
   return (
     (typeof value === "string" && value.trim() !== "") ||
@@ -9,6 +10,7 @@ export const isValidValue = (value: TResponseDataValue) => {
   );
 };
 
+/** Returns true if the submission time is more than 5 minutes ago — used to determine whether an in-progress response can be deleted. */
 export const isSubmissionTimeMoreThan5Minutes = (submissionTimeISOString: Date) => {
   const submissionTime: Date = new Date(submissionTimeISOString);
   const currentTime: Date = new Date();

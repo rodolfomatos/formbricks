@@ -1,3 +1,7 @@
+/**
+ * Badge component for multi-select with CVA variant styling.
+ * Renders a styled chip/tag for each selected option.
+ */
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
 import { cn } from "@/lib/cn";

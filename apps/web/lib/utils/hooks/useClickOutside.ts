@@ -1,6 +1,6 @@
 import { RefObject, useEffect } from "react";
 
-// Improved version of https://usehooks.com/useOnClickOutside/
+/** Detects clicks/touches outside a ref element and calls the handler. */
 export const useClickOutside = (
   ref: RefObject<HTMLElement | HTMLDivElement | null>,
   handler: (event: MouseEvent | TouchEvent) => void

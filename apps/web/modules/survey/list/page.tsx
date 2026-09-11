@@ -15,6 +15,11 @@ export const metadata: Metadata = {
   title: "Your Surveys",
 };
 
+/**
+ * Server-rendered page at `/workspaces/[workspaceId]/surveys`. Redirects to billing
+ * if the workspace has billing issues, otherwise renders the survey list with
+ * AI creation availability.
+ */
 interface SurveyTemplateProps {
   params: Promise<{
     workspaceId: string;

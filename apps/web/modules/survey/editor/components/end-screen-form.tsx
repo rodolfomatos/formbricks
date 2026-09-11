@@ -1,3 +1,4 @@
+/** Form editor for an end-screen ending card — headline, subheader, optional CTA button with label/link and recall-aware URL input. */
 "use client";
 
 import { PlusIcon } from "lucide-react";

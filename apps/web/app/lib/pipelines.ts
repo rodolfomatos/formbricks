@@ -4,6 +4,11 @@ import type { TUserLocale } from "@formbricks/types/user";
 import { getJobsQueueingConfig } from "@/lib/jobs/config";
 import { findMatchingLocale } from "@/lib/utils/locale";
 
+/**
+ * Enqueues a response pipeline job (responseCreated, responseUpdated,
+ * responseFinished) to BullMQ for async processing (webhooks, emails, etc.).
+ * Resolves the user locale before enqueuing.
+ */
 export const sendToPipeline = async (job: TResponsePipelineJobData): Promise<void> => {
   try {
     const jobsQueueingConfig = getJobsQueueingConfig();

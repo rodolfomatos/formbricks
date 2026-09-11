@@ -1,3 +1,7 @@
+/**
+ * A card for displaying an integration/service with connect/docs links and connection status.
+ * Shows a green/offline status indicator and optional action buttons.
+ */
 "use client";
 
 import Link from "next/link";

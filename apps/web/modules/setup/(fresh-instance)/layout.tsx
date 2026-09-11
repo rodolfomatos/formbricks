@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { getHasNoOrganizations, getIsFreshInstance } from "@/lib/instance/service";
 import { authOptions } from "@/modules/auth/lib/authOptions";
 
+/** Guards fresh-instance routes. Redirects authenticated users to org creation or login; shows 404 if the instance is not fresh and the user already has orgs. */
 export const FreshInstanceLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(authOptions);
   const isFreshInstance = await getIsFreshInstance();

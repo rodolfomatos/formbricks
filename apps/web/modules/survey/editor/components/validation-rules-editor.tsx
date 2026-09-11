@@ -1,3 +1,4 @@
+/** Toggle-able validation rules editor — manages a list of TValidationRule rows for any element type, including AND/OR logic combinators, field selectors for address/contact-info, and automatic input-type switching for OpenText. */
 "use client";
 
 import { useTranslation } from "react-i18next";

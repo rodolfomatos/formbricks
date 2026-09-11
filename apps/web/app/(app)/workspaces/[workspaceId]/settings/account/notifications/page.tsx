@@ -128,6 +128,11 @@ const getMemberships = async (userId: string): Promise<Membership[]> => {
   return memberships;
 };
 
+/**
+ * Route: `/workspaces/[workspaceId]/settings/account/notifications` (authenticated).
+ * Notification settings page where users configure email alerts for survey responses.
+ * Redirects billing-only users away.
+ */
 const Page = async (props: {
   params: Promise<{ workspaceId: string }>;
   searchParams: Promise<Record<string, string>>;

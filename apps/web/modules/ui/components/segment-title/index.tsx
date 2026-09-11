@@ -1,3 +1,7 @@
+/**
+ * Displays the segment title with an icon, or a "send to audience who match" hint
+ * when the segment is still private (unnamed).
+ */
 "use client";
 
 import { UsersIcon } from "lucide-react";

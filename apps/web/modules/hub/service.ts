@@ -41,6 +41,12 @@ export type HubFeedbackRecordResult = {
  * Create a single feedback record in the Hub.
  * Returns a result shape with data or error; logs failures.
  */
+/**
+ * Create a single feedback record in the Hub.
+ *
+ * @param input — the feedback record creation params
+ * @returns — { data, error } where data is the created record or null
+ */
 export const createFeedbackRecord = async (
   input: FeedbackRecordCreateParams
 ): Promise<HubFeedbackRecordResult> => {
@@ -60,6 +66,12 @@ export const createFeedbackRecord = async (
 /**
  * Retrieve a single feedback record from the Hub by id.
  */
+/**
+ * Fetch a single feedback record from the Hub by its ID.
+ *
+ * @param id — the Hub record ID
+ * @returns — { data, error }
+ */
 export const retrieveFeedbackRecord = async (id: string): Promise<HubFeedbackRecordResult> => {
   const client = getHubClient();
   if (!client) {
@@ -77,6 +89,13 @@ export const retrieveFeedbackRecord = async (id: string): Promise<HubFeedbackRec
 
 /**
  * Update a single feedback record in the Hub by id.
+ */
+/**
+ * Update a feedback record in the Hub.
+ *
+ * @param id — the record ID to update
+ * @param input — the update payload
+ * @returns — { data, error }
  */
 export const updateFeedbackRecord = async (
   id: string,
@@ -103,6 +122,12 @@ export type HubFeedbackRecordDeleteResult = {
 
 /**
  * Delete a single feedback record in the Hub by id.
+ */
+/**
+ * Delete a feedback record from the Hub.
+ *
+ * @param id — the record ID to delete
+ * @returns — { data: { deleted: true }, error } or { data: null, error }
  */
 export const deleteFeedbackRecord = async (id: string): Promise<HubFeedbackRecordDeleteResult> => {
   const client = getHubClient();
@@ -145,6 +170,13 @@ type TenantDataDeleteResponse = {
  *
  * Hits `DELETE /v1/tenants/{tenant_id}/data` directly because the SDK doesn't yet expose
  * a typed method for this endpoint.
+ */
+/**
+ * Purge all Hub-side data (records, embeddings, webhooks) for a tenant.
+ * Called when the owning organisation is deleted.
+ *
+ * @param tenantId — the Hub tenant ID
+ * @returns — counts of deleted items or error
  */
 export const deleteHubTenantData = async (tenantId: string): Promise<HubTenantDataDeleteResult> => {
   const client = getHubClient();
@@ -190,6 +222,12 @@ export type FeedbackRecordTenantResult = {
 /**
  * List feedback records from the Hub with optional filters and pagination.
  */
+/**
+ * List feedback records with optional filters and pagination.
+ *
+ * @param params — list parameters (filters, pagination)
+ * @returns — { data: FeedbackRecordListResponse, error } or { data: null, error }
+ */
 export const listFeedbackRecords = async (
   params: FeedbackRecordListParams
 ): Promise<ListFeedbackRecordsResult> => {
@@ -208,6 +246,12 @@ export const listFeedbackRecords = async (
   }
 };
 
+/**
+ * Perform a semantic search across feedback records.
+ *
+ * @param input — search query and tenant scope
+ * @returns — { data: SemanticSearchResponse, error } or { data: null, error }
+ */
 export const semanticSearchFeedbackRecords = async (
   input: SemanticSearchInput
 ): Promise<SemanticSearchFeedbackRecordsResult> => {
@@ -226,6 +270,13 @@ export const semanticSearchFeedbackRecords = async (
   }
 };
 
+/**
+ * Look up the tenant ID that owns a given feedback record. Uses a
+ * 60-second Redis cache to avoid redundant Hub API calls.
+ *
+ * @param recordId — the Hub record ID
+ * @returns — { data: { tenantId } } or { error }
+ */
 export const getFeedbackRecordTenant = async (recordId: string): Promise<FeedbackRecordTenantResult> => {
   const client = getHubClient();
   if (!client) {
@@ -255,6 +306,12 @@ export const getFeedbackRecordTenant = async (recordId: string): Promise<Feedbac
  * Create multiple feedback records in the Hub in parallel.
  * Returns an array of results (data or error) per input; logs failures.
  */
+/**
+ * Create multiple feedback records in parallel.
+ *
+ * @param inputs — array of creation params
+ * @returns — { results } where each entry is { data, error }
+ */
 export const createFeedbackRecordsBatch = async (
   inputs: FeedbackRecordCreateParams[]
 ): Promise<{ results: HubFeedbackRecordResult[] }> => {
@@ -279,6 +336,9 @@ export const createFeedbackRecordsBatch = async (
   return { results };
 };
 
+/**
+ * List available taxonomy fields for a tenant.
+ */
 export const listTaxonomyFields = async (tenantId: string): Promise<HubResult<TaxonomyFieldsResponse>> => {
   const client = getHubClient();
   if (!client) {
@@ -296,6 +356,9 @@ export const listTaxonomyFields = async (tenantId: string): Promise<HubResult<Ta
   }
 };
 
+/**
+ * Kick off a new taxonomy classification run.
+ */
 export const createTaxonomyRun = async (
   input: CreateTaxonomyRunInput
 ): Promise<HubResult<CreateTaxonomyRunResponse>> => {
@@ -322,6 +385,9 @@ export const createTaxonomyRun = async (
   }
 };
 
+/**
+ * List taxonomy runs scoped to a tenant + source + field.
+ */
 export const listTaxonomyRuns = async (
   params: TaxonomyScope & { limit?: number }
 ): Promise<HubResult<ListTaxonomyRunsResponse>> => {
@@ -339,6 +405,9 @@ export const listTaxonomyRuns = async (
   }
 };
 
+/**
+ * Fetch a single taxonomy run by ID.
+ */
 export const getTaxonomyRun = async (runId: string, tenantId: string): Promise<HubResult<TaxonomyRun>> => {
   const client = getHubClient();
   if (!client) {
@@ -356,6 +425,9 @@ export const getTaxonomyRun = async (runId: string, tenantId: string): Promise<H
   }
 };
 
+/**
+ * Get the taxonomy tree from the most recent active (successful) run.
+ */
 export const getActiveTaxonomyTree = async (
   scope: TaxonomyScope
 ): Promise<HubResult<TaxonomyTreeResponse>> => {
@@ -375,6 +447,9 @@ export const getActiveTaxonomyTree = async (
   }
 };
 
+/**
+ * Get the taxonomy tree for a specific run.
+ */
 export const getTaxonomyTree = async (
   runId: string,
   tenantId: string
@@ -395,6 +470,9 @@ export const getTaxonomyTree = async (
   }
 };
 
+/**
+ * Rename a taxonomy node.
+ */
 export const renameTaxonomyNode = async (
   nodeId: string,
   input: RenameTaxonomyNodeInput
@@ -415,6 +493,9 @@ export const renameTaxonomyNode = async (
   }
 };
 
+/**
+ * Remove (soft-delete) a taxonomy node.
+ */
 export const removeTaxonomyNode = async (
   nodeId: string,
   params: { tenant_id: string; actor_id: string }
@@ -435,6 +516,9 @@ export const removeTaxonomyNode = async (
   }
 };
 
+/**
+ * List feedback records assigned to a specific taxonomy node.
+ */
 export const listTaxonomyNodeRecords = async (
   nodeId: string,
   params: { tenant_id: string; limit?: number }

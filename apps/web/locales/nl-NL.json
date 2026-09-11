@@ -2414,6 +2414,7 @@
         "workspace": "Werkruimte"
       },
       "enterprise": {
+        "ai_smart_tools": "AI slimme tools",
         "audit_logs": "Auditlogboeken",
         "coming_soon": "Binnenkort beschikbaar",
         "contacts_and_segments": "Contactbeheer & segmenten",

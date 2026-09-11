@@ -1,3 +1,4 @@
+/** Rating — numeric (star/number/smile) scale selector with custom range, modifier key remapping, and survey-consistent UI. */
 import { Star } from "lucide-react";
 import * as React from "react";
 import { ElementError } from "@/components/general/element-error";

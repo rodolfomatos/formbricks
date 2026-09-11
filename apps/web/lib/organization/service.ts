@@ -1,3 +1,11 @@
+/**
+ * Service layer for Organisations — the top-level tenant entity.
+ *
+ * Organisations group workspaces, users (via memberships), and billing.
+ * This service provides the full CRUD lifecycle plus analytics queries like
+ * monthly response counts. Billing data is hydrated from a separate
+ * OrganisationBilling record with sensible defaults for self-hosted instances.
+ */
 import "server-only";
 import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
@@ -80,6 +88,13 @@ const mapOrganization = (organization: TOrganizationWithBilling): TOrganization 
 export const getOrganizationsTag = (organizationId: string) => `organizations-${organizationId}`;
 export const getOrganizationsByUserIdCacheTag = (userId: string) => `users-${userId}-organizations`;
 
+/**
+ * Lists all organisations a user belongs to, with optional pagination.
+ *
+ * @param userId — the user to look up
+ * @param page — page number (1-based)
+ * @returns — array of organisations
+ */
 export const getOrganizationsByUserId = reactCache(
   async (userId: string, page?: number): Promise<TOrganization[]> => {
     validateInputs([userId, ZString], [page, ZOptionalNumber]);
@@ -111,6 +126,12 @@ export const getOrganizationsByUserId = reactCache(
   }
 );
 
+/**
+ * Resolves the organisation that owns a given workspace.
+ *
+ * @param workspaceId — the workspace
+ * @returns — the owning organisation, or null
+ */
 export const getOrganizationByWorkspaceId = reactCache(
   async (workspaceId: string): Promise<TOrganization | null> => {
     validateInputs([workspaceId, ZId]);
@@ -139,6 +160,12 @@ export const getOrganizationByWorkspaceId = reactCache(
   }
 );
 
+/**
+ * Retrieves a single organisation by ID.
+ *
+ * @param organizationId — the organisation to fetch
+ * @returns — the organisation, or null
+ */
 export const getOrganization = reactCache(async (organizationId: string): Promise<TOrganization | null> => {
   validateInputs([organizationId, ZString]);
 
@@ -159,6 +186,12 @@ export const getOrganization = reactCache(async (organizationId: string): Promis
   }
 });
 
+/**
+ * Creates a new organisation with default billing limits.
+ *
+ * @param organizationInput — name and (optional) whitelabel config
+ * @returns — the created organisation
+ */
 export const createOrganization = async (
   organizationInput: TOrganizationCreateInput
 ): Promise<TOrganization> => {
@@ -185,6 +218,14 @@ export const createOrganization = async (
   }
 };
 
+/**
+ * Updates organisation fields (name, whitelabel, AI settings) and its billing record.
+ * Runs inside a transaction to keep org and billing data consistent.
+ *
+ * @param organizationId — the organisation to update
+ * @param data — partial update object (org fields + optional billing)
+ * @returns — the updated organisation
+ */
 export const updateOrganization = async (
   organizationId: string,
   data: Partial<TOrganizationUpdateInput>
@@ -268,6 +309,12 @@ export const updateOrganization = async (
   }
 };
 
+/**
+ * Deletes an organisation and its billing record. On cloud instances, also
+ * cleans up the Stripe customer. Hub tenant directories are purged best-effort.
+ *
+ * @param organizationId — the organisation to delete
+ */
 export const deleteOrganization = async (organizationId: string) => {
   validateInputs([organizationId, ZId]);
   try {
@@ -321,6 +368,13 @@ export const deleteOrganization = async (organizationId: string) => {
   }
 };
 
+/**
+ * Counts total responses across all workspaces in an organisation for the current
+ * billing cycle window. Used for usage-based quota enforcement.
+ *
+ * @param organizationId — the organisation
+ * @returns — the total response count in the current cycle
+ */
 export const getMonthlyOrganizationResponseCount = reactCache(
   async (organizationId: string): Promise<number> => {
     validateInputs([organizationId, ZId]);
@@ -362,6 +416,15 @@ export const getMonthlyOrganizationResponseCount = reactCache(
   }
 );
 
+/**
+ * Opts the survey creator into email notifications for new responses on their survey.
+ * If the user has previously unsubscribed from the organisation's notifications, the
+ * opt-in is skipped.
+ *
+ * @param surveyId — the survey to subscribe to
+ * @param createdBy — the user who created the survey
+ * @param organizationId — the organisation (for checking unsubscribed state)
+ */
 export const subscribeOrganizationMembersToSurveyResponses = async (
   surveyId: string,
   createdBy: string,
@@ -397,6 +460,13 @@ export const subscribeOrganizationMembersToSurveyResponses = async (
   });
 };
 
+/**
+ * Finds organisations where the user is the only owner — deletion or role change
+ * would leave the organisation ownerless. Used for pre-deletion warnings.
+ *
+ * @param userId — the user to check
+ * @returns — organisations with exactly this user as sole owner
+ */
 export const getOrganizationsWhereUserIsSingleOwner = reactCache(
   async (userId: string): Promise<TOrganization[]> => {
     validateInputs([userId, ZString]);

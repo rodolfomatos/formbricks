@@ -1,13 +1,26 @@
+/**
+ * Prisma PostgreSQL adapter factory — wraps @prisma/adapter-pg with
+ * Formbricks' connection-pool configuration derived from the DATABASE_URL,
+ * including support for Prisma-only params that are forwarded to the pool.
+ */
 import { PrismaPg } from "@prisma/adapter-pg";
 import { cpus } from "node:os";
 import type { PoolConfig } from "pg";
 import { logger } from "@formbricks/logger";
 
+/**
+ * Internal type for the adapter + sanitised connection string returned by
+ * createPrismaPgAdapter.
+ */
 interface TParsedPrismaPgConfig {
   adapter: PrismaPg;
   connectionString: string;
 }
 
+/**
+ * Query params that are meaningful to Prisma but must be stripped before
+ * passing the URL to pg (otherwise pg will reject them).
+ */
 const PRISMA_ONLY_PARAMS = new Set([
   "connection_limit",
   "pool_timeout",
@@ -52,6 +65,10 @@ const toMillis = (seconds: number | undefined): number | undefined =>
 // process lifetime.
 const DEFAULT_CONNECTION_LIMIT = Math.max(2 * cpus().length + 1, 2);
 
+/**
+ * Strips Prisma-only query params from the URL to produce a clean connection
+ * string that pg accepts.
+ */
 const getConnectionString = (url: URL): string => {
   const sanitizedUrl = new URL(url.toString());
 
@@ -84,6 +101,16 @@ const sslConfigFromSslAccept = (value: string | null): PoolConfig["ssl"] | undef
   }
 };
 
+/**
+ * Creates a PrismaPg adapter and a sanitised connection string from a
+ * DATABASE_URL. Supports Prisma-specific params (connection_limit,
+ * pool_timeout, sslaccept, etc.) while producing a pg-compatible URL.
+ *
+ * @param databaseUrl — Full PostgreSQL connection URL (defaults to process.env.DATABASE_URL)
+ * @returns — PrismaPg adapter + connection string
+ *
+ * @throws — When DATABASE_URL is missing or uses an unsupported Prisma Accelerate scheme
+ */
 export const createPrismaPgAdapter = (databaseUrl = process.env.DATABASE_URL): TParsedPrismaPgConfig => {
   if (!databaseUrl) {
     throw new Error("DATABASE_URL is required to create a Prisma PostgreSQL adapter.");

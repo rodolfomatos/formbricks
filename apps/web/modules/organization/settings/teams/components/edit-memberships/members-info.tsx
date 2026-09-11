@@ -28,6 +28,7 @@ const isInvitee = (member: TMember | TInvite): member is TInvite => {
   return (member as TInvite).expiresAt !== undefined;
 };
 
+/** Table body listing all members and pending invites with role badges, status, and action buttons. */
 export const MembersInfo = ({
   organization,
   invites,

@@ -1,3 +1,7 @@
+/**
+ * A labeled switch that reveals/hides child content when toggled on.
+ * Used for expanding advanced/collapsible configuration sections in forms.
+ */
 import { cn } from "@/lib/cn";
 import { Label } from "@/modules/ui/components/label";
 import { Switch } from "@/modules/ui/components/switch";

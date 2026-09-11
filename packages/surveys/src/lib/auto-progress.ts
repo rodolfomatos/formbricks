@@ -1,3 +1,4 @@
+/** Auto-progress — determines whether a survey element should auto-advance after selection (for rating, NPS, CSAT, CES, or picture/date selection) with an optional delay. */
 import { type TResponseData } from "@formbricks/types/responses";
 import { type TSurveyElement, TSurveyElementTypeEnum } from "@formbricks/types/surveys/elements";
 

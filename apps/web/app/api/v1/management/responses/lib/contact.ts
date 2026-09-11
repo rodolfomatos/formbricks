@@ -3,6 +3,10 @@ import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
 import { TContactAttributes } from "@formbricks/types/contact-attribute";
 
+/**
+ * Looks up a contact by workspace ID and user-ID attribute value. Cached
+ * per request via react cache.
+ */
 export const getContactByUserId = reactCache(
   async (
     workspaceId: string,

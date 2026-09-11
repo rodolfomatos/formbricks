@@ -1,3 +1,7 @@
+/**
+ * Centered page header with a title and optional subtitle.
+ * Used as the top-level heading on auth pages and simple views.
+ */
 import React from "react";
 
 interface HeaderProps {

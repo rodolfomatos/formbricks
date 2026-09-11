@@ -1,3 +1,8 @@
+/**
+ * Recursive conditions editor for building logical condition trees (AND/OR groups).
+ * Each condition has a left operand, operator, and right operand. Supports nesting,
+ * duplication, removal, and group creation. Used for survey quotas and display logic.
+ */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

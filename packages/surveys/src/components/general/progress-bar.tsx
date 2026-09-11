@@ -1,3 +1,4 @@
+/** Progress bar — computes survey completion percentage from the current block index and renders a Progress component. */
 import { useCallback, useMemo } from "preact/hooks";
 import { type TJsWorkspaceStateSurvey } from "@formbricks/types/js";
 import { Progress } from "@/components/general/progress";

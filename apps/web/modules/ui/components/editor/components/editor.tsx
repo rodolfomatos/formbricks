@@ -1,3 +1,8 @@
+/**
+ * Full-featured rich text editor based on Lexical, with toolbar (bold, italic, underline, links, lists),
+ * recall/fallback support for survey variables, and markdown shortcuts. Used for survey question text
+ * and description fields.
+ */
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
 import { ListItemNode, ListNode } from "@lexical/list";

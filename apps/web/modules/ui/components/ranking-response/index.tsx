@@ -1,3 +1,7 @@
+/**
+ * Renders ranking response values in order with index numbers (#1, #2, etc.).
+ * Supports expanded (vertical) and compact (horizontal) layouts with optional ID badges.
+ */
 import { cn } from "@/lib/cn";
 import { IdBadge } from "@/modules/ui/components/id-badge";
 

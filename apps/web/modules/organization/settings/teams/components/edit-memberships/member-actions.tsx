@@ -27,6 +27,7 @@ interface MemberActionsProps {
   showDeleteButton?: boolean;
 }
 
+/** Action buttons for a member/invite row — delete member or invite, share invite link, and resend invitation email. */
 export const MemberActions = ({ organization, member, invite, showDeleteButton }: MemberActionsProps) => {
   const router = useRouter();
   const { t } = useTranslation();

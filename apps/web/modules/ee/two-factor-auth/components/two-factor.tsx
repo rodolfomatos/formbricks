@@ -1,42 +1,40 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FormControl, FormField, FormItem } from "@/modules/ui/components/form";
-import { OTPInput } from "@/modules/ui/components/otp-input";
+import { Button } from "@/modules/ui/components/button";
+import { EnableTwoFactorModal } from "./enable-two-factor-modal";
+import { DisableTwoFactorModal } from "./disable-two-factor-modal";
 
 interface TwoFactorProps {
-  form: UseFormReturn<
-    {
-      email: string;
-      password: string;
-      totpCode?: string | undefined;
-      backupCode?: string | undefined;
-    },
-    any
-  >;
+  isTwoFactorEnabled: boolean;
 }
 
-export const TwoFactor = ({ form }: TwoFactorProps) => {
+export function TwoFactor({ isTwoFactorEnabled }: TwoFactorProps) {
   const { t } = useTranslation();
+  const [enableModalOpen, setEnableModalOpen] = useState(false);
+  const [disableModalOpen, setDisableModalOpen] = useState(false);
 
   return (
-    <div className="mb-2 transition-all duration-500 ease-in-out">
-      <label htmlFor="totp" className="sr-only">
-        {t("auth.login.enter_your_two_factor_authentication_code")}
-      </label>
-
-      <FormField
-        control={form.control}
-        name="totpCode"
-        render={({ field }) => (
-          <FormItem className="w-full">
-            <FormControl>
-              <OTPInput value={field.value ?? ""} onChange={field.onChange} valueLength={6} />
-            </FormControl>
-          </FormItem>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-medium">{t("two_factor_auth")}</h3>
+          <p className="text-sm text-slate-500">{t("two_factor_auth_description")}</p>
+        </div>
+        {isTwoFactorEnabled ? (
+          <Button variant="destructive" onClick={() => setDisableModalOpen(true)}>
+            {t("disable")}
+          </Button>
+        ) : (
+          <Button variant="primary" onClick={() => setEnableModalOpen(true)}>
+            {t("enable")}
+          </Button>
         )}
-      />
+      </div>
+
+      <EnableTwoFactorModal open={enableModalOpen} setOpen={setEnableModalOpen} />
+      <DisableTwoFactorModal open={disableModalOpen} setOpen={setDisableModalOpen} />
     </div>
   );
-};
+}

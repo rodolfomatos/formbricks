@@ -2,6 +2,7 @@ import { z } from "zod";
 import { ZInvite } from "@formbricks/database/zod/invites";
 import { ZUserName } from "@formbricks/types/user";
 
+/** Schema for a single invitee — name and email, with a validated user name. */
 export const ZInvitee = ZInvite.pick({
   name: true,
   email: true,
@@ -11,6 +12,7 @@ export const ZInvitee = ZInvite.pick({
 
 export type TInvitee = z.infer<typeof ZInvitee>;
 
+/** Schema for the invite-members form — a record of member entries keyed by a dynamic string index. */
 export const ZInviteMembersFormSchema = z.record(
   z.string(),
   ZInvite.pick({

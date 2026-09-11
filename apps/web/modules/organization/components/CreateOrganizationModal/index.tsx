@@ -30,6 +30,7 @@ type FormValues = {
   name: string;
 };
 
+/** Modal dialog for creating a new organization — accepts an organization name and redirects to the new org on success. */
 export const CreateOrganizationModal = ({ open, setOpen }: CreateOrganizationModalProps) => {
   const { t } = useTranslation();
   const router = useRouter();

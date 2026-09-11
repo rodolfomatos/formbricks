@@ -1,3 +1,4 @@
+/** Error class definitions and utilities — typed error classes with HTTP status codes, client error helpers, and Sentry filtering. */
 import { z } from "zod";
 
 export const INVALID_PASSWORD_RESET_TOKEN_ERROR_CODE = "ERR_INVALID_PASSWORD_RESET_TOKEN";

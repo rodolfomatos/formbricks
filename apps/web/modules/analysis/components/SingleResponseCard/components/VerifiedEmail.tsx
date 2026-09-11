@@ -7,6 +7,7 @@ import { TResponseData } from "@formbricks/types/responses";
 interface VerifiedEmailProps {
   responseData: TResponseData;
 }
+/** Displays the verified email address from a response when email verification is enabled on the survey. */
 export const VerifiedEmail = ({ responseData }: VerifiedEmailProps) => {
   const { t } = useTranslation();
   return (

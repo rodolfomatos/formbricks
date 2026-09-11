@@ -1,3 +1,7 @@
+/**
+ * Tab bar with two styles: "bar" (border-bottom indicator) and "button" (pill buttons).
+ * Supports disabled state and optional icons per tab.
+ */
 "use client";
 
 import { useTranslation } from "react-i18next";

@@ -1,3 +1,4 @@
+/** Authentication schemas — API key permissions, session tokens, and authentication context types. */
 import { z } from "zod";
 import { ZOrganizationAccess } from "./api-key";
 import { ZUser } from "./user";

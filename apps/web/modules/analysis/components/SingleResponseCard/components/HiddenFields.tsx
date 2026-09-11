@@ -11,6 +11,7 @@ interface HiddenFieldsProps {
   responseData: TResponseData;
 }
 
+/** Renders non-null hidden field values from a response, each labelled with the field name and a "hidden field" tooltip. */
 export const HiddenFields = ({ hiddenFields, responseData }: HiddenFieldsProps) => {
   const { t } = useTranslation();
   const fieldIds = hiddenFields.fieldIds ?? [];

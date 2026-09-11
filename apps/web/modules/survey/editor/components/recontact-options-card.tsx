@@ -1,3 +1,4 @@
+/** Recontact options card under settings — limits how long (in days) before a person can retake the survey, enforced per person via survey state. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

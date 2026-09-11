@@ -8,6 +8,10 @@ import { transformErrorToDetails } from "@/app/lib/api/validator";
 import { THandlerParams, withV1ApiWrapper } from "@/app/lib/api/with-api-logging";
 import { hasPermission } from "@/modules/organization/settings/api-keys/lib/utils";
 
+/**
+ * GET /api/v1/webhooks
+ * Lists all webhooks for the API key's accessible workspaces.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ authentication }: THandlerParams) => {
     if (!authentication || !("apiKeyId" in authentication)) {
@@ -33,6 +37,11 @@ export const GET = withV1ApiWrapper({
   },
 });
 
+/**
+ * POST /api/v1/webhooks
+ * Creates a new webhook. Accepts workspaceId or environmentId, validates input,
+ * and logs an audit event on success.
+ */
 export const POST = withV1ApiWrapper({
   handler: async ({ req, auditLog, authentication }: THandlerParams) => {
     if (!authentication || !("apiKeyId" in authentication)) {

@@ -32,6 +32,10 @@ const PasswordConfirmationSchema = z.object({
 
 type FormValues = z.infer<typeof PasswordConfirmationSchema>;
 
+/**
+ * Modal dialog that asks the user to confirm their password before changing their email address.
+ * Shows old and new email for context before allowing the update.
+ */
 export const PasswordConfirmationModal = ({
   open,
   setOpen,
@@ -98,7 +102,7 @@ export const PasswordConfirmationModal = ({
                             aria-label="password"
                             aria-required="true"
                             required
-                            className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand-dark focus:ring-brand-dark sm:text-sm"
+                            className="focus:border-brand-dark focus:ring-brand-dark block w-full rounded-md border-slate-300 shadow-sm sm:text-sm"
                             value={field.value}
                             onChange={(password) => field.onChange(password)}
                           />

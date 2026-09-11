@@ -16,6 +16,10 @@ interface XMTemplateListProps {
   defaultLanguage: TUserLocale;
 }
 
+/**
+ * Displays the XM (Experience Management) template options grid during onboarding.
+ * Each template click immediately creates a survey and redirects to the editor.
+ */
 export const XMTemplateList = ({ workspaceId, defaultLanguage }: Readonly<XMTemplateListProps>) => {
   const [activeTemplateId, setActiveTemplateId] = useState<string | null>(null);
   const { t } = useTranslation();

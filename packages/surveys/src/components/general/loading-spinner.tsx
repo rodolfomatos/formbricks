@@ -1,3 +1,4 @@
+/** Loading spinner — centered animated SVG spinner for survey loading states. */
 import { cn } from "@/lib/utils";
 
 export function LoadingSpinner({ className }: { className?: string }) {

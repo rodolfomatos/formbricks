@@ -1,3 +1,4 @@
+/** Survey close button — a branded close (X) button for modal surveys with hover colour and customisable border radius. */
 import { useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { CloseIcon } from "@/components/icons/close-icon";

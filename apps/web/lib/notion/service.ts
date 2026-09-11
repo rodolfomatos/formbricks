@@ -1,3 +1,10 @@
+/**
+ * Integration service for Notion.
+ *
+ * Provides database discovery (searching accessible Notion databases) and data
+ * writing (creating pages in a chosen database). Authentication uses encrypted
+ * OAuth tokens that are decrypted on each request.
+ */
 import { TIntegrationNotionConfig, TIntegrationNotionDatabase } from "@formbricks/types/integration/notion";
 import { ENCRYPTION_KEY } from "@/lib/constants";
 import { symmetricDecrypt } from "@/lib/crypto";
@@ -22,6 +29,12 @@ const fetchPages = async (config: TIntegrationNotionConfig) => {
   }
 };
 
+/**
+ * Lists all Notion databases accessible to the workspace's Notion integration.
+ *
+ * @param workspaceId — the workspace whose Notion integration to use
+ * @returns — array of Notion database objects
+ */
 export const getNotionDatabases = async (workspaceId: string): Promise<TIntegrationNotionDatabase[]> => {
   let results: TIntegrationNotionDatabase[] = [];
   try {
@@ -35,6 +48,13 @@ export const getNotionDatabases = async (workspaceId: string): Promise<TIntegrat
   }
 };
 
+/**
+ * Creates a new page in the specified Notion database with the given properties.
+ *
+ * @param databaseId — the Notion database to write into
+ * @param properties — page property values keyed by field name
+ * @param config — the integration config (provides decrypted access token)
+ */
 export const writeData = async (
   databaseId: string,
   properties: Record<string, Object>,

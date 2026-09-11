@@ -1,3 +1,7 @@
+/**
+ * Styled checkbox component built on Radix Checkbox primitive.
+ * Renders a checkmark indicator when checked, with focus-visible ring styling.
+ */
 "use client";
 
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";

@@ -8,6 +8,7 @@ interface emailVerificationDetails {
   email?: string;
 }
 
+/** Verifies the email verification JWT token for link surveys. Returns the verification status and verified email if valid. */
 export const getEmailVerificationDetails = async (
   surveyId: string,
   token: string
@@ -28,6 +29,7 @@ export const getEmailVerificationDetails = async (
   }
 };
 
+/** Validates and optionally decrypts a single-use survey ID from URL params. Returns the plaintext ID or null if invalid. */
 export const checkAndValidateSingleUseId = (
   suid?: string,
   isEncrypted = false,

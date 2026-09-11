@@ -1,3 +1,10 @@
+/**
+ * Context types for the safe action client pipeline.
+ *
+ * `AuditLoggingCtx` carries metadata captured during action execution (IDs for
+ * all Formbricks entity types). `AuthenticatedActionClientCtx` extends the base
+ * context with a resolved `TUser` object.
+ */
 import { TUser } from "@formbricks/types/user";
 
 export type AuditLoggingCtx = {

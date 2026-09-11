@@ -40,6 +40,15 @@ const mapLicenseFeaturesToEntitlements = (
   return entitlementKeys;
 };
 
+/**
+ * Build the entitlement context for a self-hosted organisation. The
+ * feature set is derived entirely from the enterprise license — there is
+ * no Stripe subscription to consult.
+ *
+ * @param organizationId — the organisation to look up
+ * @returns — the entitlement context (features from license, workspace limit from license)
+ * @throws — ResourceNotFoundError if the organisation does not exist
+ */
 export const getSelfHostedOrganizationEntitlementsContext = async (
   organizationId: string
 ): Promise<TOrganizationEntitlementsContext> => {

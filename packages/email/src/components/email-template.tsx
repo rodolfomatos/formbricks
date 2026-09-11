@@ -13,6 +13,11 @@ interface EmailTemplateProps extends TEmailTemplateLegalProps {
   readonly t: TFunction;
 }
 
+/**
+ * Email layout wrapper — renders the Formbricks logo header, child content in
+ * a white card, and a footer with imprint/privacy links. Optionally forces
+ * light colour scheme for email clients that support it.
+ */
 export function EmailTemplate({
   children,
   forceLightMode = false,

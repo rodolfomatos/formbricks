@@ -5,6 +5,10 @@ import { useTranslation } from "react-i18next";
 import { CreateOrganizationModal } from "@/modules/organization/components/CreateOrganizationModal";
 import { Alert, AlertButton, AlertDescription } from "@/modules/ui/components/alert";
 
+/**
+ * Alert card with a button to open the CreateOrganizationModal for creating a new organization.
+ * Only shown when multi-org is enabled.
+ */
 export const CreateOrganizationCard = () => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);

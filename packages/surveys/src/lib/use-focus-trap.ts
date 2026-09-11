@@ -1,3 +1,4 @@
+/** Focus trap hook — adapted from Radix UI FocusScope for Preact, trapping keyboard focus within survey modal/overlay containers with Escape-key dismiss. */
 import { type MutableRef, useEffect, useRef } from "preact/hooks";
 
 type FocusScope = { paused: boolean; pause: () => void; resume: () => void };

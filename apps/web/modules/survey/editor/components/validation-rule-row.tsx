@@ -1,3 +1,4 @@
+/** Single row in the validation rules editor — renders field selector, input type, rule type, value + unit inputs, and add/delete actions. */
 "use client";
 
 import { PlusIcon, TrashIcon } from "lucide-react";

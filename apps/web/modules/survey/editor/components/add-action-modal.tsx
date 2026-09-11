@@ -1,3 +1,4 @@
+/** Add Action modal dialog — toggles between the saved-actions list and create-new-action form tabs, used to select or define a no-code action that triggers the survey. */
 "use client";
 
 import { useEffect, useState } from "react";

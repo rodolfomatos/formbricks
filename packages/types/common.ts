@@ -1,3 +1,4 @@
+/** Common/shared Zod schemas — reusable primitive validators (URL, color, email, ID, placement, overlay) used across the type system. */
 import { z } from "zod";
 
 export const ZBoolean = z.boolean();

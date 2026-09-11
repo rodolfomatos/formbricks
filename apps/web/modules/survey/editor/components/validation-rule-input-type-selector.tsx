@@ -1,3 +1,4 @@
+/** Dropdown to select the HTML input type (text, email, url, phone, number) for OpenText element validation rules. */
 "use client";
 
 import { useTranslation } from "react-i18next";

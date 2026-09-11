@@ -27,6 +27,7 @@ export const metadata: Metadata = {
   description: "Open-source Experience Management. Free & open source.",
 };
 
+/** Serves the `/setup/signup` route — admin account creation form for the first user on a fresh instance. */
 export const SignupPage = async () => {
   const locale = await findMatchingLocale();
 

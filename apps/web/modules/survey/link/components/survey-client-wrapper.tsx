@@ -42,6 +42,7 @@ interface SurveyClientWrapperProps {
 let setBlockId = (_: string) => {};
 let setResponseData = (_: TResponseData) => {};
 
+/** Client component that renders the link survey. Manages i18n locale, prefill values, hidden fields from URL, offline support, script injection, and the SurveyInline component. */
 export const SurveyClientWrapper = ({
   survey,
   workspace,

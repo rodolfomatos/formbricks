@@ -1,3 +1,4 @@
+/** Multi-select — dropdown checkbox list with search, select-all, "none" option, and "other" custom input support for survey elements. */
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
 import { Button } from "@/components/general/button";

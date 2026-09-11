@@ -219,6 +219,11 @@ const SectionHeader = ({
   );
 };
 
+/**
+ * Settings navigation sidebar with section headers for workspace, organization, and account settings.
+ * Each section contains nav items filtered by role and permissions, with an inline switcher
+ * for changing the active workspace or organization.
+ */
 export const SettingsSidebarContent = ({
   workspaceId,
   workspaceName,
@@ -357,7 +362,7 @@ export const SettingsSidebarContent = ({
     },
     {
       id: "org-enterprise",
-      label: t("common.enterprise_license"),
+      label: "AGPL Resources",
       href: `${basePath}/organization/enterprise`,
       icon: <ShieldIcon className={iconClassName} />,
       hidden: isFormbricksCloud,

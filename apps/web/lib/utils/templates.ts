@@ -1,9 +1,14 @@
+/**
+ * Template utilities — replaces preset placeholders (like `$[workspaceName]`)
+ * in survey template elements with real workspace data.
+ */
 import type { TSurveyElement } from "@formbricks/types/surveys/elements";
 import type { TTemplate } from "@formbricks/types/templates";
 import type { TWorkspace } from "@formbricks/types/workspace";
 import { getLocalizedValue } from "@/lib/i18n/utils";
 import { structuredClone } from "@/lib/pollyfills/structuredClone";
 
+/** Replaces template placeholders (e.g. `$[workspaceName]`) in element content with real workspace values. */
 export const replaceElementPresetPlaceholders = (
   element: TSurveyElement,
   workspace: TWorkspace
@@ -29,7 +34,7 @@ export const replaceElementPresetPlaceholders = (
   return newElement;
 };
 
-// replace all occurences of workspaceName with the actual workspace name in the current template
+/** Replaces `$[workspaceName]` placeholders in a template preset (name, blocks, elements). */
 export const replacePresetPlaceholders = (template: TTemplate, workspace: any) => {
   const preset = structuredClone(template.preset);
   preset.name = preset.name.replace("$[workspaceName]", workspace.name);

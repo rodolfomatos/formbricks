@@ -5,12 +5,20 @@ import { responses } from "@/app/lib/api/response";
 const rateLimitMessage = "Maximum number of requests reached. Please try again later.";
 const unexpectedErrorMessage = "Something went wrong. Please try again.";
 
+/**
+ * Type guard that checks whether an unknown error represents a
+ * TooManyRequestsError (from @formbricks/types/errors or the error name).
+ */
 export const isTooManyRequestsError = (error: unknown): boolean => {
   return (
     error instanceof TooManyRequestsError || (error instanceof Error && error.name === "TooManyRequestsError")
   );
 };
 
+/**
+ * Returns a 429 too-many-requests response if the error is a rate-limit error,
+ * otherwise logs it and returns a 500 internal server error.
+ */
 export const getRateLimitErrorResponse = ({
   request,
   error,

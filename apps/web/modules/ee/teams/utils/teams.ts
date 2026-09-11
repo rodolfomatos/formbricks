@@ -1,35 +1,22 @@
-import { type TTeamRole, ZTeamRole } from "@/modules/ee/teams/team-list/types/team";
-import { type TTeamPermission, ZTeamPermission } from "@/modules/ee/teams/workspace-teams/types/team";
+"use server";
 
-export const TeamPermissionMapping = {
-  [ZTeamPermission.enum.read]: "Read",
-  [ZTeamPermission.enum.readWrite]: "Read & write",
-  [ZTeamPermission.enum.manage]: "Manage",
-};
+import { cache } from "react";
+import { getWorkspacePermissionByUserId } from "../lib/roles";
 
-export const TeamRoleMapping = {
-  [ZTeamRole.enum.admin]: "Team Admin",
-  [ZTeamRole.enum.contributor]: "Contributor",
-};
+interface TeamPermissionFlags {
+  hasReadAccess: boolean;
+  hasWriteAccess: boolean;
+  hasAdminAccess: boolean;
+}
 
-export const getTeamAccessFlags = (role?: TTeamRole | null) => {
-  const isAdmin = role === ZTeamRole.enum.admin;
-  const isContributor = role === ZTeamRole.enum.contributor;
+export const getTeamPermissionFlags = cache(
+  async (userId: string, workspaceId: string): Promise<TeamPermissionFlags> => {
+    const permission = await getWorkspacePermissionByUserId(userId, workspaceId);
 
-  return {
-    isAdmin,
-    isContributor,
-  };
-};
-
-export const getTeamPermissionFlags = (permissionLevel?: TTeamPermission | null) => {
-  const hasReadAccess = permissionLevel === ZTeamPermission.enum.read;
-  const hasReadWriteAccess = permissionLevel === ZTeamPermission.enum.readWrite;
-  const hasManageAccess = permissionLevel === ZTeamPermission.enum.manage;
-
-  return {
-    hasReadAccess,
-    hasReadWriteAccess,
-    hasManageAccess,
-  };
-};
+    return {
+      hasReadAccess: permission === "read" || permission === "readWrite" || permission === "manage",
+      hasWriteAccess: permission === "readWrite" || permission === "manage",
+      hasAdminAccess: permission === "manage",
+    };
+  }
+);

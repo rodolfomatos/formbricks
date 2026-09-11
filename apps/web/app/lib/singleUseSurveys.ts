@@ -2,7 +2,10 @@ import { createId, isCuid } from "@paralleldrive/cuid2";
 import { ENCRYPTION_KEY } from "@/lib/constants";
 import { symmetricDecrypt, symmetricEncrypt } from "@/lib/crypto";
 
-// generate encrypted single use id for the survey
+/**
+ * Generates a single-use ID for a survey. If encryption is enabled, the ID is
+ * symmetrically encrypted before being returned.
+ */
 export const generateSurveySingleUseId = (isEncrypted: boolean): string => {
   const cuid = createId();
   if (!isEncrypted) {
@@ -17,7 +20,10 @@ export const generateSurveySingleUseId = (isEncrypted: boolean): string => {
   return encryptedCuid;
 };
 
-// validate the survey single use id
+/**
+ * Validates and decrypts a survey single-use ID. Returns the decrypted CUID if
+ * valid, or undefined if decryption fails or the decoded value is not a valid CUID.
+ */
 export const validateSurveySingleUseId = (surveySingleUseId: string): string | undefined => {
   let decryptedCuid: string | null = null;
 

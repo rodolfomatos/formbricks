@@ -2414,6 +2414,7 @@
         "workspace": "Espacio de trabajo"
       },
       "enterprise": {
+        "ai_smart_tools": "Herramientas inteligentes de IA",
         "audit_logs": "Registros de auditoría",
         "coming_soon": "Próximamente",
         "contacts_and_segments": "Gestión de contactos y segmentos",

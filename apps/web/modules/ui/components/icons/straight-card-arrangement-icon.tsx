@@ -1,3 +1,6 @@
+/**
+ * SVG icon for a straight/stacked card arrangement (3 overlapping cards offset vertically).
+ */
 export const StraightCardArrangementIcon: React.FC<React.SVGProps<SVGSVGElement>> = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="17" fill="none" viewBox="0 0 14 17">

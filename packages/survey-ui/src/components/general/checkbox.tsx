@@ -1,3 +1,4 @@
+/** Checkbox — Radix UI checkbox primitive with survey-specific styling and brand-color integration. */
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "lucide-react";
 import * as React from "react";

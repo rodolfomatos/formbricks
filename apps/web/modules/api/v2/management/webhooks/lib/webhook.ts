@@ -9,6 +9,13 @@ import { TGetWebhooksFilter, TWebhookInput } from "@/modules/api/v2/management/w
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { ApiResponseWithMeta } from "@/modules/api/v2/types/api-success";
 
+/**
+ * Lists webhooks with filtering and pagination, omitting secrets from the response.
+ *
+ * @param workspaceIds — The workspaces to scope the query to
+ * @param params — Filter and pagination parameters
+ * @returns — Paginated list of webhooks (without secrets)
+ */
 export const getWebhooks = async (
   workspaceIds: string[],
   params: TGetWebhooksFilter
@@ -53,6 +60,12 @@ export const getWebhooks = async (
   }
 };
 
+/**
+ * Creates a new webhook with a generated signing secret after URL validation.
+ *
+ * @param webhook — The webhook configuration (url, triggers, surveyIds, etc.)
+ * @returns — The created webhook
+ */
 export const createWebhook = async (webhook: TWebhookInput): Promise<Result<Webhook, ApiErrorResponseV2>> => {
   const { workspaceId, name, url, source, triggers, surveyIds } = webhook;
 

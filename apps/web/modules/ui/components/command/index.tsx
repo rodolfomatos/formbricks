@@ -1,3 +1,8 @@
+/**
+ * Compound command palette component built on cmdk.
+ * Provides Command, CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup,
+ * CommandSeparator, CommandItem, and CommandShortcut for building searchable selection UIs.
+ */
 "use client";
 
 import { Command as CommandPrimitive } from "cmdk";

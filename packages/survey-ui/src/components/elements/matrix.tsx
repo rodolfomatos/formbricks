@@ -1,3 +1,4 @@
+/** Matrix (Likert scale) — grid of rows vs columns rendered as radio groups, supporting single-option-per-row, RTL layout, and per-cell labels. */
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import * as React from "react";
 import { ElementError } from "@/components/general/element-error";

@@ -1,3 +1,7 @@
+/**
+ * A confirmation dialog with a header, body, confirm button, and optional decline button.
+ * Wraps the Dialog component for alert-style confirmations (e.g. "Are you sure?").
+ */
 "use client";
 
 import { Button } from "@/modules/ui/components/button";

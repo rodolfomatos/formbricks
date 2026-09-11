@@ -1,3 +1,8 @@
+/**
+ * Centralised rate-limit configuration catalogue grouped by domain (auth,
+ * API, actions, storage). Every consumer should reference these constants
+ * rather than inlining interval/allowedPerInterval values.
+ */
 export const rateLimitConfigs = {
   // Authentication endpoints - stricter limits for security
   auth: {

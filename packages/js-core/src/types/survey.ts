@@ -1,3 +1,4 @@
+/** Survey UI prop types — props interfaces for survey rendering (inline, modal) and no-code action class shapes. */
 import type { TSurveyStyling, TWorkspaceStateSurvey, TWorkspaceStyling } from "@/types/config";
 import type { TResponseData, TResponseUpdate } from "@/types/response";
 import type { TFileUploadParams, TUploadFileConfig } from "@/types/storage";

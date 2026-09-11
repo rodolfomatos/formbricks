@@ -3,6 +3,10 @@ import { ApiSuccessResponse } from "@/modules/api/v2/types/api-success";
 
 export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponseV2;
 
+/**
+ * Standardised HTTP response factories for the V2 API.
+ * Each factory returns a Response.json with the appropriate status code, body shape, and optional CORS headers.
+ */
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -318,6 +322,9 @@ const successResponse = ({
   );
 };
 
+/**
+ * Returns a 201 Created response with the given data payload.
+ */
 export const createdResponse = ({
   data,
   meta,
@@ -346,6 +353,9 @@ export const createdResponse = ({
   );
 };
 
+/**
+ * Returns a 207 Multi-Status response for bulk operations that may have partial success.
+ */
 export const multiStatusResponse = ({
   data,
   meta,

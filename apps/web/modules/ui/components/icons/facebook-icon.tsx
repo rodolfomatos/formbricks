@@ -1,3 +1,6 @@
+/**
+ * Facebook brand icon SVG (outline style).
+ */
 export const FacebookIcon: React.FC<React.SVGProps<SVGSVGElement>> = () => {
   return (
     <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">

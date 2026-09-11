@@ -1,3 +1,4 @@
+/** Survey state — in-memory accumulator for the current survey session: response data, display ID, TTC (time-to-complete), variables, and offline queue management. */
 import { TResponseUpdate } from "@formbricks/types/responses";
 
 export class SurveyState {

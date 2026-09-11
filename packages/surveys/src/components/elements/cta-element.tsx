@@ -1,5 +1,5 @@
+/** CTA element — renders a call-to-action button survey question using the survey-ui CTA component with TTC tracking. */
 import { useState } from "preact/hooks";
-// Import as Cta to fix sonar issue - "Imported JSX component CTA must be in PascalCase"
 import { CTA as Cta } from "@formbricks/survey-ui";
 import { type TResponseData, type TResponseTtc } from "@formbricks/types/responses";
 import type { TSurveyCTAElement } from "@formbricks/types/surveys/elements";

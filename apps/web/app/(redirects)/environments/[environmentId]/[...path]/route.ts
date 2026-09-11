@@ -5,6 +5,10 @@ import { findWorkspaceByIdOrLegacyEnvId } from "@/lib/utils/resolve-client-id";
 import { hasUserWorkspaceAccess } from "@/lib/workspace/auth";
 import { authOptions } from "@/modules/auth/lib/authOptions";
 
+/**
+ * GET /environments/[environmentId]/[...path] — Legacy redirect. Resolves an
+ * environmentId to a workspaceId and redirects to the equivalent workspace path.
+ */
 export const GET = async (
   _: Request,
   context: { params: Promise<{ environmentId: string; path: string[] }> }

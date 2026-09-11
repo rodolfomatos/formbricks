@@ -1,3 +1,7 @@
+/**
+ * Inline SVG of the Formbricks logo. Used in branding contexts like login pages,
+ * integration connection screens, and the survey editor.
+ */
 interface FormbricksLogoProps {
   className?: string;
 }

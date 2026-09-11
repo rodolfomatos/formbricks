@@ -4,9 +4,12 @@ import type { CacheError, Result } from "@/types/error";
 import { ErrorCode, err, ok } from "@/types/error";
 
 /**
- * Generic validation function using Zod schemas with Result types
- * @param pairs - Array of [value, schema] tuples to validate
- * @returns Result with validated data or CacheValidationError
+ * Validates one or more [value, ZodSchema] pairs at once, returning either
+ * the validated (and possibly transformed) values in a Result, or a
+ * CacheValidationError. Logs the first Zod issue for debugging.
+ *
+ * @param pairs — Alternating value/schema tuples (spread-based API so TS can infer the result shape)
+ * @returns — Result with an array of validated data, or a CacheValidationError
  */
 export function validateInputs<T extends readonly [unknown, z.ZodType][]>(
   ...pairs: T

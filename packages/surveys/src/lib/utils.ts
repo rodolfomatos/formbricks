@@ -1,3 +1,4 @@
+/** Survey utilities — element extraction from blocks, file extension validation, Tailwind class merging, and error-aware data fetching wrappers. */
 import { twMerge } from "tailwind-merge";
 import { type Result, err, ok, wrapThrowsAsync } from "@formbricks/types/error-handlers";
 import { type ApiErrorResponse } from "@formbricks/types/errors";

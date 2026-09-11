@@ -27,6 +27,7 @@ type TUpdatedResponseResult =
   | { updatedResponse: Awaited<ReturnType<typeof updateResponseWithQuotaEvaluation>> }
   | TRouteResult;
 
+/** Route parameters for the PUT response handler. */
 export type TPutRouteParams = {
   params: Promise<{
     workspaceId: string;
@@ -214,6 +215,11 @@ const getUpdatedResponse = async (
   }
 };
 
+/**
+ * Handles PUT /client/{workspaceId}/responses/{responseId}: validates the
+ * update input, resolves client IDs, checks quotas, and forwards the
+ * response to the pipeline.
+ */
 export const putResponseHandler = async ({
   req,
   props,

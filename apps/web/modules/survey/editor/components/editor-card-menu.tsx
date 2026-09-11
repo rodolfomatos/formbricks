@@ -1,3 +1,4 @@
+/** Action toolbar for element or ending-card editor cards — move up/down, duplicate, delete, change type (with logic-warning modal), add question below, and move to another block. */
 "use client";
 
 import { createId } from "@paralleldrive/cuid2";

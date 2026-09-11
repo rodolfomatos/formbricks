@@ -25,6 +25,13 @@ import {
   ZWorkspaceTeamInput,
 } from "./types/workspace-teams";
 
+/**
+ * Handles GET requests for `/api/v2/organizations/[organizationId]/workspace-teams`. Requires API key authentication. Returns the requested resource(s).
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export async function GET(request: Request, props: { params: Promise<{ organizationId: string }> }) {
   return authenticatedApiClient({
     request,
@@ -56,6 +63,13 @@ export async function GET(request: Request, props: { params: Promise<{ organizat
   });
 }
 
+/**
+ * Handles POST requests for `/api/v2/organizations/[organizationId]/workspace-teams`. Requires API key authentication. Creates a new resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param request — The incoming Next.js Request object with parsed body
+ * @returns — A Next.js Response with the operation result
+ */
 export async function POST(request: Request, props: { params: Promise<{ organizationId: string }> }) {
   return authenticatedApiClient({
     request,
@@ -140,6 +154,13 @@ export async function POST(request: Request, props: { params: Promise<{ organiza
   });
 }
 
+/**
+ * Handles PUT requests for `/api/v2/organizations/[organizationId]/workspace-teams`. Requires API key authentication. Updates an existing resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param request — The incoming Next.js Request object with parsed body
+ * @returns — A Next.js Response with the operation result
+ */
 export async function PUT(request: Request, props: { params: Promise<{ organizationId: string }> }) {
   return authenticatedApiClient({
     request,
@@ -220,6 +241,13 @@ export async function PUT(request: Request, props: { params: Promise<{ organizat
   });
 }
 
+/**
+ * Handles DELETE requests for `/api/v2/organizations/[organizationId]/workspace-teams`. Requires API key authentication. Deletes an existing resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export async function DELETE(request: Request, props: { params: Promise<{ organizationId: string }> }) {
   return authenticatedApiClient({
     request,

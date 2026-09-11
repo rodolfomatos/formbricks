@@ -1,3 +1,4 @@
+/** Skeleton placeholder UI for the survey editor while survey data is being fetched. */
 export const LoadingSkeleton = () => (
   <div className="flex h-full w-full flex-col items-center justify-between p-6">
     {/* Top Part - Loading Navbar */}

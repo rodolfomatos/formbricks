@@ -35,6 +35,7 @@ interface SingleResponseCardProps {
   renderHeader?: (props: SingleResponseCardHeaderRenderProps) => ReactNode;
 }
 
+/** Full response card component — displays the response header, body (with skipped/aborted elements), tags, and delete dialog. */
 export const SingleResponseCard = ({
   survey,
   response,

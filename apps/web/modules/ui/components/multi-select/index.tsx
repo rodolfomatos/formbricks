@@ -1,3 +1,8 @@
+/**
+ * Multi-select combobox with search, badge display, and portal-based dropdown.
+ * Each selected item shows as a removable badge. Uses cmdk for filtering.
+ * Positioned relative to the input container via portal for correct z-index in modals.
+ */
 "use client";
 
 import { Command as CommandPrimitive } from "cmdk";

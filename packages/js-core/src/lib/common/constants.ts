@@ -1,3 +1,4 @@
+/** SDK constants — local storage keys, container IDs, and reCAPTCHA script identifiers used by the JS widget. */
 export const JS_LOCAL_STORAGE_KEY = "formbricks-js";
 export const LEGACY_JS_WEBSITE_LOCAL_STORAGE_KEY = "formbricks-js-website";
 export const LEGACY_JS_APP_LOCAL_STORAGE_KEY = "formbricks-js-app";

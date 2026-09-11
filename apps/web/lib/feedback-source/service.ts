@@ -1,3 +1,11 @@
+/**
+ * Service layer for FeedbackSource entities and their mappings.
+ *
+ * FeedbackSources connect external feedback data (from Formbricks surveys or CSV
+ * imports) to the Hub. Each source carries a set of mappings that define how
+ * source fields map to Hub field types. This service manages the composite CRUD:
+ * creating/updating a source atomically with its mappings inside a transaction.
+ */
 import "server-only";
 import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";

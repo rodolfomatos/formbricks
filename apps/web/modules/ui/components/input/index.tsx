@@ -1,3 +1,7 @@
+/**
+ * Styled text input with focus ring, placeholder styling, disabled state,
+ * and an isInvalid prop for error highlighting.
+ */
 import * as React from "react";
 import { cn } from "@/lib/cn";
 

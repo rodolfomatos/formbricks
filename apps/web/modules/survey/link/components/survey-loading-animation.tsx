@@ -10,6 +10,7 @@ interface SurveyLoadingAnimationProps {
   isBrandingEnabled: boolean;
 }
 
+/** Full-screen loading overlay shown while the survey package loads. Fades out after media elements in the first question card have loaded or after 3 seconds. */
 export const SurveyLoadingAnimation = ({
   isWelcomeCardEnabled,
   isBackgroundLoaded = true,

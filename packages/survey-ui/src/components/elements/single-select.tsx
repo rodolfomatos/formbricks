@@ -1,3 +1,4 @@
+/** Single-select — dropdown radio list with search, "other" custom input option, and survey styling for choosing one from many. */
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
 import { Button } from "@/components/general/button";

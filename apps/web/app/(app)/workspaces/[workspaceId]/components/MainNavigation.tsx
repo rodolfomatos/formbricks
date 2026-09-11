@@ -76,6 +76,12 @@ interface NavigationProps {
   newTrialBannerVariant: string | boolean;
 }
 
+/**
+ * Persistent sidebar navigation for the authenticated workspace area.
+ * Contains the main nav sections (surveys, contacts, dashboards), a collapsible toggle,
+ * workspace and organization dropdown switchers, user profile dropdown, trial banners,
+ * and a new-version-available notice for self-hosted instances.
+ */
 export const MainNavigation = ({
   organization,
   user,
@@ -213,7 +219,7 @@ export const MainNavigation = ({
     },
     {
       label: t("common.share_feedback"),
-      href: "https://github.com/formbricks/formbricks/issues",
+      href: "https://github.com/rodolfomatos/formbricks/issues",
       target: "_blank",
       icon: ArrowUpRightIcon,
     },
@@ -581,7 +587,7 @@ export const MainNavigation = ({
                   !isFormbricksCloud &&
                   !isDevelopment && (
                     <Link
-                      href="https://github.com/formbricks/formbricks/releases"
+                      href="https://github.com/rodolfomatos/formbricks/releases"
                       target="_blank"
                       className="m-2 flex items-center gap-x-4 rounded-lg border border-slate-200 bg-slate-100 p-2 text-sm text-slate-800 hover:border-slate-300 hover:bg-slate-200">
                       <p className="flex items-center justify-center gap-x-2 text-xs">

@@ -1,3 +1,4 @@
+/** Dropdown to select a validation rule type from the available types for a given question element. */
 "use client";
 
 import { TValidationRuleType } from "@formbricks/types/surveys/validation-rules";

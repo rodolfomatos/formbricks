@@ -117,6 +117,12 @@ const createAirtableIntegration = async ({
   return null;
 };
 
+/**
+ * GET /api/v1/integrations/airtable/callback
+ * Handles the Airtable OAuth callback (PKCE flow). Exchanges the auth code for a
+ * token, preserves existing survey-to-table mappings, and redirects back to the
+ * integration settings page.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ req, authentication }) => {
     if (!authentication || !("user" in authentication)) {

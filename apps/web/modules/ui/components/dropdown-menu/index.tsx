@@ -1,3 +1,8 @@
+/**
+ * Compound dropdown menu component built on Radix DropdownMenu.
+ * Provides all standard sub-components: trigger, content, items, checkboxes, radio items,
+ * separators, labels, sub-menus, and keyboard shortcuts.
+ */
 "use client";
 
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";

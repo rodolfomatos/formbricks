@@ -1,9 +1,4 @@
-import {
-  TResponseData,
-  TResponseTtc,
-  TResponseUpdate,
-  TResponseVariables,
-} from "@formbricks/types/responses";
+/** Offline storage — IndexedDB-backed persistence layer for pending survey responses, supporting add, remove, update, getAll, and clear operations. */
 
 const DB_NAME = "formbricks-offline";
 const DB_VERSION = 1;

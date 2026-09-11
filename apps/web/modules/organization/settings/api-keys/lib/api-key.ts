@@ -18,6 +18,7 @@ import {
   ZApiKeyCreateInput,
 } from "@/modules/organization/settings/api-keys/types/api-keys";
 
+/** Fetches all API keys for an organization with their workspace-level permissions. */
 export const getApiKeysWithEnvironmentPermissions = reactCache(
   async (organizationId: string): Promise<TApiKeyWithEnvironmentPermission[]> => {
     validateInputs([organizationId, ZId]);
@@ -50,7 +51,7 @@ export const getApiKeysWithEnvironmentPermissions = reactCache(
   }
 );
 
-// Get API key with its permissions from a raw API key
+/** Resolves a raw API key string (v2 `fbk_` format or legacy) to its full record with workspace permissions, verifying the secret via bcrypt. */
 export const getApiKeyWithPermissions = reactCache(
   async (apiKey: string): Promise<TApiKeyWithEnvironmentAndWorkspace | null> => {
     try {
@@ -128,6 +129,7 @@ export const getApiKeyWithPermissions = reactCache(
   }
 );
 
+/** Deletes an API key by ID. */
 export const deleteApiKey = async (id: string): Promise<ApiKey | null> => {
   validateInputs([id, ZId]);
 
@@ -148,6 +150,7 @@ export const deleteApiKey = async (id: string): Promise<ApiKey | null> => {
   }
 };
 
+/** Creates a new API key with a generated `fbk_` secret, SHA-256 lookup hash, and bcrypt-hashed key. */
 export const createApiKey = async (
   organizationId: string,
   userId: string,
@@ -208,6 +211,7 @@ export const createApiKey = async (
   }
 };
 
+/** Updates an API key's label. */
 export const updateApiKey = async (apiKeyId: string, data: TApiKeyUpdateInput): Promise<ApiKey | null> => {
   try {
     const updatedApiKey = await prisma.apiKey.update({

@@ -21,6 +21,10 @@ import { RecallItemSelect } from "@/modules/survey/components/element-form-input
 import { getElementsFromBlocks } from "@/modules/survey/lib/client-utils";
 import { Button } from "@/modules/ui/components/button";
 
+/**
+ * Props forwarded to the render-prop child so it can build a controlled input
+ * with recall-item highlighting and the recall-select / fallback UI layered on top.
+ */
 interface RecallWrapperRenderProps {
   value: string;
   onChange: (val: string) => void;
@@ -29,6 +33,11 @@ interface RecallWrapperRenderProps {
   isRecallSelectVisible: boolean;
 }
 
+/**
+ * Wraps an input field to support recall-item insertion (@-mention style).
+ * Manages the list of embedded recall items, their fallback values, and the
+ * visual highlighting that shows which parts of the text are dynamic.
+ */
 interface RecallWrapperProps {
   value: string | undefined;
   onChange: (val: string, recallItems: TSurveyRecallItem[], fallbacks: { [id: string]: string }) => void;

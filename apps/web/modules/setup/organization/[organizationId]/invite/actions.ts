@@ -19,6 +19,7 @@ const ZInviteOrganizationMemberAction = z.object({
   name: ZUserName,
 });
 
+/** Server action that invites a member to an organization during the setup flow, enforcing rate limits and authorization. */
 export const inviteOrganizationMemberAction = authenticatedActionClient
   .inputSchema(ZInviteOrganizationMemberAction)
   .action(

@@ -24,12 +24,14 @@ import {
   SelectValue,
 } from "@/modules/ui/components/select";
 
+/** Props passed to the renderFooter callback so consumers can customise dialog footer buttons. */
 export type TCreateWithAIFormFooterProps = {
   isBusy: boolean;
   canCreate: boolean;
   submitLabel: string;
 };
 
+/** Form that collects the AI prompt, survey type, and helper prompts for AI-powered survey generation. */
 type CreateWithAIFormProps = {
   workspaceId: string;
   language: TUserLocale;

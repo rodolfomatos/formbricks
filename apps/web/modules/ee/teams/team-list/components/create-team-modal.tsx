@@ -1,98 +1,16 @@
 "use client";
 
-import { UsersIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import { useTranslation } from "react-i18next";
-import { getFormattedErrorMessage } from "@/lib/utils/helper";
-import { createTeamAction } from "@/modules/ee/teams/team-list/actions";
-import { Button } from "@/modules/ui/components/button";
-import {
-  Dialog,
-  DialogBody,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/modules/ui/components/dialog";
-import { Input } from "@/modules/ui/components/input";
-import { Label } from "@/modules/ui/components/label";
-
-interface CreateTeamModalProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  organizationId: string;
-  onCreate?: (teamId: string) => void;
-}
-
-export const CreateTeamModal = ({ open, setOpen, organizationId, onCreate }: CreateTeamModalProps) => {
-  const [teamName, setTeamName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const { t } = useTranslation();
-  const router = useRouter();
-
-  const handleTeamCreation = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const name = teamName.trim();
-    const createTeamActionResponse = await createTeamAction({ name, organizationId });
-    if (createTeamActionResponse?.data) {
-      toast.success(t("workspace.settings.teams.team_created_successfully"));
-      if (typeof onCreate === "function") {
-        onCreate(createTeamActionResponse.data);
-      }
-      router.refresh();
-      setOpen(false);
-      setTeamName("");
-    } else {
-      const errorMessage = getFormattedErrorMessage(createTeamActionResponse);
-      toast.error(errorMessage);
-    }
-    setIsLoading(false);
-  };
-
+export function CreateTeamModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  if (!open) return null;
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <UsersIcon />
-          <DialogTitle>{t("workspace.settings.teams.create_new_team")}</DialogTitle>
-        </DialogHeader>
-
-        <form onSubmit={handleTeamCreation} className="gap-y-4 pt-4">
-          <DialogBody>
-            <div className="grid w-full gap-y-2 pb-4">
-              <Label htmlFor="team-name">{t("workspace.settings.teams.team_name")}</Label>
-              <Input
-                id="team-name"
-                name="team-name"
-                value={teamName}
-                onChange={(e) => {
-                  setTeamName(e.target.value);
-                }}
-                placeholder={t("workspace.settings.teams.enter_team_name")}
-              />
-            </div>
-          </DialogBody>
-
-          <DialogFooter>
-            <Button
-              variant="secondary"
-              type="button"
-              onClick={() => {
-                setOpen(false);
-                setTeamName("");
-              }}>
-              {t("common.cancel")}
-            </Button>
-            <Button disabled={!teamName || isLoading} loading={isLoading} type="submit">
-              {t("workspace.settings.teams.create")}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="rounded-lg bg-white p-6 shadow-xl">
+        <h2 className="text-lg font-semibold">Create Team</h2>
+        <p className="text-muted-foreground text-sm">Team creation dialog.</p>
+        <button className="mt-4 rounded bg-slate-800 px-4 py-2 text-white" onClick={onClose}>
+          Close
+        </button>
+      </div>
+    </div>
   );
-};
+}

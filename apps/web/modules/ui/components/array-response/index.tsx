@@ -1,3 +1,7 @@
+/**
+ * Renders an array of strings as a stacked list of lines.
+ * Used to display multi-value survey responses (e.g. multi-select answers).
+ */
 interface ArrayResponseProps {
   value: string[];
 }

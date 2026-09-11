@@ -21,6 +21,7 @@ const getNumericScaleOptions = (t: TFunction) => ({
   ],
 });
 
+/** Returns all available comparison operator options grouped by element type, variable type, and hidden fields. Each group defines which operators are shown in the condition editor for that type. */
 export const getLogicRules = (t: TFunction) => {
   const numericScaleOptions = getNumericScaleOptions(t);
 
@@ -471,6 +472,7 @@ export const getLogicRules = (t: TFunction) => {
   };
 };
 
+/** A single operator option from the logic rules, with label and value. */
 export type TLogicRuleOption = ReturnType<typeof getLogicRules>["element"][keyof ReturnType<
   typeof getLogicRules
 >["element"]]["options"];

@@ -26,6 +26,7 @@ interface WebhookModalProps {
   allowInternalUrls: boolean;
 }
 
+/** Modal dialog showing webhook details with Overview and Settings tabs. */
 export const WebhookModal = ({
   open,
   setOpen,

@@ -10,6 +10,11 @@ import {
   DialogTitle,
 } from "@/modules/ui/components/dialog";
 
+/**
+ * Confirmation dialog shown when a user attempts to edit a survey that has already received responses.
+ * Warns that responses already collected will remain unaffected but any structural changes take effect
+ * for new respondents only.
+ */
 interface EditPublicSurveyAlertDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;

@@ -5,6 +5,10 @@ import { processSurveySchedulingJob } from "@/src/processors/survey-scheduling";
 import { processTestLogJob } from "@/src/processors/test-log";
 import { ZResponsePipelineJobData, ZSurveySchedulingJobData, ZTestLogJobData } from "@/src/types";
 
+/**
+ * Registry of all background job definitions — the single source of truth for
+ * mapping job names to handlers and validation schemas.
+ */
 export const backgroundJobDefinitions = {
   [JOB_NAMES.responsePipeline]: toAnyBackgroundJobDefinition({
     handle: processResponsePipelineJob,
@@ -23,7 +27,14 @@ export const backgroundJobDefinitions = {
   }),
 } as const satisfies Record<string, AnyBackgroundJobDefinition>;
 
+/**
+ * Union type of all registered job names — derived from the definition registry.
+ */
 export type TBackgroundJobName = keyof typeof backgroundJobDefinitions;
 
+/**
+ * Looks up a job definition by name. Returns undefined when the job name is
+ * not registered.
+ */
 export const getBackgroundJobDefinition = (jobName: string): AnyBackgroundJobDefinition | undefined =>
   backgroundJobDefinitions[jobName as TBackgroundJobName];

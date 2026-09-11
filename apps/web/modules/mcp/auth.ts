@@ -25,6 +25,10 @@ const QUERY_CREDENTIAL_PARAMS = new Set([
   "authorization",
 ]);
 
+/**
+ * Extended MCP auth info carrying the resolved Formbricks API key
+ * authentication and a unique request ID for observability.
+ */
 export type TMcpAuthInfo = AuthInfo & {
   extra: {
     formbricksAuthentication: TAuthenticationApiKey;
@@ -94,6 +98,12 @@ function createMcpAuthInfo(authentication: TAuthenticationApiKey, requestId: str
   };
 }
 
+/**
+ * Extract the Formbricks API key authentication from MCP auth info.
+ *
+ * @param authInfo — the MCP session auth info
+ * @returns — the API key authentication or null
+ */
 export function getMcpAuthentication(authInfo?: AuthInfo): TAuthenticationApiKey | null {
   const authentication = authInfo?.extra?.formbricksAuthentication;
   if (!authentication || typeof authentication !== "object" || !("apiKeyId" in authentication)) {
@@ -103,11 +113,25 @@ export function getMcpAuthentication(authInfo?: AuthInfo): TAuthenticationApiKey
   return authentication as TAuthenticationApiKey;
 }
 
+/**
+ * Extract the request ID from MCP auth info, falling back to a new UUID.
+ *
+ * @param authInfo — the MCP session auth info
+ * @returns — the request ID string
+ */
 export function getMcpRequestId(authInfo?: AuthInfo): string {
   const requestId = authInfo?.extra?.requestId;
   return typeof requestId === "string" && requestId.length > 0 ? requestId : crypto.randomUUID();
 }
 
+/**
+ * Attach observability headers (X-Request-Id, Cache-Control) to an MCP
+ * response.
+ *
+ * @param response — the original response
+ * @param requestId — the request ID to inject
+ * @returns — a new Response with the added headers
+ */
 export function withMcpResponseHeaders(response: Response, requestId: string): Response {
   const headers = new Headers(response.headers);
   headers.set("X-Request-Id", requestId);
@@ -120,6 +144,14 @@ export function withMcpResponseHeaders(response: Response, requestId: string): R
   });
 }
 
+/**
+ * Authenticate an MCP request: validate origin, check for query-param
+ * credentials (rejected), authenticate the API key from headers, and
+ * apply rate limiting.
+ *
+ * @param request — the incoming MCP request
+ * @returns — { ok: true, authInfo } or { ok: false, response }
+ */
 export async function authenticateMcpRequest(request: NextRequest): Promise<TMcpAuthenticationResult> {
   const requestId = getRequestId(request);
   const instance = request.nextUrl.pathname;
@@ -192,6 +224,14 @@ export async function authenticateMcpRequest(request: NextRequest): Promise<TMcp
   }
 }
 
+/**
+ * Authenticate the request, attach auth info to the request object, and
+ * delegate to the inner handler. Wraps the response with MCP headers.
+ *
+ * @param request — the incoming request
+ * @param handler — the inner request handler
+ * @returns — the authenticated response or an auth error response
+ */
 export async function handleAuthenticatedMcpRequest(
   request: NextRequest,
   handler: (request: Request) => Promise<Response>

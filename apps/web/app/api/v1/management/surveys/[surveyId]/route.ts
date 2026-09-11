@@ -45,6 +45,11 @@ const fetchAndAuthorizeSurvey = async (
   return { survey };
 };
 
+/**
+ * GET /api/v1/management/surveys/[surveyId]
+ * Returns a single survey by ID. Verifies the API key has permission on the
+ * survey's workspace.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ props, authentication }: THandlerParams<{ params: Promise<{ surveyId: string }> }>) => {
     if (!authentication || !("apiKeyId" in authentication)) {
@@ -82,6 +87,11 @@ export const GET = withV1ApiWrapper({
   },
 });
 
+/**
+ * DELETE /api/v1/management/surveys/[surveyId]
+ * Deletes a survey by ID. Authorizes against the survey's workspace and logs
+ * an audit event on success.
+ */
 export const DELETE = withV1ApiWrapper({
   handler: async ({
     props,
@@ -121,6 +131,11 @@ export const DELETE = withV1ApiWrapper({
   targetType: "survey",
 });
 
+/**
+ * PUT /api/v1/management/surveys/[surveyId]
+ * Updates an existing survey by ID. Validates input, checks feature permissions,
+ * migrates legacy fields, and logs an audit event on success.
+ */
 export const PUT = withV1ApiWrapper({
   handler: async ({
     req,

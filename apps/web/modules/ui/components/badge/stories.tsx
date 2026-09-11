@@ -1,3 +1,8 @@
+/**
+ * Storybook stories for the Badge component.
+ * Covers all type variants (gray, warning, success, error, info), sizes (tiny, normal, large),
+ * long text, custom styling, and accessibility role.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { Badge } from "./index";
 

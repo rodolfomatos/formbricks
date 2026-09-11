@@ -1,3 +1,4 @@
+/** Color utilities — hex-to-RGBA conversion, luminance-based lightness detection, and colour mixing for dynamic survey styling. */
 const hexToRGBA = (hex: string | undefined, opacity: number): string | undefined => {
   // return undefined if hex is undefined, this is important for adding the default values to the CSS variables
   // TODO: find a better way to handle this

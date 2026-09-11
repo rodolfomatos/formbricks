@@ -1,3 +1,4 @@
+/** Dropdown menu — Radix UI dropdown menu primitives with survey-consistent styling and keyboard navigation. */
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { CheckIcon, ChevronRightIcon } from "lucide-react";
 import * as React from "react";

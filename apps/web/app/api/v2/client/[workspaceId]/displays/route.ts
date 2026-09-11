@@ -6,9 +6,7 @@ import {
 import { reportApiError } from "@/app/lib/api/api-error-reporter";
 import { parseAndValidateJsonBody } from "@/app/lib/api/parse-and-validate-json-body";
 import { responses } from "@/app/lib/api/response";
-import { getOrganizationIdFromWorkspaceId } from "@/lib/utils/helper";
 import { resolveClientApiIds } from "@/lib/utils/resolve-client-id";
-import { getIsContactsEnabled } from "@/modules/ee/license-check/lib/utils";
 import { createDisplay } from "./lib/display";
 
 interface Context {
@@ -50,6 +48,12 @@ export const OPTIONS = async (): Promise<Response> => {
   );
 };
 
+/**
+ * POST /api/v2/client/[workspaceId]/displays
+ * Records a survey display event. Accepts environmentId or workspaceId.
+ * Uses parseAndValidateJsonBody for input validation. Optionally links to a contactId
+ * (enterprise only).
+ */
 export const POST = async (request: Request, context: Context): Promise<Response> => {
   const params = await context.params;
   // Resolve: accepts either an environmentId (old SDK) or a workspaceId (new SDK)
@@ -68,17 +72,6 @@ export const POST = async (request: Request, context: Context): Promise<Response
   const { displayInputData } = validatedInput;
 
   try {
-    if (displayInputData.contactId) {
-      const organizationId = await getOrganizationIdFromWorkspaceId(workspaceId);
-      const isContactsEnabled = await getIsContactsEnabled(organizationId);
-      if (!isContactsEnabled) {
-        return responses.forbiddenResponse(
-          "User identification is only available for enterprise users.",
-          true
-        );
-      }
-    }
-
     const response = await createDisplay(displayInputData);
 
     return responses.successResponse(response, true);

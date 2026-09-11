@@ -1,3 +1,4 @@
+/** Conditions editor for a single logic item — delegates to the shared ConditionsEditor component via a factory-generated config and callbacks. */
 "use client";
 
 import { useTranslation } from "react-i18next";

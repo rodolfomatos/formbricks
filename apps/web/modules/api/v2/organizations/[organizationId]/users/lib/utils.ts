@@ -2,6 +2,13 @@ import { Prisma } from "@formbricks/database/prisma";
 import { buildCommonFilterQuery, pickCommonFilter } from "@/modules/api/v2/management/lib/utils";
 import { TGetUsersFilter } from "@/modules/api/v2/organizations/[organizationId]/users/types/users";
 
+/**
+ * Builds a Prisma query filter for listing users in an organization.
+ *
+ * @param organizationId — The organization to scope the query to
+ * @param params — Optional filter parameters including email and id
+ * @returns — Prisma find-many arguments
+ */
 export const getUsersQuery = (organizationId: string, params?: TGetUsersFilter) => {
   let query: Prisma.UserFindManyArgs = {
     where: {

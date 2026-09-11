@@ -14,6 +14,7 @@ interface EditMembershipsProps {
   isUserManagementDisabledFromUi: boolean;
 }
 
+/** Server component that renders the memberships table with column headers and passes member/invite data to MembersInfo. */
 export const EditMemberships = async ({
   organization,
   currentUserId,

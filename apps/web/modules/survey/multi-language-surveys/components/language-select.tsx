@@ -17,6 +17,7 @@ interface LanguageSelectProps {
   locale: TUserLocale;
 }
 
+/** Dropdown for selecting a language from the ISO 639 list with search filtering. */
 export function LanguageSelect({ language, onLanguageChange, disabled, locale }: LanguageSelectProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);

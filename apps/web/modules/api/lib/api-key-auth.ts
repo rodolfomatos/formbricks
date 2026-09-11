@@ -6,6 +6,12 @@ type THeadersLike = Pick<Headers, "get">;
 
 const BEARER_PREFIX = "bearer ";
 
+/**
+ * Extracts a Bearer token from the Authorization header.
+ *
+ * @param headers — The request headers object
+ * @returns — The bearer token string, or null if not present
+ */
 export const getBearerTokenFromHeaders = (headers: THeadersLike): string | null => {
   const authorizationHeader = headers.get("authorization")?.trim();
   if (!authorizationHeader) {
@@ -20,6 +26,12 @@ export const getBearerTokenFromHeaders = (headers: THeadersLike): string | null 
   const token = authorizationHeader.slice(BEARER_PREFIX.length).trim();
   return token.length > 0 ? token : null;
 };
+/**
+ * Extracts an API key from the x-api-key header or Authorization Bearer header.
+ *
+ * @param headers — The request headers object
+ * @returns — The API key string, or null if not found
+ */
 export const getApiKeyFromHeaders = (headers: THeadersLike): string | null => {
   const apiKeyHeader = headers.get("x-api-key")?.trim();
   if (apiKeyHeader) {
@@ -38,6 +50,13 @@ export type AuthenticateApiKeyOptions = {
   allowOrganizationOnlyApiKey?: boolean;
 };
 
+/**
+ * Authenticates by extracting an API key from request headers and looking it up with permissions.
+ *
+ * @param headers — The request headers
+ * @param options — Authentication options
+ * @returns — The authenticated API key data with permissions, or null
+ */
 export const authenticateApiKeyFromHeaders = async (
   headers: THeadersLike,
   options: AuthenticateApiKeyOptions = {}

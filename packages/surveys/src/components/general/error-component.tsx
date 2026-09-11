@@ -1,3 +1,4 @@
+/** Error component — displays user-facing reCAPTCHA or invalid-device error messages with i18n-translated titles, descriptions, and illustrations. */
 import { useTranslation } from "react-i18next";
 import { TResponseErrorCodesEnum } from "@/types/response-error-codes";
 

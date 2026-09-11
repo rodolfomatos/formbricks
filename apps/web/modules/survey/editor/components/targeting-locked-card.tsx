@@ -1,3 +1,4 @@
+/** Locked targeting card shown when the environment has no active actions — warns the user that no-code actions must exist before targeting the survey to a specific audience. */
 "use client";
 
 import * as Collapsible from "@radix-ui/react-collapsible";

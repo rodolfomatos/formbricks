@@ -1,3 +1,4 @@
+/** Form editor for the CTA (Call-to-Action) question element — headline, subheader, optional external button label + URL. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

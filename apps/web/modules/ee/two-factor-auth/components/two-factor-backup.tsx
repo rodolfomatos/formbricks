@@ -1,48 +1,24 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { FormControl, FormField, FormItem } from "@/modules/ui/components/form";
-import { Input } from "@/modules/ui/components/input";
 
 interface TwoFactorBackupProps {
-  form: UseFormReturn<
-    {
-      email: string;
-      password: string;
-      totpCode?: string | undefined;
-      backupCode?: string | undefined;
-    },
-    any
-  >;
+  codes: string[];
 }
 
-export const TwoFactorBackup = ({ form }: TwoFactorBackupProps) => {
+export function TwoFactorBackup({ codes }: TwoFactorBackupProps) {
   const { t } = useTranslation();
 
   return (
-    <div className="mb-2 transition-all duration-500 ease-in-out">
-      <label htmlFor="totpBackup" className="sr-only">
-        {t("auth.login.backup_code")}
-      </label>
-      <FormField
-        control={form.control}
-        name="backupCode"
-        render={({ field }) => (
-          <FormItem className="w-full">
-            <FormControl>
-              <Input
-                id="totpBackup"
-                required
-                placeholder="XXXXX-XXXXX"
-                className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand-dark focus:ring-brand-dark sm:text-sm"
-                value={field.value}
-                onChange={(e) => field.onChange(e.target.value)}
-              />
-            </FormControl>
-          </FormItem>
-        )}
-      />
+    <div className="space-y-4 p-4">
+      <p className="text-sm text-slate-500">{t("backup_codes_warning")}</p>
+      <div className="rounded-lg bg-slate-50 p-4 font-mono text-sm space-y-1">
+        {codes.map((code) => (
+          <div key={code} className="tracking-wider">
+            {code}
+          </div>
+        ))}
+      </div>
     </div>
   );
-};
+}

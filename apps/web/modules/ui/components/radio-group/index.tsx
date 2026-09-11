@@ -1,3 +1,7 @@
+/**
+ * Styled radio group component built on Radix RadioGroup primitive.
+ * Provides RadioGroup (container) and RadioGroupItem (individual option) with indicator.
+ */
 "use client";
 
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";

@@ -1,3 +1,4 @@
+/** No-code action detection — listens for clicks, page views, exit intent, scroll depth, and page dwell; triggers matching surveys. */
 /* eslint-disable no-console -- required for logging */
 import { CommandQueue, CommandType } from "@/lib/common/command-queue";
 import { Config } from "@/lib/common/config";

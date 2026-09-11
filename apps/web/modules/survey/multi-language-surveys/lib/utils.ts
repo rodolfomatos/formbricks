@@ -34,6 +34,7 @@ const pushIfI18n = (
   }
 };
 
+/** Walks the survey structure (welcome card, blocks, elements, endings) and collects all i18n-string fields for translation. */
 export const extractTranslatableStrings = (survey: TSurvey, t: TFunction): TranslatableString[] => {
   const result: TranslatableString[] = [];
 
@@ -242,6 +243,7 @@ export const extractTranslatableStrings = (survey: TSurvey, t: TFunction): Trans
   return result;
 };
 
+/** Computes the translation progress (translated/total/percentage) for a given language code. */
 export const computeTranslationProgress = (
   strings: TranslatableString[],
   languageCode: string
@@ -258,6 +260,7 @@ export const computeTranslationProgress = (
   return { translated, total, percentage };
 };
 
+/** Returns a Tailwind background colour class corresponding to the translation progress percentage (red < 10% → green > 75%). */
 export const getProgressColor = (percentage: number): string => {
   if (percentage < 10) return "bg-red-500";
   if (percentage < 25) return "bg-orange-700";
@@ -266,6 +269,7 @@ export const getProgressColor = (percentage: number): string => {
   return "bg-green-600";
 };
 
+/** Returns a Tailwind text colour class corresponding to the translation progress percentage (red < 10% → green > 75%). */
 export const getProgressTextColor = (percentage: number): string => {
   if (percentage < 10) return "text-red-600";
   if (percentage < 25) return "text-orange-700";
@@ -274,6 +278,7 @@ export const getProgressTextColor = (percentage: number): string => {
   return "text-green-600";
 };
 
+/** Deep-clones the survey and removes all i18n keys for the given language code from every translatable field. */
 export const removeLanguageKeysFromSurvey = (survey: TSurvey, languageCode: string): TSurvey => {
   const clone = structuredClone(survey);
 
@@ -307,6 +312,7 @@ const isTraversable = (val: unknown): val is Traversable => val !== null && type
  * Mutates the given survey in-place, setting a translation value at the
  * specified path. Use this inside a loop after cloning once upfront.
  */
+/** Sets a translation value on a deep-cloned survey at the given dotted path for the given language code. Mutates the survey in place. */
 export const setTranslationAtPathMutable = (
   survey: TSurvey,
   path: string,

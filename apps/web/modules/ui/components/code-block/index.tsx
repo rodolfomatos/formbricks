@@ -1,3 +1,7 @@
+/**
+ * Syntax-highlighted code block with optional copy-to-clipboard button.
+ * Uses Prism.js for highlighting and supports any Prism language identifier.
+ */
 "use client";
 
 import { CopyIcon } from "lucide-react";

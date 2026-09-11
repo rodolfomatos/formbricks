@@ -1,3 +1,4 @@
+/** Open text — single-line or multi-line free-text survey input with character limit, auto-resize, and RTL support. */
 import { useState } from "react";
 import { ElementError } from "@/components/general/element-error";
 import { ElementHeader } from "@/components/general/element-header";

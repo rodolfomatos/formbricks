@@ -1,3 +1,4 @@
+/** Input — single-line text input with survey styling, error state, and RTL direction support. */
 import * as React from "react";
 import { cn } from "@/lib/utils";
 

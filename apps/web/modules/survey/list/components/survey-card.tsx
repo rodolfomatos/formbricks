@@ -13,6 +13,7 @@ import { TSurveyListItem } from "@/modules/survey/list/types/survey-overview";
 import { SurveyStatusIndicator } from "@/modules/ui/components/survey-status-indicator";
 import { SurveyDropDownMenu } from "./survey-dropdown-menu";
 
+/** Single survey row in the list with status indicator, response count, type, dates, creator, and a dropdown for actions. */
 interface SurveyCardProps {
   survey: TSurveyListItem;
   publicDomain: string;

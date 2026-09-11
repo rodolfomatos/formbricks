@@ -7,6 +7,9 @@ interface WorkspaceNavItemProps {
   isActive: boolean;
 }
 
+/**
+ * A simple navigation list item linking to a workspace page, with active/inactive styling.
+ */
 export const WorkspaceNavItem = ({ href, children, isActive }: WorkspaceNavItemProps) => {
   const activeClass = "bg-slate-50 font-semibold";
   const inactiveClass = "hover:bg-slate-50";

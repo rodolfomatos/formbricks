@@ -2414,6 +2414,7 @@
         "workspace": "ワークスペース"
       },
       "enterprise": {
+        "ai_smart_tools": "AIスマートツール",
         "audit_logs": "監査ログ",
         "coming_soon": "近日公開",
         "contacts_and_segments": "連絡先管理＆セグメント",

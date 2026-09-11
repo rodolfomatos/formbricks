@@ -1,3 +1,4 @@
+/** API response types — success/error wrapper and user state update response. */
 import { type TUserState } from "@/types/config";
 import { type ApiErrorResponse } from "@/types/error";
 

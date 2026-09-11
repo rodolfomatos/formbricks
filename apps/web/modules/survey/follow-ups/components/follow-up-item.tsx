@@ -16,6 +16,7 @@ import { Button } from "@/modules/ui/components/button";
 import { ConfirmationModal } from "@/modules/ui/components/confirmation-modal";
 import { TooltipRenderer } from "@/modules/ui/components/tooltip";
 
+/** Renders a single follow-up action card with edit, delete, and duplicate controls. Shows issue badges when the email target or ending selection is invalid. */
 interface FollowUpItemProps {
   followUp: TSurveyFollowUp;
   localSurvey: TSurvey;

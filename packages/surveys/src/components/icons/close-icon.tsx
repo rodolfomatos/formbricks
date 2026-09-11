@@ -1,3 +1,4 @@
+/** Close icon — inline SVG X icon for the survey modal close button. */
 interface CloseIconProps {
   className?: string;
 }

@@ -356,6 +356,10 @@ const reverseLogicFallback = (
   return undefined;
 };
 
+/**
+ * Converts the legacy `questions` array and `endings` into the newer `blocks`
+ * format, grouping questions that share a common logic target or fallback.
+ */
 export const transformQuestionsToBlocks = (
   questions: TSurveyQuestion[],
   endings: TSurveyEnding[] = []
@@ -470,6 +474,10 @@ const applyBlockAttributesToElement = (
   }
 };
 
+/**
+ * Flattens blocks back into the legacy flat `questions` array with their
+ * logic rules, and appends ending screens as separate ending-card questions.
+ */
 export const transformBlocksToQuestions = (
   blocks: TSurveyBlock[],
   endings: TSurveyEnding[] = []
@@ -532,6 +540,10 @@ export const withDerivedQuestions = <
   };
 };
 
+/**
+ * Validates survey creation/update input by checking that blocks and endings
+ * have unique IDs and that all logic references point to existing targets.
+ */
 export const validateSurveyInput = (input: {
   questions?: TSurveyQuestion[];
   blocks?: TSurveyBlock[];

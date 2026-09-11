@@ -1,3 +1,4 @@
+/** Element error — displays an inline error message with an alert icon beneath survey form fields. */
 import { AlertCircle } from "lucide-react";
 import * as React from "react";
 import { cn } from "@/lib/utils";

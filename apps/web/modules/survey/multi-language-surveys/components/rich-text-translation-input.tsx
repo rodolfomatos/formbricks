@@ -16,6 +16,7 @@ interface RichTextTranslationInputProps {
   disabled?: boolean;
 }
 
+/** Rich text editor for translating a single rich-text field within the translation modal. Handles external value changes (e.g. AI fill) via remount key and suppresses mount-time empty write-back. */
 export const RichTextTranslationInput = ({
   path,
   value,

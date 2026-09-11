@@ -1,3 +1,8 @@
+/**
+ * Combobox with dropdown selection and optional free-text input. Supports single/multi-select,
+ * grouped options with nested sub-menus, search/filter, and clearable values.
+ * Used in conditions editor and survey configuration forms.
+ */
 "use client";
 
 import { CheckIcon, ChevronDownIcon, LucideProps, XIcon } from "lucide-react";

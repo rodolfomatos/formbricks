@@ -1,3 +1,14 @@
+/**
+ * Background jobs module — BullMQ-powered job queue for async processing
+ * (response pipeline, survey scheduling, test/health checks). Provides
+ * enqueue, schedule, and recurring-schedule helpers with a shared Redis
+ * connection.
+ *
+ * @example
+ * ```typescript
+ * import { enqueueResponsePipelineJob } from "@formbricks/jobs";
+ * ```
+ */
 /* v8 ignore start */
 export { UnrecoverableError } from "bullmq";
 export type {

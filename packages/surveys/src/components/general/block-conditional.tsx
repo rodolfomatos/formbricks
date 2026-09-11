@@ -1,3 +1,4 @@
+/** Block conditional — renders a survey block (question group) by iterating its elements, handling back/submit, validation errors, auto-progress, file uploads, and ranking interactions. */
 import { useEffect, useRef, useState } from "preact/hooks";
 import { type TJsFileUploadParams } from "@formbricks/types/js";
 import { type TResponseData, type TResponseTtc } from "@formbricks/types/responses";

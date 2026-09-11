@@ -1,3 +1,4 @@
+/** Address element — renders a multi-field address form survey question (street, city, state, zip, country) using the survey-ui FormField, with TTC tracking. */
 import { useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { FormField, type FormFieldConfig } from "@formbricks/survey-ui";

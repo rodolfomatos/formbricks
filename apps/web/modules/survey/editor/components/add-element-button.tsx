@@ -1,3 +1,4 @@
+/** Collapsible button to add a new block (with its first question) to the survey — lists available question types grouped by category. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

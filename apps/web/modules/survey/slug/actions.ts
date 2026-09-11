@@ -14,6 +14,7 @@ const ZUpdateSurveySlugAction = z.object({
   slug: ZSurveySlug,
 });
 
+/** Server action that sets a custom slug (pretty URL) on a survey. Only available on self-hosted instances. */
 export const updateSurveySlugAction = authenticatedActionClient
   .inputSchema(ZUpdateSurveySlugAction)
   .action(async ({ ctx, parsedInput }) => {
@@ -42,6 +43,7 @@ const ZRemoveSurveySlugAction = z.object({
   surveyId: z.cuid2(),
 });
 
+/** Server action that removes the custom slug from a survey, reverting to the default ID-based URL. */
 export const removeSurveySlugAction = authenticatedActionClient
   .inputSchema(ZRemoveSurveySlugAction)
   .action(async ({ ctx, parsedInput }) => {

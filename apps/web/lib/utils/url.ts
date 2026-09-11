@@ -1,5 +1,20 @@
+/**
+ * URL matching utilities for action-class page URL rules.
+ *
+ * Supports: exactMatch, contains, startsWith, endsWith, notMatch, notContains,
+ * matchesRegex — used by the action-class editor and the JS client's no-code
+ * event detection.
+ */
 import { TActionClassPageUrlRule } from "@formbricks/types/action-classes";
 
+/**
+ * Tests whether a URL matches a given page URL rule.
+ *
+ * @param testUrl — the URL to test
+ * @param pageUrlValue — the rule's comparison value
+ * @param pageUrlRule — the rule type
+ * @param t — i18n translate function (for error messages)
+ */
 export const testURLmatch = (
   testUrl: string,
   pageUrlValue: string,
@@ -34,7 +49,14 @@ export const testURLmatch = (
   }
 };
 
-// Helper function to validate callback URLs
+/**
+ * Validates a callback URL against the WEBAPP_URL origin to prevent open redirects.
+ * Only allows same-origin absolute URLs and safe root-relative paths.
+ *
+ * @param url — the URL to validate
+ * @param WEBAPP_URL — the application's base URL
+ * @returns — the validated URL string, or null
+ */
 export const getValidatedCallbackUrl = (
   url: string | null | undefined,
   WEBAPP_URL: string
@@ -75,6 +97,7 @@ export const getValidatedCallbackUrl = (
   }
 };
 
+/** Quick check whether a string is a valid URL. */
 export const isStringUrl = (url: string): boolean => {
   try {
     new URL(url);

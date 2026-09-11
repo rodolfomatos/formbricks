@@ -9,6 +9,7 @@ import { validateInputs } from "@/lib/utils/validate";
 import { TWorkspaceWithLanguages } from "@/modules/survey/list/types/surveys";
 import { TUserWorkspace } from "@/modules/survey/list/types/workspaces";
 
+/** Checks if a workspace exists. Returns its ID or throws ResourceNotFoundError. */
 export const doesWorkspaceExist = reactCache(async (workspaceId: string): Promise<string | null> => {
   const workspace = await prisma.workspace.findUnique({
     where: {
@@ -26,6 +27,7 @@ export const doesWorkspaceExist = reactCache(async (workspaceId: string): Promis
   return workspace.id;
 });
 
+/** Fetches a minimal workspace object by ID (just the ID). Returns null if not found. */
 export const getWorkspace = reactCache(async (workspaceId: string): Promise<{ id: string } | null> => {
   validateInputs([workspaceId, z.cuid2()]);
 
@@ -49,6 +51,7 @@ export const getWorkspace = reactCache(async (workspaceId: string): Promise<{ id
   }
 });
 
+/** Loads a workspace with its associated languages. Returns null if not found. */
 export const getWorkspaceWithLanguages = reactCache(
   async (workspaceId: string): Promise<TWorkspaceWithLanguages | null> => {
     try {
@@ -73,6 +76,7 @@ export const getWorkspaceWithLanguages = reactCache(
   }
 );
 
+/** Returns the list of workspaces a user belongs to within an organisation. Members are scoped to their teams. */
 export const getUserWorkspaces = reactCache(
   async (userId: string, organizationId: string): Promise<TUserWorkspace[]> => {
     try {

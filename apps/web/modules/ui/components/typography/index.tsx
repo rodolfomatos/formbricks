@@ -1,3 +1,7 @@
+/**
+ * Typography components: H1–H4, Lead, P, Large, Base, Small, InlineSmall, Muted, InlineCode, List, Quote.
+ * Each styled heading/paragraph/span component with consistent text sizing and color tokens.
+ */
 import { cva } from "class-variance-authority";
 import React, { forwardRef } from "react";
 import { cn } from "@/modules/ui/lib/utils";

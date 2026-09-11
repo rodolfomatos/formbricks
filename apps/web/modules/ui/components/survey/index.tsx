@@ -1,3 +1,8 @@
+/**
+ * Inline survey renderer that dynamically loads the surveys UMD bundle and renders
+ * a survey into a container div. Handles reCAPTCHA loading, script lifecycle, and
+ * re-rendering on prop changes.
+ */
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";

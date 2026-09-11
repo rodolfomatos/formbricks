@@ -1,3 +1,10 @@
+/**
+ * Single-use survey link utilities.
+ *
+ * Generates, signs, and validates single-use survey IDs. Supports both plain
+ * (cuid) and encrypted formats. Signatures use HMAC-SHA256 with the app's
+ * encryption key for tamper resistance.
+ */
 import { createId, isCuid } from "@paralleldrive/cuid2";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { symmetricEncrypt } from "@/lib/crypto";
@@ -18,7 +25,7 @@ const getSingleUseSigningKey = (): string => {
   return env.ENCRYPTION_KEY;
 };
 
-// generate encrypted single use id for the survey
+/** Generates a single-use ID (plain cuid or encrypted depending on config). */
 export const generateSurveySingleUseId = (isEncrypted: boolean): string => {
   const cuid = createId();
   if (!isEncrypted) {
@@ -33,6 +40,7 @@ export const generateSurveySingleUseId = (isEncrypted: boolean): string => {
   return encryptedCuid;
 };
 
+/** Generates a batch of `count` single-use IDs at once. */
 export const generateSurveySingleUseIds = (count: number, isEncrypted: boolean): string[] => {
   const singleUseIds: string[] = [];
 
@@ -43,12 +51,14 @@ export const generateSurveySingleUseIds = (count: number, isEncrypted: boolean):
   return singleUseIds;
 };
 
+/** Creates an HMAC-SHA256 signature for a single-use survey link. */
 export const generateSurveySingleUseSignature = (surveyId: string, singleUseId: string): string => {
   const payload = `${SINGLE_USE_SIGNATURE_PAYLOAD_PREFIX}:${surveyId}:${singleUseId}`;
 
   return createHmac("sha256", getSingleUseSigningKey()).update(payload).digest("hex");
 };
 
+/** Validates a single-use survey link signature using timing-safe comparison. */
 export const validateSurveySingleUseSignature = (
   surveyId: string,
   singleUseId: string,
@@ -65,6 +75,7 @@ export const validateSurveySingleUseSignature = (
   return expected.length === received.length && timingSafeEqual(expected, received);
 };
 
+/** Generates the URL params (suId, optional suToken) for a single-use survey link. */
 export const generateSurveySingleUseLinkParams = (
   surveyId: string,
   isEncrypted: boolean,
@@ -82,6 +93,7 @@ export const generateSurveySingleUseLinkParams = (
   };
 };
 
+/** Generates a batch of single-use survey link params. */
 export const generateSurveySingleUseLinkParamsList = (
   count: number,
   surveyId: string,
@@ -96,6 +108,10 @@ export const generateSurveySingleUseLinkParamsList = (
   return singleUseLinkParams;
 };
 
+/**
+ * Validates single-use link params (suId + suToken) and returns the decrypted
+ * single-use ID, or null if invalid/expired.
+ */
 export const validateSurveySingleUseLinkParams = ({
   surveyId,
   suId,

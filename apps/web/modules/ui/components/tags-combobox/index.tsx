@@ -1,3 +1,7 @@
+/**
+ * Combobox for selecting or creating tags via a popover with search and create-new functionality.
+ * Uses Command (cmdk) for filtering and Popover for the dropdown.
+ */
 "use client";
 
 import { useEffect, useMemo } from "react";

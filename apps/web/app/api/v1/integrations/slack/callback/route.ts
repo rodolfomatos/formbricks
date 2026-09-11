@@ -17,6 +17,12 @@ import { capturePostHogEvent } from "@/lib/posthog";
 import { getOrganizationIdFromWorkspaceId } from "@/lib/utils/helper";
 import { hasUserWorkspaceAccess } from "@/lib/workspace/auth";
 
+/**
+ * GET /api/v1/integrations/slack/callback
+ * Handles the Slack OAuth callback. Exchanges the authorization code for a token,
+ * creates/updates the Slack integration, records a PostHog event, and redirects
+ * back to the integration settings page.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ req, authentication }) => {
     if (!authentication || !("user" in authentication)) {

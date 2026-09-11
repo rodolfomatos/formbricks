@@ -10,6 +10,10 @@ interface PostHogGroupIdentifyProps {
   workspaceName: string;
 }
 
+/**
+ * Client component that groups the current user under the active organization
+ * and workspace in PostHog. Polls briefly if PostHog hasn't loaded yet.
+ */
 export const PostHogGroupIdentify = ({
   organizationId,
   organizationName,

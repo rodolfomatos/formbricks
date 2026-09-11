@@ -1,10 +1,12 @@
+"use client";
+
+import { useCallback, useState } from "react";
+import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { TWorkspace } from "@formbricks/types/workspace";
-import { SettingsCard } from "@/app/(app)/workspaces/[workspaceId]/settings/components/SettingsCard";
-import { ENTERPRISE_LICENSE_REQUEST_FORM_URL, IS_FORMBRICKS_CLOUD } from "@/lib/constants";
-import { getTranslate } from "@/lingodotdev/server";
-import { EditBranding } from "@/modules/ee/whitelabel/remove-branding/components/edit-branding";
-import { Alert, AlertDescription } from "@/modules/ui/components/alert";
-import { ModalButton, UpgradePrompt } from "@/modules/ui/components/upgrade-prompt";
+import { getFormattedErrorMessage } from "@/lib/utils/helper";
+import { Switch } from "@/modules/ui/components/switch";
+import { updateWorkspaceAction } from "@/modules/workspaces/settings/actions";
 
 interface BrandingSettingsCardProps {
   canRemoveBranding: boolean;
@@ -12,61 +14,36 @@ interface BrandingSettingsCardProps {
   isReadOnly: boolean;
 }
 
-export const BrandingSettingsCard = async ({
-  canRemoveBranding,
-  workspace,
-  isReadOnly,
-}: BrandingSettingsCardProps) => {
-  const t = await getTranslate();
-  const workspaceBasePath = `/workspaces/${workspace.id}`;
+export function BrandingSettingsCard({ canRemoveBranding, workspace, isReadOnly }: BrandingSettingsCardProps) {
+  const { t } = useTranslation();
+  const [linkSurveyBranding, setLinkSurveyBranding] = useState(workspace.linkSurveyBranding);
 
-  const buttons: [ModalButton, ModalButton] = [
-    {
-      text: IS_FORMBRICKS_CLOUD ? t("common.upgrade_plan") : t("common.request_trial_license"),
-      href: IS_FORMBRICKS_CLOUD
-        ? `${workspaceBasePath}/settings/organization/billing`
-        : ENTERPRISE_LICENSE_REQUEST_FORM_URL,
+  const handleToggle = useCallback(
+    async (enabled: boolean) => {
+      const result = await updateWorkspaceAction({
+        workspaceId: workspace.id,
+        data: { linkSurveyBranding: enabled },
+      });
+      if (result?.data) {
+        setLinkSurveyBranding(enabled);
+        toast.success(t("workspace.look.branding_updated_successfully"));
+      } else {
+        const errorMessage = getFormattedErrorMessage(result);
+        toast.error(errorMessage);
+      }
     },
-    {
-      text: t("common.learn_more"),
-      href: "https://formbricks.com/docs/self-hosting/advanced/enterprise-features/hide-powered-by-formbricks",
-    },
-  ];
+    [workspace.id, t]
+  );
+
+  const disabled = isReadOnly || !canRemoveBranding;
 
   return (
-    <SettingsCard
-      title={t("workspace.look.formbricks_branding")}
-      description={t("workspace.look.formbricks_branding_settings_description")}>
-      {canRemoveBranding ? (
-        <div className="space-y-4">
-          <EditBranding
-            type="linkSurvey"
-            isEnabled={workspace.linkSurveyBranding}
-            workspaceId={workspace.id}
-            isReadOnly={isReadOnly}
-          />
-          <EditBranding
-            type="appSurvey"
-            isEnabled={workspace.inAppSurveyBranding}
-            workspaceId={workspace.id}
-            isReadOnly={isReadOnly}
-          />
-        </div>
-      ) : (
-        <UpgradePrompt
-          title={t("workspace.look.remove_branding_with_a_higher_plan")}
-          description={t("workspace.settings.general.eliminate_branding_with_whitelabel")}
-          buttons={buttons}
-          feature="remove_branding"
-        />
-      )}
-      {isReadOnly && (
-        <Alert variant="warning" className="mt-4">
-          <AlertDescription>
-            {t("common.only_owners_managers_and_manage_access_members_can_perform_this_action")}
-          </AlertDescription>
-        </Alert>
-      )}
-    </SettingsCard>
+    <div className="flex items-center justify-between rounded-lg border p-4">
+      <div>
+        <h3 className="text-sm font-medium">{t("formbricks_branding")}</h3>
+        <p className="text-xs text-slate-500">{t("formbricks_branding_settings_description")}</p>
+      </div>
+      <Switch checked={linkSurveyBranding} onCheckedChange={handleToggle} disabled={disabled} />
+    </div>
   );
-};
+}

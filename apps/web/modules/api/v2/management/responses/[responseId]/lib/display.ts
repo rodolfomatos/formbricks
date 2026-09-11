@@ -4,6 +4,12 @@ import { PrismaErrorType } from "@formbricks/database/types/error";
 import { Result, err, ok } from "@formbricks/types/error-handlers";
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 
+/**
+ * Deletes a display record by ID.
+ *
+ * @param displayId — The ID of the display to delete
+ * @returns — True if deletion succeeded
+ */
 export const deleteDisplay = async (displayId: string): Promise<Result<boolean, ApiErrorResponseV2>> => {
   try {
     await prisma.display.delete({

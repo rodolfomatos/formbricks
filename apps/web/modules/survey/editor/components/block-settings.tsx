@@ -1,3 +1,4 @@
+/** Collapsible settings panel for a block — back/next button label editors (with empty-label propagation to other blocks) and the conditional logic editor. */
 "use client";
 
 import * as Collapsible from "@radix-ui/react-collapsible";

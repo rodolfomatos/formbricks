@@ -12,6 +12,10 @@ interface CreateSurveyWithAIOnboardingProps {
   language: TUserLocale;
 }
 
+/**
+ * Onboarding component that wraps the CreateWithAIForm for first-survey creation.
+ * Auto-focuses the prompt input and navigates to the survey editor on success.
+ */
 export const CreateSurveyWithAIOnboarding = ({
   workspaceId,
   language,

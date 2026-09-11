@@ -1,3 +1,4 @@
+/** Setup status — tracks whether the SDK has been initialised and guards API calls against un-initialised use. */
 import { Logger } from "@/lib/common/logger";
 import { type NotSetupError, type Result, err, okVoid } from "@/types/error";
 

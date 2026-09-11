@@ -1,3 +1,4 @@
+/** Error types and Result helpers — discriminated union for typed error handling and API error response shapes. */
 export interface ResultError<T> {
   ok: false;
   error: T;

@@ -9,6 +9,10 @@ import { cn } from "@/lib/cn";
 import { replacePresetPlaceholders } from "@/lib/utils/templates";
 import { Button } from "@/modules/ui/components/button";
 
+/**
+ * Card that represents the "start from scratch" / blank survey option in the template picker.
+ * Uses a dashed border and plus-icon visual to distinguish it from preset templates.
+ */
 interface StartFromScratchTemplateProps {
   activeTemplate: TTemplate | null;
   setActiveTemplate: (template: TTemplate) => void;

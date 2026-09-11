@@ -1,3 +1,8 @@
+/**
+ * Compound alert component with variant-based styling (default, error, warning, info, success, outbound).
+ * Consists of Alert, AlertTitle, AlertDescription, and AlertButton sub-components that share
+ * variant/size context via React context.
+ */
 "use client";
 
 import { VariantProps, cva } from "class-variance-authority";

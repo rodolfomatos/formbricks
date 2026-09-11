@@ -1,24 +1,7 @@
 "use client";
 
-import { useTranslation } from "react-i18next";
-import { Button } from "@/modules/ui/components/button";
-import { TooltipRenderer } from "@/modules/ui/components/tooltip";
+import { Button } from "@formbricks/ui/components/Button";
 
-interface ManageTeamButtonProps {
-  onClick: () => void;
-  disabled: boolean;
+export function ManageTeamButton({ teamId }: { teamId: string }) {
+  return <Button variant="secondary">{teamId ? "Manage Team" : "Manage"}</Button>;
 }
-
-export const ManageTeamButton = ({ onClick, disabled }: ManageTeamButtonProps) => {
-  const { t } = useTranslation();
-
-  return (
-    <TooltipRenderer
-      shouldRender={disabled}
-      tooltipContent={t("workspace.settings.teams.manage_team_disabled")}>
-      <Button size="sm" variant="secondary" disabled={disabled} onClick={onClick}>
-        {t("workspace.settings.teams.manage_team")}
-      </Button>
-    </TooltipRenderer>
-  );
-};

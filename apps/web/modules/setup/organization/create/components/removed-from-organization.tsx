@@ -8,12 +8,17 @@ import { Alert, AlertDescription, AlertTitle } from "@/modules/ui/components/ale
 import { Button } from "@/modules/ui/components/button";
 
 interface RemovedFromOrganizationProps {
+  /** Whether the deployment is Formbricks Cloud (affects delete-account modal copy). */
   isFormbricksCloud: boolean;
+  /** Whether SSO identity confirmation for account deletion is disabled. */
   isSsoIdentityConfirmationDisabled: boolean;
+  /** Whether the user must confirm their password before account deletion. */
   requiresPasswordConfirmation: boolean;
+  /** The current user whose memberships were removed. */
   user: TUser;
 }
 
+/** Shown when a user who has been removed from their last organization visits the org-creation page without multi-org access. */
 export const RemovedFromOrganization = ({
   user,
   isFormbricksCloud,

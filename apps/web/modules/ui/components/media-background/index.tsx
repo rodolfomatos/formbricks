@@ -1,3 +1,8 @@
+/**
+ * Full-screen background renderer for survey previews and live surveys.
+ * Supports color, animation (video), Unsplash images, and uploaded images.
+ * Handles brightness filtering, Unsplash photo attribution, and mobile mockup overlay.
+ */
 "use client";
 
 import Image from "next/image";

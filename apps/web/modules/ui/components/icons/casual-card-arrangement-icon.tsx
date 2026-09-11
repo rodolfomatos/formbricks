@@ -1,3 +1,6 @@
+/**
+ * SVG icon for a casual/overlapping card arrangement layout (3 cards rotated at different angles).
+ */
 export const CasualCardArrangementIcon: React.FC<React.SVGProps<SVGSVGElement>> = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="none" viewBox="0 0 17 17">

@@ -11,11 +11,22 @@ import type {
 } from "./types";
 import { AI_PROVIDERS } from "./types";
 
+/**
+ * Maximum entries in the LRU language model cache before eviction.
+ */
 const MAX_LANGUAGE_MODEL_CACHE_ENTRIES = 50;
+/**
+ * Simple LRU cache keyed by provider+model+config fingerprint so that
+ * repeated calls with the same environment reuse the same LanguageModel instance.
+ */
 const languageModelCache = new Map<string, LanguageModel>();
 
 export { AIConfigurationError };
 
+/**
+ * Checks which required fields are missing or invalid for a given provider +
+ * environment, and extracts the resolved model name.
+ */
 const getProviderMissingAndInvalidFields = (
   provider: ActiveAIProvider,
   environment: AIEnvironment
@@ -38,6 +49,10 @@ const getProviderMissingAndInvalidFields = (
   };
 };
 
+/**
+ * Builds a per-provider health status by collecting missing/invalid fields and
+ * deriving a suitable error code.
+ */
 const getProviderStatus = (provider: ActiveAIProvider, environment?: AIEnvironment): AIProviderStatus => {
   const resolvedEnvironment = getAIEnvironment(environment);
   const { missingFields, invalidFields, model } = getProviderMissingAndInvalidFields(
@@ -65,6 +80,10 @@ const getProviderStatus = (provider: ActiveAIProvider, environment?: AIEnvironme
   };
 };
 
+/**
+ * Produces a human-readable error message from an AIConfigurationStatus,
+ * listing missing and invalid fields so operators know exactly what to fix.
+ */
 const getAIConfigurationErrorMessage = (status: AIConfigurationStatus): string => {
   switch (status.errorCode) {
     case "providerMissing":
@@ -89,6 +108,10 @@ const getAIConfigurationErrorMessage = (status: AIConfigurationStatus): string =
   }
 };
 
+/**
+ * Retrieves a cached LanguageModel and bumps it to the front of the LRU list
+ * (most-recently-used position). Returns undefined on cache miss.
+ */
 const getCachedLanguageModel = (cacheKey: string): LanguageModel | undefined => {
   const cachedLanguageModel = languageModelCache.get(cacheKey);
 
@@ -102,6 +125,10 @@ const getCachedLanguageModel = (cacheKey: string): LanguageModel | undefined => 
   return cachedLanguageModel;
 };
 
+/**
+ * Inserts a LanguageModel into the LRU cache, evicting the oldest entry when
+ * the cache exceeds MAX_LANGUAGE_MODEL_CACHE_ENTRIES.
+ */
 const setCachedLanguageModel = (cacheKey: string, languageModel: LanguageModel): void => {
   if (languageModelCache.has(cacheKey)) {
     languageModelCache.delete(cacheKey);
@@ -116,13 +143,25 @@ const setCachedLanguageModel = (cacheKey: string, languageModel: LanguageModel):
   languageModelCache.set(cacheKey, languageModel);
 };
 
+/**
+ * Returns the active AI provider name from the environment, or null when
+ * AI_PROVIDER is not set or is invalid.
+ */
 export const getActiveAiProvider = (environment?: AIEnvironment): ActiveAIProvider | null => {
   return resolveActiveAIProvider(getAIEnvironment(environment).AI_PROVIDER);
 };
 
+/**
+ * Returns the AI model name from the environment, or null when AI_MODEL is not set.
+ */
 export const getActiveAiModel = (environment?: AIEnvironment): string | null =>
   normalizeValue(getAIEnvironment(environment).AI_MODEL) ?? null;
 
+/**
+ * Performs a full AI configuration health-check: validates AI_PROVIDER,
+ * delegates per-provider validation, and returns a structured status that
+ * callers (UI, health endpoints) can inspect without parsing error messages.
+ */
 export const getAiConfigurationStatus = (environment?: AIEnvironment): AIConfigurationStatus => {
   const resolvedEnvironment = getAIEnvironment(environment);
   const rawProvider = normalizeValue(resolvedEnvironment.AI_PROVIDER);
@@ -174,9 +213,18 @@ export const getAiConfigurationStatus = (environment?: AIEnvironment): AIConfigu
   };
 };
 
+/**
+ * Convenience check: is the AI subsystem fully configured and ready to use?
+ */
 export const isAiConfigured = (environment?: AIEnvironment): boolean =>
   getAiConfigurationStatus(environment).isConfigured;
 
+/**
+ * Resolves the active AI provider, validates configuration, and returns a
+ * cached (or freshly created) LanguageModel. Throws AIConfigurationError when
+ * configuration is missing or invalid so callers don't silently receive a
+ * broken model.
+ */
 export const getAiModel = (environment?: AIEnvironment): AILanguageModel => {
   const resolvedEnvironment = getAIEnvironment(environment);
   const configurationStatus = getAiConfigurationStatus(resolvedEnvironment);
@@ -223,6 +271,10 @@ export const getAiModel = (environment?: AIEnvironment): AILanguageModel => {
   return languageModel;
 };
 
+/**
+ * Clears the in-memory LRU cache so the next getAiModel() call creates a fresh
+ * LanguageModel. Useful during credential rotation or provider re-configuration.
+ */
 export const resetLanguageModelCache = (): void => {
   languageModelCache.clear();
 };

@@ -23,6 +23,12 @@ import { hasPermission } from "@/modules/organization/settings/api-keys/lib/util
 import { resolveStorageUrlsInObject } from "@/modules/storage/utils";
 import { getSurveys } from "./lib/surveys";
 
+/**
+ * GET /api/v1/management/surveys
+ * Returns paginated surveys for all workspaces the API key has access to.
+ * Supports `limit` and `offset` query params. Derives `questions` from `blocks`
+ * for backwards compatibility.
+ */
 export const GET = withV1ApiWrapper({
   allowOrganizationOnlyApiKey: true,
   handler: async ({ req, authentication }) => {
@@ -61,6 +67,12 @@ export const GET = withV1ApiWrapper({
   },
 });
 
+/**
+ * POST /api/v1/management/surveys
+ * Creates a new survey. Accepts workspaceId or environmentId, validates input,
+ * checks feature permissions, and supports legacy `projectOverwrites` and
+ * `questions`→`blocks` migration.
+ */
 export const POST = withV1ApiWrapper({
   handler: async ({ req, auditLog, authentication }) => {
     if (!authentication || !("apiKeyId" in authentication)) {

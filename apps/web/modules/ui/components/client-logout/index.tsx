@@ -1,3 +1,7 @@
+/**
+ * Immediately triggers a forced logout when mounted. Renders nothing.
+ * Used internally when the server redirects to a logout page (e.g. session expired).
+ */
 "use client";
 
 import { useEffect } from "react";

@@ -2,6 +2,10 @@ import { logger } from "@formbricks/logger";
 import type { JobHandler } from "@/src/contracts";
 import type { TSurveySchedulingJobData } from "@/src/types";
 
+/**
+ * Default survey-scheduling processor — throws to signal that the web app
+ * layer must register a handler override.
+ */
 export const processSurveySchedulingJob: JobHandler<TSurveySchedulingJobData> = (data, context) => {
   logger.error(
     {

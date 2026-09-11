@@ -1,3 +1,9 @@
+/**
+ * App-sidebar component with responsive behavior (drawer on mobile, collapsible on desktop).
+ * Provides Provider, Sidebar, Trigger, Rail, Inset, Input, Header, Footer, Content,
+ * Group, Menu, MenuButton, MenuAction, MenuBadge, MenuSkeleton, MenuSub, and Separator sub-components.
+ * Supports keyboard shortcut (Ctrl+B) to toggle and cookie-persisted state.
+ */
 "use client";
 
 import { Slot } from "@radix-ui/react-slot";

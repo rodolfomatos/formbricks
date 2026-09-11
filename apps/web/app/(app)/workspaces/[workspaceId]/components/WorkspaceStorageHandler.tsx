@@ -7,6 +7,10 @@ interface WorkspaceStorageHandlerProps {
   workspaceId: string;
 }
 
+/**
+ * Syncs the current workspace ID to localStorage on mount and on workspace change.
+ * Writes both the workspace ID and the legacy environment ID for backward compatibility.
+ */
 const WorkspaceStorageHandler = ({ workspaceId }: WorkspaceStorageHandlerProps) => {
   useEffect(() => {
     localStorage.setItem(FORMBRICKS_WORKSPACE_ID_LS, workspaceId);

@@ -1,3 +1,11 @@
+/**
+ * Survey utility helpers used internally by the survey service.
+ *
+ * Handles: Prisma-to-domain survey transformation (numeric decimal conversion,
+ * segment surveys list flattening), media validation (image/video URLs in
+ * questions and blocks), isDraft-stripping before persistence, and block/element
+ * navigation (flat element lists, element location lookups).
+ */
 import "server-only";
 import { Result, err, ok } from "@formbricks/types/error-handlers";
 import { InvalidInputError } from "@formbricks/types/errors";
@@ -13,6 +21,13 @@ import { TSurvey, TSurveyQuestion, TSurveyQuestionTypeEnum } from "@formbricks/t
 import { isValidVideoUrl } from "@/lib/utils/video-upload";
 import { isValidImageFile } from "@/modules/storage/utils";
 
+/**
+ * Converts a raw Prisma survey result into the domain type.
+ * Handles: displayPercentage decimal→Number, segment surveys list→id array.
+ *
+ * @param surveyPrisma — the raw Prisma query result
+ * @returns — the typed survey
+ */
 export const transformPrismaSurvey = <T extends TSurvey | TJsWorkspaceStateSurvey>(surveyPrisma: any): T => {
   let segment: TSegment | null = null;
 
@@ -33,6 +48,12 @@ export const transformPrismaSurvey = <T extends TSurvey | TJsWorkspaceStateSurve
   return transformedSurvey;
 };
 
+/**
+ * Checks whether any survey in a list has active segment filters.
+ *
+ * @param surveys — the survey list
+ * @returns — true if at least one survey has non-empty filters
+ */
 export const anySurveyHasFilters = (surveys: TSurvey[]): boolean => {
   return surveys.some((survey) => {
     if ("segment" in survey && survey.segment) {
@@ -42,6 +63,12 @@ export const anySurveyHasFilters = (surveys: TSurvey[]): boolean => {
   });
 };
 
+/**
+ * Validates image URLs in all questions, including picture-selection choice images.
+ * Throws InvalidInputError on the first invalid URL found.
+ *
+ * @param questions — the questions to validate
+ */
 export const checkForInvalidImagesInQuestions = (questions: TSurveyQuestion[]) => {
   questions.forEach((question, qIndex) => {
     if (question.imageUrl && !isValidImageFile(question.imageUrl)) {
@@ -64,14 +91,6 @@ export const checkForInvalidImagesInQuestions = (questions: TSurveyQuestion[]) =
   });
 };
 
-/**
- * Validates a single choice's image URL
- * @param choice - Choice to validate
- * @param choiceIdx - Index of the choice for error reporting
- * @param elementIdx - Index of the element for error reporting
- * @param blockName - Block name for error reporting
- * @returns Result with void data on success or Error on failure
- */
 const validateChoiceImage = (
   choice: TSurveyPictureChoice,
   choiceIdx: number,
@@ -88,14 +107,6 @@ const validateChoiceImage = (
   return ok(undefined);
 };
 
-/**
- * Validates choice images for picture selection elements
- * Only picture selection elements have imageUrl in choices
- * @param element - Element with choices to validate
- * @param elementIdx - Index of the element for error reporting
- * @param blockName - Block name for error reporting
- * @returns Result with void data on success or Error on failure
- */
 const validatePictureSelectionChoiceImages = (
   element: TSurveyElement,
   elementIdx: number,
@@ -120,14 +131,6 @@ const validatePictureSelectionChoiceImages = (
   return ok(undefined);
 };
 
-/**
- * Validates a single element's image URL, video URL, and picture selection choice images
- * @param element - Element to validate
- * @param elementIdx - Index of the element for error reporting
- * @param blockIdx - Index of the block for error reporting
- * @param blockName - Block name for error reporting
- * @returns Result with void data on success or Error on failure
- */
 const validateElement = (
   element: TSurveyElement,
   elementIdx: number,
@@ -186,6 +189,13 @@ export const checkForInvalidMediaInBlocks = (blocks: TSurveyBlock[]): Result<voi
  * @param blocks - Array of survey blocks
  * @returns New array with isDraft stripped from all elements
  */
+/**
+ * Strips the isDraft flag from all elements before persistence.
+ * Blocks don't have isDraft — only element IDs need protection as they're user-editable.
+ *
+ * @param blocks — the blocks to clean
+ * @returns — clean blocks ready for DB
+ */
 export const stripIsDraftFromBlocks = (blocks: TSurveyBlock[]): TSurveyBlock[] => {
   return blocks.map((block) => ({
     ...block,
@@ -203,6 +213,12 @@ export const stripIsDraftFromBlocks = (blocks: TSurveyBlock[]): TSurveyBlock[] =
  * @param blocks - Array of survey blocks to validate and prepare
  * @returns Prepared blocks ready for database persistence
  * @throws Error if any media validation fails
+ */
+/**
+ * Validates media URLs and strips isDraft in one pass.
+ *
+ * @param blocks — blocks to validate and prepare
+ * @returns — prepared blocks
  */
 export const validateMediaAndPrepareBlocks = (blocks: TSurveyBlock[]): TSurveyBlock[] => {
   // Validate media (images and videos)
@@ -222,6 +238,13 @@ export const validateMediaAndPrepareBlocks = (blocks: TSurveyBlock[]): TSurveyBl
  * @param blocks - Array of survey blocks
  * @returns Flat array of all elements across all blocks
  */
+/**
+ * Derives a flat array of elements from the blocks structure.
+ * Duplicated from the client-side survey utils since this file is server-only.
+ *
+ * @param blocks — the survey blocks
+ * @returns — flat element array
+ */
 export const getElementsFromBlocks = (blocks: TSurveyBlock[]): TSurveyElement[] => {
   return blocks.flatMap((block) => block.elements);
 };
@@ -231,6 +254,13 @@ export const getElementsFromBlocks = (blocks: TSurveyBlock[]): TSurveyElement[] 
  * @param survey - The survey object
  * @param elementId - The ID of the element to find
  * @returns Object containing blockId, blockIndex, elementIndex and the block
+ */
+/**
+ * Locates an element within a survey's blocks by its ID.
+ *
+ * @param survey — the survey
+ * @param elementId — the element to find
+ * @returns — block/position info (all -1 / null if not found)
  */
 export const findElementLocation = (
   survey: TSurvey,

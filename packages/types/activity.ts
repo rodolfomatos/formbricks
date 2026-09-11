@@ -1,3 +1,4 @@
+/** Activity feed item schema — represents a single event/attribute/display in the contact activity log. */
 import { z } from "zod";
 
 export const ZActivityFeedItem = z.object({

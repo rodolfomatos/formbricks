@@ -1,3 +1,7 @@
+/**
+ * Zod schemas for contact attribute value entities — validates attribute
+ * values assigned to contacts, including string, number, and date variants.
+ */
 import { z } from "zod";
 import type { ContactAttribute } from "../src/prisma";
 

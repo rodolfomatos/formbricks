@@ -10,6 +10,10 @@ import { selectSurvey } from "@/lib/survey/service";
 import { transformPrismaSurvey } from "@/lib/survey/utils";
 import { validateInputs } from "@/lib/utils/validate";
 
+/**
+ * Fetches all non-completed surveys for a workspace, ordered by most recent update.
+ * Used by integration pages to let users select which survey to connect. Cached per request.
+ */
 export const getSurveys = reactCache(async (workspaceId: string): Promise<TSurvey[]> => {
   validateInputs([workspaceId, ZId]);
 

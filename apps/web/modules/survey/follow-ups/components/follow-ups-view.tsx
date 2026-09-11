@@ -13,6 +13,7 @@ import { FollowUpModal } from "@/modules/survey/follow-ups/components/follow-up-
 import { Button } from "@/modules/ui/components/button";
 import { UpgradePrompt } from "@/modules/ui/components/upgrade-prompt";
 
+/** Main view for managing survey follow-up email actions. Shows an upgrade prompt when follow-ups are not allowed on the plan, or lists existing follow-ups with an add-new button. */
 interface FollowUpsViewProps {
   localSurvey: TSurvey;
   setLocalSurvey: React.Dispatch<React.SetStateAction<TSurvey>>;

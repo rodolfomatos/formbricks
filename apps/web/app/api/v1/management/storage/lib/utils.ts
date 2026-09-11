@@ -3,6 +3,10 @@ import { TApiV1Authentication } from "@/app/lib/api/with-api-logging";
 import { hasUserWorkspaceAccessForAction } from "@/lib/workspace/auth";
 import { hasPermission } from "@/modules/organization/settings/api-keys/lib/utils";
 
+/**
+ * Validates that the authenticated user or API key has POST access to the
+ * given workspace. Returns an error Response if unauthorized.
+ */
 export const checkAuth = async (authentication: TApiV1Authentication | undefined, workspaceId: string) => {
   if (!authentication) {
     return responses.notAuthenticatedResponse();

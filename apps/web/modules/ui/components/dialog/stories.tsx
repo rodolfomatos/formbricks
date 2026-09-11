@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the Dialog component.
+ * Covers default, only-body, no-footer, no-header, restricted-close, and wide variants.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { AlertCircle } from "lucide-react";
 import { Button } from "../button";

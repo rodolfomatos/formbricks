@@ -1,3 +1,4 @@
+/** Expand icon — inline SVG fullscreen/maximise icon for lightbox media expansion in surveys. */
 import { cn } from "@/lib/utils";
 
 interface ExpandIconProps {

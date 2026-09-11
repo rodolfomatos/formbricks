@@ -1,3 +1,7 @@
+/**
+ * Displays uploaded file URLs as clickable download links with the original filename.
+ * Shows "Skipped" when no files were uploaded. Used in response summary views.
+ */
 "use client";
 
 import { DownloadIcon } from "lucide-react";

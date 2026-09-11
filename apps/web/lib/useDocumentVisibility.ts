@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 
-// This hook will listen to the visibilitychange event and run the provided function whenever the document's visibility state changes to visible
+/**
+ * React hook that fires a callback each time the browser tab becomes visible.
+ * Mount this in components that need to refresh stale data or re-establish
+ * connections when the user returns to the tab.
+ *
+ * @param onVisible — function to invoke when the document becomes visible
+ */
 export const useDocumentVisibility = (onVisible: () => void) => {
   useEffect(() => {
     const listener = () => {

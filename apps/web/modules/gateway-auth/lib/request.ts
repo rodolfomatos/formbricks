@@ -45,6 +45,14 @@ export type TGatewayRequestAuthorizer = {
   }) => Promise<TGatewayAuthorizationDecision>;
 };
 
+/**
+ * Build a plain-text HTTP Response for gateway auth responses (used for
+ * both error responses and the unsupported-route case).
+ *
+ * @param status — the HTTP status code
+ * @param message — the plain-text body
+ * @returns — a Response with content-type text/plain
+ */
 export const buildGatewayStatusResponse = (status: number, message: string): Response =>
   new Response(message, {
     status,
@@ -53,6 +61,9 @@ export const buildGatewayStatusResponse = (status: number, message: string): Res
     },
   });
 
+/**
+ * Shortcut that produces an unconditional allow decision for the gateway.
+ */
 export const allowGatewayRequest = (): TGatewayAuthorizationDecision => ({ status: "allow" });
 
 export const authenticateGatewayRequest = async (

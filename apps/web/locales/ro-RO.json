@@ -2414,6 +2414,7 @@
         "workspace": "Workspace"
       },
       "enterprise": {
+        "ai_smart_tools": "Instrumente inteligente AI",
         "audit_logs": "Jurnale de audit",
         "coming_soon": "În curând",
         "contacts_and_segments": "Gestionare contacte & segmente",

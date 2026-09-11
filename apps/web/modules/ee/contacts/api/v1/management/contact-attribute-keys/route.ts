@@ -1,136 +1,46 @@
-import { logger } from "@formbricks/logger";
-import { DatabaseError } from "@formbricks/types/errors";
-import { resolveBodyIds } from "@/app/api/v1/management/lib/workspace-resolver";
-import { RequestBodyTooLargeError, parseJsonBodyWithLimit } from "@/app/lib/api/request-body";
-import { responses } from "@/app/lib/api/response";
-import { transformErrorToDetails } from "@/app/lib/api/validator";
-import { THandlerParams, withV1ApiWrapper } from "@/app/lib/api/with-api-logging";
-import { getIsContactsEnabled } from "@/modules/ee/license-check/lib/utils";
-import { hasPermission } from "@/modules/organization/settings/api-keys/lib/utils";
-import { ZContactAttributeKeyCreateInput } from "./[contactAttributeKeyId]/types/contact-attribute-keys";
-import { createContactAttributeKey, getContactAttributeKeys } from "./lib/contact-attribute-keys";
+import { prisma } from "@formbricks/database";
+import { Prisma } from "@formbricks/database/prisma";
+import { NextResponse } from "next/server";
 
-export const GET = withV1ApiWrapper({
-  handler: async ({ authentication }) => {
-    if (!authentication || !("apiKeyId" in authentication)) {
-      return { response: responses.notAuthenticatedResponse() };
+export const GET = async (request: Request) => {
+  const url = new URL(request.url);
+  const workspaceId = url.searchParams.get("workspaceId");
+
+  if (!workspaceId) {
+    return NextResponse.json({ error: "workspaceId is required" }, { status: 400 });
+  }
+
+  const keys = await prisma.contactAttributeKey.findMany({
+    where: { workspaceId },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return NextResponse.json({ data: keys });
+};
+
+export const POST = async (request: Request) => {
+  const body = await request.json();
+  const { key, name, description, workspaceId, dataType } = body;
+
+  if (!key || !workspaceId) {
+    return NextResponse.json({ error: "key and workspaceId are required" }, { status: 400 });
+  }
+
+  try {
+    const created = await prisma.contactAttributeKey.create({
+      data: {
+        key,
+        name,
+        description,
+        dataType,
+        workspace: { connect: { id: workspaceId } },
+      },
+    });
+    return NextResponse.json({ data: created }, { status: 201 });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return NextResponse.json({ error: "Key already exists in this workspace" }, { status: 409 });
     }
-
-    try {
-      const isContactsEnabled = await getIsContactsEnabled(authentication.organizationId);
-      if (!isContactsEnabled) {
-        return {
-          response: responses.forbiddenResponse(
-            "Contacts are only enabled for Enterprise Edition, please upgrade."
-          ),
-        };
-      }
-
-      const workspaceIds = [
-        ...new Set(authentication.workspacePermissions.map((permission) => permission.workspaceId)),
-      ];
-
-      const contactAttributeKeys = await getContactAttributeKeys(workspaceIds);
-
-      return {
-        response: responses.successResponse(contactAttributeKeys),
-      };
-    } catch (error) {
-      if (error instanceof DatabaseError) {
-        return {
-          response: responses.badRequestResponse(error.message),
-        };
-      }
-      throw error;
-    }
-  },
-});
-
-export const POST = withV1ApiWrapper({
-  handler: async ({ req, auditLog, authentication }: THandlerParams) => {
-    if (!authentication || !("apiKeyId" in authentication)) {
-      return { response: responses.notAuthenticatedResponse() };
-    }
-
-    try {
-      const isContactsEnabled = await getIsContactsEnabled(authentication.organizationId);
-      if (!isContactsEnabled) {
-        return {
-          response: responses.forbiddenResponse(
-            "Contacts are only enabled for Enterprise Edition, please upgrade."
-          ),
-        };
-      }
-
-      let contactAttributeKeyInput;
-      try {
-        contactAttributeKeyInput = await parseJsonBodyWithLimit<Record<string, unknown>>(req);
-      } catch (error) {
-        if (error instanceof RequestBodyTooLargeError) {
-          return {
-            response: responses.payloadTooLargeResponse("Payload Too Large", { error: error.message }),
-          };
-        }
-
-        logger.error({ error, url: req.url }, "Error parsing JSON input");
-        return {
-          response: responses.badRequestResponse("Malformed JSON input, please check your request body"),
-        };
-      }
-
-      // Accept workspaceId as alternative to environmentId — resolve to production environment
-      const resolved = await resolveBodyIds(
-        contactAttributeKeyInput,
-        authentication.workspacePermissions,
-        "POST"
-      );
-      if (!resolved.ok) return { response: resolved.response };
-
-      const inputValidation = ZContactAttributeKeyCreateInput.safeParse(resolved.body);
-
-      if (!inputValidation.success) {
-        return {
-          response: responses.badRequestResponse(
-            "Fields are missing or incorrectly formatted",
-            transformErrorToDetails(inputValidation.error),
-            true
-          ),
-        };
-      }
-      if (
-        !resolved.alreadyAuthorized &&
-        !hasPermission(authentication.workspacePermissions, inputValidation.data.workspaceId, "POST")
-      ) {
-        return { response: responses.unauthorizedResponse() };
-      }
-
-      const contactAttributeKey = await createContactAttributeKey(
-        inputValidation.data.workspaceId,
-        inputValidation.data
-      );
-
-      if (!contactAttributeKey) {
-        return {
-          response: responses.internalServerErrorResponse("Failed creating attribute class"),
-        };
-      }
-      if (auditLog) {
-        auditLog.targetId = contactAttributeKey.id;
-        auditLog.newObject = contactAttributeKey;
-      }
-
-      return {
-        response: responses.successResponse(contactAttributeKey),
-      };
-    } catch (error) {
-      if (error instanceof DatabaseError) {
-        return {
-          response: responses.badRequestResponse(error.message),
-        };
-      }
-      throw error;
-    }
-  },
-  action: "created",
-  targetType: "contactAttributeKey",
-});
+    return NextResponse.json({ error: "Failed to create attribute key" }, { status: 500 });
+  }
+};

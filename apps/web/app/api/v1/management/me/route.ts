@@ -189,6 +189,11 @@ const handleSessionAuthentication = async () => {
   return Response.json(user);
 };
 
+/**
+ * GET /api/v1/management/me
+ * Returns the current user (session auth) or workspace details (API key auth).
+ * API key auth supports both v2 (lookupHash) and legacy (hashedKey) formats.
+ */
 export const GET = async () => {
   const headersList = await headers();
   const apiKey = headersList.get("x-api-key");

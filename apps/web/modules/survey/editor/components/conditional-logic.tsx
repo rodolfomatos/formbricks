@@ -1,3 +1,4 @@
+/** Conditional logic builder for a block — manages a list of logic items (conditions + actions) with add, delete, duplicate, and reorder, plus a fallback handler. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

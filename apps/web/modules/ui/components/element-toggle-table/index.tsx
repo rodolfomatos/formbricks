@@ -1,3 +1,8 @@
+/**
+ * Table of toggleable fields for address/contact form elements.
+ * Each row has show/required switches and a placeholder input.
+ * Used in survey editor for address and contact info elements.
+ */
 "use client";
 
 import { useTranslation } from "react-i18next";

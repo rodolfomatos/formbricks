@@ -7,12 +7,15 @@ import { TGatewayAuthService, getGatewayAuthServiceTokenPurpose } from "@/module
 
 const FEEDBACK_RECORDS_GATEWAY_TOKEN_TTL_SECONDS = 60 * 10;
 
-// Helper function to decrypt with fallback to plain text
+/**
+ * Attempts symmetric decryption; returns the original text on failure.
+ * Backwards-compat for tokens created before payload encryption was introduced.
+ */
 const decryptWithFallback = (encryptedText: string, key: string): string => {
   try {
     return symmetricDecrypt(encryptedText, key);
   } catch {
-    return encryptedText; // Return as-is if decryption fails (legacy format)
+    return encryptedText;
   }
 };
 
@@ -58,6 +61,14 @@ const getVerificationTokenPurpose = (purpose: unknown): TVerificationTokenPurpos
   return DEFAULT_VERIFICATION_TOKEN_PURPOSE;
 };
 
+/**
+ * Creates a verification token (email verification or SSO recovery).
+ * The userId is encrypted before embedding.
+ *
+ * @param userId — the user to create the token for
+ * @param options — JWT sign options + optional purpose
+ * @returns — signed JWT string
+ */
 export const createToken = (userId: string, options: TVerificationTokenOptions = {}): string => {
   if (!NEXTAUTH_SECRET) {
     throw new Error("NEXTAUTH_SECRET is not set");
@@ -73,6 +84,13 @@ export const createToken = (userId: string, options: TVerificationTokenOptions =
   return jwt.sign({ id: encryptedUserId, purpose }, NEXTAUTH_SECRET, jwtOptions);
 };
 
+/**
+ * Creates a short-lived gateway auth token for internal microservice communication.
+ *
+ * @param userId — the user the token acts on behalf of (sub claim)
+ * @param service — which gateway service to authorise
+ * @returns — the token and its ISO expiry timestamp
+ */
 export const createGatewayServiceToken = (
   userId: string,
   service: TGatewayAuthService
@@ -101,6 +119,7 @@ export const createGatewayServiceToken = (
   };
 };
 
+/** Convenience wrapper: creates a feedback-records gateway token. */
 export const createFeedbackRecordsGatewayToken = (
   userId: string
 ): {
@@ -110,6 +129,14 @@ export const createFeedbackRecordsGatewayToken = (
   return createGatewayServiceToken(userId, "feedbackRecords");
 };
 
+/**
+ * Creates a token that allows a respondent to access a link survey.
+ * The email is encrypted; surveyId is stored in plaintext for routing.
+ *
+ * @param surveyId — the survey
+ * @param userEmail — the respondent's email (encrypted in payload)
+ * @returns — the signed JWT
+ */
 export const createTokenForLinkSurvey = (surveyId: string, userEmail: string): string => {
   if (!NEXTAUTH_SECRET) {
     throw new Error("NEXTAUTH_SECRET is not set");
@@ -123,6 +150,12 @@ export const createTokenForLinkSurvey = (surveyId: string, userEmail: string): s
   return jwt.sign({ email: encryptedEmail, surveyId }, NEXTAUTH_SECRET);
 };
 
+/**
+ * Verifies an email-change token and returns the decrypted userId + new email.
+ *
+ * @param token — the JWT to verify
+ * @returns — decrypted { id, email }
+ */
 export const verifyEmailChangeToken = async (token: string): Promise<{ id: string; email: string }> => {
   if (!NEXTAUTH_SECRET) {
     throw new Error("NEXTAUTH_SECRET is not set");
@@ -151,6 +184,13 @@ export const verifyEmailChangeToken = async (token: string): Promise<{ id: strin
   };
 };
 
+/**
+ * Verifies a gateway service token and returns the user ID from the sub claim.
+ *
+ * @param token — the JWT to verify
+ * @param service — the expected service (purpose must match)
+ * @returns — the authenticated userId
+ */
 export const verifyGatewayServiceToken = (
   token: string,
   service: TGatewayAuthService
@@ -175,6 +215,7 @@ export const verifyGatewayServiceToken = (
   };
 };
 
+/** Convenience wrapper: verifies a feedback-records gateway token. */
 export const verifyFeedbackRecordsGatewayToken = (
   token: string
 ): {
@@ -183,6 +224,7 @@ export const verifyFeedbackRecordsGatewayToken = (
   return verifyGatewayServiceToken(token, "feedbackRecords");
 };
 
+/** Creates a short-lived (1 day) token for confirming an email change. */
 export const createEmailChangeToken = (userId: string, email: string): string => {
   if (!NEXTAUTH_SECRET) {
     throw new Error("NEXTAUTH_SECRET is not set");
@@ -205,6 +247,7 @@ export const createEmailChangeToken = (userId: string, email: string): string =>
   });
 };
 
+/** Creates a bare email-verification token with just the encrypted email. */
 export const createEmailToken = (email: string): string => {
   if (!NEXTAUTH_SECRET) {
     throw new Error("NEXTAUTH_SECRET is not set");
@@ -218,6 +261,7 @@ export const createEmailToken = (email: string): string => {
   return jwt.sign({ email: encryptedEmail }, NEXTAUTH_SECRET);
 };
 
+/** Extracts and decrypts the email from an email-only token. */
 export const getEmailFromEmailToken = (token: string): string => {
   if (!NEXTAUTH_SECRET) {
     throw new Error("NEXTAUTH_SECRET is not set");
@@ -233,6 +277,14 @@ export const getEmailFromEmailToken = (token: string): string => {
   return decryptWithFallback(payload.email, ENCRYPTION_KEY);
 };
 
+/**
+ * Creates a token for a workspace invitation.
+ * Both the invite ID and the email are encrypted.
+ *
+ * @param inviteId — the DB invite record ID
+ * @param email — the invitee's email
+ * @param options — extra JWT sign options
+ */
 export const createInviteToken = (inviteId: string, email: string, options = {}): string => {
   if (!NEXTAUTH_SECRET) {
     throw new Error("NEXTAUTH_SECRET is not set");
@@ -247,6 +299,13 @@ export const createInviteToken = (inviteId: string, email: string, options = {})
   return jwt.sign({ inviteId: encryptedInviteId, email: encryptedEmail }, NEXTAUTH_SECRET, options);
 };
 
+/**
+ * Verifies a link-survey token with fallback to legacy (surveyId-concatenated secret).
+ *
+ * @param token — the JWT
+ * @param surveyId — the expected survey (checked against payload.surveyId if present)
+ * @returns — the decrypted email, or null on failure
+ */
 export const verifyTokenForLinkSurvey = (token: string, surveyId: string): string | null => {
   if (!NEXTAUTH_SECRET) {
     return null;
@@ -349,6 +408,10 @@ const DEFAULT_ACCOUNT_DELETION_SSO_REAUTH_INTENT_OPTIONS: SignOptions = {
   expiresIn: "10m",
 };
 
+/**
+ * Creates a short-lived (15m) token for SSO account re-linking.
+ * All sensitive fields (userId, email, providerAccountId, callbackUrl) are encrypted.
+ */
 export const createSsoRelinkIntent = (
   payload: TSsoRelinkIntentPayload,
   options: SignOptions = DEFAULT_SSO_RELINK_INTENT_OPTIONS
@@ -374,6 +437,7 @@ export const createSsoRelinkIntent = (
   );
 };
 
+/** Verifies and decrypts an SSO re-link intent token. */
 export const verifySsoRelinkIntent = (token: string): TSsoRelinkIntentPayload => {
   if (!NEXTAUTH_SECRET) {
     throw new Error("NEXTAUTH_SECRET is not set");
@@ -410,6 +474,9 @@ export const verifySsoRelinkIntent = (token: string): TSsoRelinkIntentPayload =>
   };
 };
 
+/**
+ * Creates a short-lived (10m) token for SSO re-authentication before account deletion.
+ */
 export const createAccountDeletionSsoReauthIntent = (
   payload: TAccountDeletionSsoReauthIntentPayload,
   options: SignOptions = DEFAULT_ACCOUNT_DELETION_SSO_REAUTH_INTENT_OPTIONS
@@ -437,6 +504,7 @@ export const createAccountDeletionSsoReauthIntent = (
   );
 };
 
+/** Verifies and decrypts an account-deletion SSO re-auth token. */
 export const verifyAccountDeletionSsoReauthIntent = (
   token: string
 ): TAccountDeletionSsoReauthIntentPayload => {
@@ -481,6 +549,14 @@ export const verifyAccountDeletionSsoReauthIntent = (
   };
 };
 
+/**
+ * Verifies a verification token with fallback.
+ * Tries the current secret first; on failure, fetches the user's email and
+ * retries with the legacy email-concatenated secret.
+ *
+ * @param token — the JWT
+ * @returns — decrypted payload with id, email, and purpose
+ */
 export const verifyToken = async (token: string): Promise<TVerifyTokenPayload> => {
   if (!NEXTAUTH_SECRET) {
     throw new Error("NEXTAUTH_SECRET is not set");
@@ -527,6 +603,12 @@ export const verifyToken = async (token: string): Promise<TVerifyTokenPayload> =
   };
 };
 
+/**
+ * Verifies and decrypts an invite token.
+ *
+ * @param token — the JWT
+ * @returns — decrypted { inviteId, email }
+ */
 export const verifyInviteToken = (token: string): { inviteId: string; email: string } => {
   if (!NEXTAUTH_SECRET) {
     throw new Error("NEXTAUTH_SECRET is not set");

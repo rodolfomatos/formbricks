@@ -1,6 +1,6 @@
 import { RefObject, useEffect } from "react";
 
-// Custom hook to synchronize the horizontal scroll position of two elements.
+/** Synchronises horizontal scroll position of two elements (e.g. highlight overlay + textarea). */
 export const useSyncScroll = (
   highlightContainerRef: RefObject<HTMLElement | HTMLInputElement | null>,
   inputRef: RefObject<HTMLElement | HTMLInputElement | null>

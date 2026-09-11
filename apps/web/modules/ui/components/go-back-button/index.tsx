@@ -1,3 +1,7 @@
+/**
+ * A back button that navigates to a specific URL or invokes router.back().
+ * Used in form headers and detail views.
+ */
 "use client";
 
 import { ArrowLeftIcon } from "lucide-react";

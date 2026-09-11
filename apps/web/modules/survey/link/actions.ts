@@ -11,6 +11,7 @@ import { getOrganizationLogoUrl } from "@/modules/ee/whitelabel/email-customizat
 import { sendLinkSurveyToVerifiedEmail } from "@/modules/email";
 import { getSurveyWithMetadata, isSurveyResponsePresent } from "@/modules/survey/link/lib/data";
 
+/** Sends the survey link via email to the respondent's verified email address. Rate-limited per IP. */
 export const sendLinkSurveyEmailAction = actionClient
   .inputSchema(ZLinkSurveyEmailData)
   .action(async ({ parsedInput }) => {
@@ -34,6 +35,7 @@ const ZValidateSurveyPinAction = z.object({
   pin: z.string(),
 });
 
+/** Validates the survey PIN against the stored value. Rate-limited per IP. */
 export const validateSurveyPinAction = actionClient
   .inputSchema(ZValidateSurveyPinAction)
   .action(async ({ parsedInput }) => {
@@ -61,6 +63,7 @@ const ZIsSurveyResponsePresentAction = z.object({
   email: z.email(),
 });
 
+/** Checks whether a verified email has already submitted a response for single-response-per-email surveys. Rate-limited per IP. */
 export const isSurveyResponsePresentAction = actionClient
   .inputSchema(ZIsSurveyResponsePresentAction)
   .action(async ({ parsedInput }) => {

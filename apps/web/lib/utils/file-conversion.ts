@@ -1,3 +1,10 @@
+/**
+ * File format conversion utilities for response exports.
+ *
+ * Converts JSON response data to CSV (via @json2csv) or XLSX (via xlsx).
+ * Includes spreadsheet formula-injection sanitisation — cell values starting
+ * with `=`, `+`, `-`, `@`, `\t`, or `\r` are prefixed with `'` at render time.
+ */
 import { AsyncParser } from "@json2csv/node";
 import * as xlsx from "xlsx";
 import { logger } from "@formbricks/logger";
@@ -16,6 +23,7 @@ const sanitizeFormulaInjection = <T>(value: T): T => {
   return value;
 };
 
+/** Converts an array of flat JSON objects into CSV string, sanitising formula injection. */
 export const convertToCsv = async (fields: string[], jsonData: Record<string, string | number>[]) => {
   let csv: string = "";
 
@@ -38,6 +46,7 @@ export const convertToCsv = async (fields: string[], jsonData: Record<string, st
   return csv;
 };
 
+/** Converts an array of flat JSON objects into an XLSX Buffer, sanitising formula injection. */
 export const convertToXlsxBuffer = (
   fields: string[],
   jsonData: Record<string, string | number>[]

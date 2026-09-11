@@ -12,6 +12,9 @@ export interface WorkspaceContextType {
 
 const WorkspaceContext = createContext<WorkspaceContextType | null>(null);
 
+/**
+ * Returns the workspace context (workspace + organization data) or throws if used outside the provider.
+ */
 export const useWorkspaceContext = () => {
   const context = useContext(WorkspaceContext);
   if (!context) {
@@ -20,6 +23,9 @@ export const useWorkspaceContext = () => {
   return context;
 };
 
+/**
+ * Returns the workspace object from context, or null-safe default if no provider is present.
+ */
 export const useWorkspace = () => {
   const context = useContext(WorkspaceContext);
   if (!context) {
@@ -28,6 +34,9 @@ export const useWorkspace = () => {
   return { workspace: context.workspace };
 };
 
+/**
+ * Returns the organization object from context, or null-safe default if no provider is present.
+ */
 export const useOrganization = () => {
   const context = useContext(WorkspaceContext);
   if (!context) {
@@ -43,6 +52,10 @@ interface WorkspaceContextWrapperProps {
   children: React.ReactNode;
 }
 
+/**
+ * Provider component that makes workspace and organization data available to the client component tree.
+ * Memoizes the context value to prevent unnecessary re-renders.
+ */
 export const WorkspaceContextWrapper = ({
   workspace,
   organization,

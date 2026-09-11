@@ -1,3 +1,4 @@
+/** Survey UI utilities — Tailwind CSS merging (`cn`), CSP-safe inline style stripping, and RTL-aware border class generation for scale options. */
 import { type ClassValue, clsx } from "clsx";
 import { sanitize } from "isomorphic-dompurify";
 import { extendTailwindMerge } from "tailwind-merge";

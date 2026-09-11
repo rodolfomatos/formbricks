@@ -51,6 +51,10 @@ import { getTranslate } from "@/lingodotdev/server";
 import { TVerificationRequestPurpose, buildVerificationLinks } from "@/modules/auth/lib/verification-links";
 import { resolveStorageUrl } from "@/modules/storage/utils";
 
+/**
+ * Whether the environment has SMTP credentials configured. All email-sending
+ * functions gate on this flag to avoid crashing when no mail server is set up.
+ */
 export const IS_SMTP_CONFIGURED = Boolean(SMTP_HOST && SMTP_PORT);
 
 const legalProps: TEmailTemplateLegalProps = {
@@ -71,6 +75,14 @@ interface SendEmailDataProps {
 export type TResponseFinishedEmailSurvey = TElementResponseMappingSurvey &
   Pick<TSurvey, "id" | "name" | "variables" | "hiddenFields">;
 
+/**
+ * Send an email through the configured SMTP transport. Skips silently when
+ * SMTP is not configured so that callers don't need to check upfront.
+ *
+ * @param emailData — the email payload (to, subject, html, optional replyTo)
+ * @returns — true if sent successfully, false if SMTP is unconfigured
+ * @throws — InvalidInputError for incorrect SMTP credentials
+ */
 export const sendEmail = async (emailData: SendEmailDataProps): Promise<boolean> => {
   if (!IS_SMTP_CONFIGURED) {
     logger.info("SMTP is not configured, skipping email sending");
@@ -109,6 +121,14 @@ export const sendEmail = async (emailData: SendEmailDataProps): Promise<boolean>
   }
 };
 
+/**
+ * Send an email-change verification link to the new address.
+ *
+ * @param id — the user ID
+ * @param email — the new email address to verify
+ * @param locale — the user's locale for the email text
+ * @returns — true if sent successfully
+ */
 export const sendVerificationNewEmail = async (
   id: string,
   email: string,
@@ -132,6 +152,16 @@ export const sendVerificationNewEmail = async (
   }
 };
 
+/**
+ * Send a generic verification email (sign-up, email change, etc.).
+ *
+ * @param id — the user ID
+ * @param email — the recipient email
+ * @param locale — locale for email text
+ * @param callbackUrl — optional URL to redirect after verification
+ * @param purpose — the type of verification
+ * @returns — true if sent successfully
+ */
 export const sendVerificationEmail = async ({
   id,
   email,
@@ -177,6 +207,15 @@ export const sendVerificationEmail = async ({
   }
 };
 
+/**
+ * Send a password-reset email containing a time-limited link.
+ *
+ * @param user.email — the recipient email
+ * @param user.locale — locale for the email text
+ * @param user.verifyLink — the reset link
+ * @param user.linkValidityInMinutes — how long the link is valid (shown in email)
+ * @returns — true if sent successfully
+ */
 export const sendPasswordResetLinkEmail = async (user: {
   email: TUserEmail;
   locale: TUserLocale;
@@ -197,6 +236,13 @@ export const sendPasswordResetLinkEmail = async (user: {
   });
 };
 
+/**
+ * Notify a user that their password was changed (security best practice).
+ *
+ * @param user.email — the recipient email
+ * @param user.locale — locale for the email text
+ * @returns — true if sent successfully
+ */
 export const sendPasswordResetNotifyEmail = async (user: {
   email: string;
   locale: TUserLocale;
@@ -210,6 +256,15 @@ export const sendPasswordResetNotifyEmail = async (user: {
   });
 };
 
+/**
+ * Send a workspace/organisation invitation email with a JWT-backed invite link.
+ *
+ * @param inviteId — the invite record ID
+ * @param email — the invitee's email
+ * @param inviterName — display name of the person who sent the invite
+ * @param inviteeName — display name of the person being invited
+ * @returns — true if sent successfully
+ */
 export const sendInviteMemberEmail = async (
   inviteId: string,
   email: string,
@@ -231,6 +286,14 @@ export const sendInviteMemberEmail = async (
   });
 };
 
+/**
+ * Notify the inviter that their invitation was accepted.
+ *
+ * @param inviterName — name of the person who sent the original invite
+ * @param inviteeName — name of the person who accepted
+ * @param email — the inviter's email
+ * @param inviterLocale — locale for the notification text
+ */
 export const sendInviteAcceptedEmail = async (
   inviterName: string,
   inviteeName: string,
@@ -246,6 +309,17 @@ export const sendInviteAcceptedEmail = async (
   });
 };
 
+/**
+ * Notify watchers that a new survey response was submitted. Includes the
+ * response data mapped to element names for human-readable context.
+ *
+ * @param email — the notification recipient
+ * @param locale — locale for the email text
+ * @param workspaceId — used to look up the organisation for branding
+ * @param survey — the survey metadata
+ * @param response — the submitted response
+ * @param responseCount — total responses so far (for context)
+ */
 export const sendResponseFinishedEmail = async (
   email: string,
   locale: TUserLocale,
@@ -308,6 +382,17 @@ export const sendResponseFinishedEmail = async (
   });
 };
 
+/**
+ * Send a preview of an embedded survey to the given email address so the
+ * user can see how it renders in their inbox.
+ *
+ * @param to — recipient email
+ * @param innerHtml — the rendered survey HTML (without wrapper)
+ * @param workspaceId — used for branding resolution
+ * @param locale — locale for the email wrapper text
+ * @param logoUrl — optional workspace logo URL
+ * @returns — true if sent successfully
+ */
 export const sendEmbedSurveyPreviewEmail = async (
   to: string,
   innerHtml: string,
@@ -332,6 +417,16 @@ export const sendEmbedSurveyPreviewEmail = async (
   });
 };
 
+/**
+ * Send a preview of the email customisation settings (branding colours,
+ * logo, etc.) so the user can verify their email template looks right.
+ *
+ * @param to — recipient email
+ * @param userName — user's display name for the personalised greeting
+ * @param locale — locale for the email text
+ * @param logoUrl — optional custom logo URL
+ * @returns — true if sent successfully
+ */
 export const sendEmailCustomizationPreviewEmail = async (
   to: string,
   userName: string,
@@ -355,6 +450,13 @@ export const sendEmailCustomizationPreviewEmail = async (
   });
 };
 
+/**
+ * Send a link survey to a verified email address. Supports single-use
+ * survey links with optional tokens for one-time access control.
+ *
+ * @param data — link survey email payload including survey ID, recipient email, and optional single-use params
+ * @returns — true if sent successfully
+ */
 export const sendLinkSurveyToVerifiedEmail = async (data: TLinkSurveyEmailData): Promise<boolean> => {
   const surveyId = data.surveyId;
   const email = data.email;

@@ -16,7 +16,6 @@ import { getTagsByWorkspaceId } from "@/lib/tag/service";
 import { getUser } from "@/lib/user/service";
 import { getTranslate } from "@/lingodotdev/server";
 import { getSegments } from "@/modules/ee/contacts/segments/lib/segments";
-import { getIsContactsEnabled, getIsQuotasEnabled } from "@/modules/ee/license-check/lib/utils";
 import { getQuotas } from "@/modules/ee/quotas/lib/quotas";
 import { getOrganizationBilling } from "@/modules/survey/lib/survey";
 import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper";
@@ -29,11 +28,10 @@ const Page = async (props: { params: Promise<{ workspaceId: string; surveyId: st
 
   const { session, organization, isReadOnly, workspace } = await getWorkspaceAuth(params.workspaceId);
 
-  const [survey, user, tags, isContactsEnabled, responseCount] = await Promise.all([
+  const [survey, user, tags, responseCount] = await Promise.all([
     getSurvey(params.surveyId),
     getUser(session.user.id),
     getTagsByWorkspaceId(workspace.id),
-    getIsContactsEnabled(organization.id),
     getResponseCountBySurveyId(params.surveyId),
   ]);
 
@@ -49,7 +47,7 @@ const Page = async (props: { params: Promise<{ workspaceId: string; surveyId: st
     throw new ResourceNotFoundError(t("common.organization"), null);
   }
 
-  const segments = isContactsEnabled ? await getSegments(workspace.id) : [];
+  const segments = await getSegments(workspace.id);
 
   const publicDomain = getPublicDomain();
 
@@ -58,8 +56,7 @@ const Page = async (props: { params: Promise<{ workspaceId: string; surveyId: st
     throw new ResourceNotFoundError(t("common.organization"), organization.id);
   }
 
-  const isQuotasAllowed = await getIsQuotasEnabled(organization.id);
-  const quotas = isQuotasAllowed ? await getQuotas(survey.id) : [];
+  const quotas = await getQuotas(survey.id);
 
   const aiConfig = await getOrganizationAIConfig(organization.id);
   const aiUnavailableReason = getAISmartToolsUnavailableReason(aiConfig) ?? null;
@@ -78,7 +75,7 @@ const Page = async (props: { params: Promise<{ workspaceId: string; surveyId: st
             publicDomain={publicDomain}
             responseCount={responseCount}
             segments={segments}
-            isContactsEnabled={isContactsEnabled}
+            isContactsEnabled={true}
             isFormbricksCloud={IS_FORMBRICKS_CLOUD}
             isStorageConfigured={IS_STORAGE_CONFIGURED}
             enterpriseLicenseRequestFormUrl={ENTERPRISE_LICENSE_REQUEST_FORM_URL}
@@ -95,7 +92,7 @@ const Page = async (props: { params: Promise<{ workspaceId: string; surveyId: st
         responsesPerPage={RESPONSES_PER_PAGE}
         locale={user.locale}
         isReadOnly={isReadOnly}
-        isQuotasAllowed={isQuotasAllowed}
+        isQuotasAllowed={true}
         quotas={quotas}
         initialResponses={initialResponses}
       />

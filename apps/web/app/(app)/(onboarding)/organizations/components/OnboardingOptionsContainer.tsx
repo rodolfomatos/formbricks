@@ -17,6 +17,10 @@ interface OnboardingOptionsContainerProps {
   }[];
 }
 
+/**
+ * Renders a responsive grid of onboarding option cards (e.g. "Create Survey", "Import", "Use AI").
+ * Each card can link to a route, trigger an action, or be disabled with a description.
+ */
 export const OnboardingOptionsContainer = ({ options }: Readonly<OnboardingOptionsContainerProps>) => {
   return (
     <div className="grid w-full max-w-5xl grid-cols-1 gap-8 text-center sm:grid-cols-2 lg:grid-cols-3">

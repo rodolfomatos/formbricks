@@ -12,6 +12,10 @@ interface ButtonInfo {
   variant: "secondary" | "default" | "outline" | "ghost" | "link";
 }
 
+/**
+ * A reusable card container for settings pages with a title, description,
+ * optional beta/soon badges, an action button or CTA, and a children slot for content.
+ */
 export const SettingsCard = ({
   title,
   description,

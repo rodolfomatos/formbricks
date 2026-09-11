@@ -15,6 +15,7 @@ export type TSurveyGenerationType = "link";
 
 export const SURVEY_TYPE_OPTIONS: { value: TSurveyGenerationType }[] = [{ value: "link" }];
 
+/** Returns the translation key for the AI-unavailable message based on the specific reason. */
 export const getUnavailableMessageKey = (reason?: TAIUnavailableReason) => {
   if (reason === "read_only") {
     return "workspace.surveys.read_only_user_not_allowed_to_create_survey_warning";
@@ -27,6 +28,7 @@ export const getUnavailableMessageKey = (reason?: TAIUnavailableReason) => {
   return "workspace.surveys.ai_create.ai_not_available";
 };
 
+/** Returns predefined helper prompts (onboarding, churn, PMF, website) for the AI create flow. */
 export const getHelperPrompts = (
   t: TFunction
 ): {

@@ -17,6 +17,7 @@ interface InvitePageProps {
   params: Promise<{ organizationId: string }>;
 }
 
+/** Serves the `/setup/organization/[organizationId]/invite` route — allows owners/managers to invite members during onboarding. */
 export const InvitePage = async (props: InvitePageProps) => {
   const params = await props.params;
   const t = await getTranslate();

@@ -11,6 +11,11 @@ type TSingleUseResponseInput = Pick<TResponseInput, "singleUseId" | "meta">;
 
 type TValidateSingleUseResponseInputResult = { singleUseId: string } | { response: Response } | null;
 
+/**
+ * Validates the single-use ID from a link survey response input.
+ * Returns null if single-use is not enabled, an error response if
+ * validation fails, or the decrypted singleUseId on success.
+ */
 export const validateSingleUseResponseInput = (
   survey: TSurvey,
   environmentId: string,

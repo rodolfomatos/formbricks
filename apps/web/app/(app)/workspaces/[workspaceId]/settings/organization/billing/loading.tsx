@@ -2,6 +2,10 @@ import { getTranslate } from "@/lingodotdev/server";
 import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper";
 import { PageHeader } from "@/modules/ui/components/page-header";
 
+/**
+ * Loading fallback for the billing settings page.
+ * Displays skeleton animated blocks for the page header, pricing card, and detail section.
+ */
 const Loading = async () => {
   const t = await getTranslate();
   return (

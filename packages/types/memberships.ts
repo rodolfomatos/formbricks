@@ -1,3 +1,4 @@
+/** Organization membership schemas — roles (owner/admin/editor/etc.) and member/Membership CRUD. */
 import { z } from "zod";
 
 export const ZMembershipRole = z.enum(["owner", "admin", "editor", "developer", "viewer"]);

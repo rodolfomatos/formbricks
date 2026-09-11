@@ -1,3 +1,4 @@
+/** Subheader — renders the optional description/subheader text below a survey headline with CSP-safe HTML sanitisation and inline style stripping. */
 import DOMPurify from "isomorphic-dompurify";
 import { isValidHTML, stripInlineStyles } from "@/lib/html-utils";
 

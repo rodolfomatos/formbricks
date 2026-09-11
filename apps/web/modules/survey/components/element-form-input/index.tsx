@@ -69,6 +69,7 @@ interface ElementFormInputProps {
   isExternalUrlsAllowed?: boolean;
 }
 
+/** Multi-purpose input for survey editor forms. Handles rich-text (headline/subheader/html) and plain-text fields, recall items, image/video uploads, choice labels, matrix labels, and ending/welcome card fields. Routes updates to the correct handler based on field context. */
 export const ElementFormInput = ({
   id,
   value,

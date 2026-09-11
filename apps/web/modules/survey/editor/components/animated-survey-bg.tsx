@@ -1,3 +1,4 @@
+/** Animated video-background picker — plays a thumbnail preview on hover and lets the user select one of the bundled MP4 backgrounds. */
 import { useState } from "react";
 import { debounce } from "@/lib/utils/debounce";
 

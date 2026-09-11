@@ -1,62 +1,14 @@
-import { notFound } from "next/navigation";
-import { IS_FORMBRICKS_CLOUD } from "@/lib/constants";
-import { getMonthlyOrganizationResponseCount } from "@/lib/organization/service";
-import { getOrganizationWorkspacesCount } from "@/lib/workspace/service";
-import { getTranslate } from "@/lingodotdev/server";
-import { getCloudBillingDisplayContext } from "@/modules/ee/billing/lib/cloud-billing-display";
-import { getStripeBillingCatalogDisplay } from "@/modules/ee/billing/lib/stripe-billing-catalog";
-import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper";
-import { PageHeader } from "@/modules/ui/components/page-header";
-import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
-import { PricingTable } from "./components/pricing-table";
+"use client";
 
-export const PricingPage = async (props: { params: Promise<{ workspaceId: string }> }) => {
-  const params = await props.params;
-  const t = await getTranslate();
+import { useTranslation } from "react-i18next";
 
-  const { organization, isMember } = await getWorkspaceAuth(params.workspaceId);
-
-  if (!IS_FORMBRICKS_CLOUD) {
-    notFound();
-  }
-
-  const [cloudBillingDisplayContext, billingCatalog] = await Promise.all([
-    getCloudBillingDisplayContext(organization.id),
-    getStripeBillingCatalogDisplay(),
-  ]);
-
-  const organizationWithSyncedBilling = {
-    ...organization,
-    billing: cloudBillingDisplayContext.billing,
-  };
-
-  const [responseCount, workspaceCount] = await Promise.all([
-    getMonthlyOrganizationResponseCount(organization.id),
-    getOrganizationWorkspacesCount(organization.id),
-  ]);
-
-  const hasBillingRights = !isMember;
+export function PricingPage() {
+  const { t } = useTranslation();
 
   return (
-    <PageContentWrapper>
-      <PageHeader pageTitle={t("common.billing")} />
-
-      <PricingTable
-        organization={organizationWithSyncedBilling}
-        workspaceId={params.workspaceId}
-        responseCount={responseCount}
-        workspaceCount={workspaceCount}
-        hasBillingRights={hasBillingRights}
-        currentCloudPlan={cloudBillingDisplayContext.currentCloudPlan}
-        currentBillingInterval={cloudBillingDisplayContext.currentBillingInterval}
-        currentSubscriptionStatus={cloudBillingDisplayContext.currentSubscriptionStatus}
-        pendingChange={cloudBillingDisplayContext.pendingChange}
-        usageCycleStart={cloudBillingDisplayContext.usageCycleStart}
-        usageCycleEnd={cloudBillingDisplayContext.usageCycleEnd}
-        isStripeSetupIncomplete={!organizationWithSyncedBilling.billing.stripeCustomerId}
-        trialDaysRemaining={cloudBillingDisplayContext.trialDaysRemaining}
-        billingCatalog={billingCatalog}
-      />
-    </PageContentWrapper>
+    <div className="space-y-4 p-6">
+      <h1 className="text-2xl font-bold">{t("billing")}</h1>
+      <p className="text-slate-500">{t("billing_description")}</p>
+    </div>
   );
-};
+}

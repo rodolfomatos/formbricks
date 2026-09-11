@@ -1,3 +1,4 @@
+/** Form editor for the CES (Customer Effort Score) question element — headline, subheader, scale/range selectors, labels, and optional color coding. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

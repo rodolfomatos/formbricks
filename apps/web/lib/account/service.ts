@@ -1,3 +1,10 @@
+/**
+ * Service layer for Provider Account records (OAuth / SSO accounts).
+ *
+ * Manages the lifecycle of third-party accounts linked to a Formbricks user —
+ * creating new ones and upserting tokens when they are refreshed — so the auth
+ * system can maintain valid access tokens without interrupting the user.
+ */
 import { prisma } from "@formbricks/database";
 import { Prisma, PrismaClient } from "@formbricks/database/prisma";
 import { TAccount, TAccountInput, ZAccountInput } from "@formbricks/types/account";
@@ -8,6 +15,12 @@ type TAccountDbClient = PrismaClient | Prisma.TransactionClient;
 
 const getDbClient = (tx?: Prisma.TransactionClient): TAccountDbClient => tx ?? prisma;
 
+/**
+ * Creates a new provider account record linking a third-party identity to a Formbricks user.
+ *
+ * @param accountData — the provider account details (provider, providerAccountId, tokens, etc.)
+ * @returns — the newly created Account record
+ */
 export const createAccount = async (accountData: TAccountInput): Promise<TAccount> => {
   validateInputs([accountData, ZAccountInput]);
 
@@ -25,6 +38,14 @@ export const createAccount = async (accountData: TAccountInput): Promise<TAccoun
   }
 };
 
+/**
+ * Creates or updates a provider account record (keyed on provider + providerAccountId).
+ * Used during OAuth callbacks to persist refreshed tokens without creating duplicates.
+ *
+ * @param accountData — the full account input including immutable identity fields
+ * @param tx — optional Prisma transaction for atomicity
+ * @returns — the upserted Account record
+ */
 export const upsertAccount = async (
   accountData: TAccountInput,
   tx?: Prisma.TransactionClient

@@ -2,6 +2,14 @@ import { useEffect, useState } from "react";
 import { TOrganizationRole } from "@formbricks/types/memberships";
 import { getMembershipByUserIdOrganizationIdAction } from "./actions";
 
+/**
+ * React hook that fetches the current user's organisation role for a workspace.
+ * Mount it in any client component that needs to gate UI based on permissions.
+ *
+ * @param workspaceId — the workspace to check
+ * @param userId — the current user ID
+ * @returns — { membershipRole, isLoading, error }
+ */
 export const useMembershipRole = (workspaceId: string, userId: string) => {
   const [membershipRole, setMembershipRole] = useState<TOrganizationRole>();
   const [isLoading, setIsLoading] = useState<boolean>(false);

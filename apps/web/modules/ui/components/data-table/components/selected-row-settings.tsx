@@ -1,3 +1,8 @@
+/**
+ * Toolbar that appears when rows are selected in a data table.
+ * Shows selection count with select-all/clear buttons, batch download (CSV/XLSX),
+ * and batch delete with quota decrement option for responses.
+ */
 "use client";
 
 import { Table } from "@tanstack/react-table";

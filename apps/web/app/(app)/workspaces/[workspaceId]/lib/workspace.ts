@@ -53,11 +53,19 @@ const findWorkspacesForMembership = async (
   }
 };
 
+/**
+ * Returns all workspaces a user belongs to within an organization.
+ * Cached per request via React cache().
+ */
 export const getWorkspacesByUserId = reactCache(
   async (userId: string, orgMembership: TMembership): Promise<{ id: string; name: string }[]> =>
     findWorkspacesForMembership(userId, orgMembership, { writableOnly: false })
 );
 
+/**
+ * Returns workspaces the user can write to within an organization (readWrite/manage permission).
+ * Used for targeting write operations like copying surveys.
+ */
 export const getWritableWorkspacesByUserId = reactCache(
   async (userId: string, orgMembership: TMembership): Promise<{ id: string; name: string }[]> =>
     findWorkspacesForMembership(userId, orgMembership, { writableOnly: true })

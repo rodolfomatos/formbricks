@@ -1,5 +1,8 @@
-// Mock translation function for React Email preview server
-// Returns English strings extracted from apps/web/locales/en-US.json
+/**
+ * Mock translations for the React Email preview server — returns hardcoded
+ * English strings from apps/web/locales/en-US.json so email templates render
+ * without a live i18n instance.
+ */
 
 type TranslationKey = string;
 type TranslationValue = string;

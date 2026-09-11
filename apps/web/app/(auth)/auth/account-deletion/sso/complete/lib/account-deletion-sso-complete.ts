@@ -44,6 +44,10 @@ const getSafeFailureRedirectPath = (returnToUrl: string) => {
 const getPostDeletionRedirectPath = () =>
   IS_FORMBRICKS_CLOUD ? FORMBRICKS_CLOUD_ACCOUNT_DELETION_SURVEY_URL : "/auth/login";
 
+/**
+ * Verifies the SSO re-authentication intent, confirms the user's session matches,
+ * deletes the user account, and returns the appropriate redirect path.
+ */
 export const completeAccountDeletionSsoIdentityConfirmationAndGetRedirectPath = async ({
   intent,
 }: TAccountDeletionSsoCompleteSearchParams): Promise<string> => {

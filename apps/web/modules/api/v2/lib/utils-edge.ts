@@ -24,6 +24,13 @@ const getStatusFromApiError = (error: ApiErrorResponseV2): number => {
   }
 };
 
+/**
+ * Reports an API error to the error tracking system (edge-runtime safe).
+ *
+ * @param request — The original request
+ * @param error — The API error
+ * @param originalError — The original error for debugging
+ */
 export const logApiErrorEdge = (
   request: Request,
   error: ApiErrorResponseV2,

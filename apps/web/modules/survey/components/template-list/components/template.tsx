@@ -8,6 +8,10 @@ import { replacePresetPlaceholders } from "@/lib/utils/templates";
 import { Button } from "@/modules/ui/components/button";
 import { TemplateTags } from "./template-tags";
 
+/**
+ * Renders a single survey template card. When selected (active), shows a "use this template"
+ * button that triggers survey creation. Highlights with a ring when active.
+ */
 interface TemplateProps {
   template: TTemplate;
   activeTemplate: TTemplate | null;

@@ -1,5 +1,6 @@
 import { NextApiResponse } from "next";
 
+/** Union of all possible API response shapes (success or typed error). */
 export type ApiResponse = ApiSuccessResponse | ApiErrorResponse;
 
 interface ApiSuccessResponse<T = { [key: string]: unknown }> {
@@ -25,6 +26,7 @@ interface ApiErrorResponse {
   };
 }
 
+/** Next.js API response typed with the canonical ApiResponse union. */
 export type CustomNextApiResponse = NextApiResponse<ApiResponse>;
 
 const corsHeaders = {
@@ -310,6 +312,7 @@ const tooManyRequestsResponse = (
   );
 };
 
+/** Collection of factory functions that produce standardised API Response objects. */
 export const responses = {
   goneResponse,
   badRequestResponse,

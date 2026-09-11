@@ -27,6 +27,7 @@ interface RenderResponseProps {
   showId: boolean;
 }
 
+/** Renders a single response value based on its survey element type — supports all element types including ratings, dates, file uploads, matrix, and multi-choice. */
 export const RenderResponse: React.FC<RenderResponseProps> = ({
   responseData,
   element,

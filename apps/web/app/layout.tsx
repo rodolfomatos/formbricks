@@ -21,6 +21,10 @@ export const metadata: Metadata = {
   description: "Open-Source Survey Suite",
 };
 
+/**
+ * Root HTML layout. Sets the document language, injects the noscript warning,
+ * initializes Sentry, and wraps children in the i18n provider.
+ */
 const RootLayout = async ({ children }: { children: React.ReactNode }) => {
   const locale = await getLocale();
 

@@ -4,6 +4,7 @@ import { TJsWorkspaceStateSurvey } from "@formbricks/types/js";
 import { TSegment } from "@formbricks/types/segment";
 import { TSurvey, TSurveyFilterCriteria } from "@formbricks/types/surveys/types";
 
+/** Converts a raw Prisma survey object into the application-level TSurvey shape, handling displayPercentage decimal conversion and segment data flattening. */
 export const transformPrismaSurvey = <T extends TSurvey | TJsWorkspaceStateSurvey>(surveyPrisma: any): T => {
   let segment: TSegment | null = null;
 
@@ -24,6 +25,7 @@ export const transformPrismaSurvey = <T extends TSurvey | TJsWorkspaceStateSurve
   return transformedSurvey;
 };
 
+/** Builds a Prisma WHERE clause from filter criteria (name, status, type, creator). */
 export const buildWhereClause = (filterCriteria?: TSurveyFilterCriteria) => {
   const whereClause: Prisma.SurveyWhereInput["AND"] = [];
 
@@ -68,6 +70,7 @@ export const buildWhereClause = (filterCriteria?: TSurveyFilterCriteria) => {
   return { AND: whereClause };
 };
 
+/** Builds a Prisma ORDER BY clause from a sort-by key (name, createdAt, updatedAt). */
 export const buildOrderByClause = (
   sortBy?: TSurveyFilterCriteria["sortBy"]
 ): Prisma.SurveyOrderByWithRelationInput[] | undefined => {
@@ -80,6 +83,7 @@ export const buildOrderByClause = (
   return sortBy ? [orderMapping[sortBy] || { updatedAt: "desc" }] : undefined;
 };
 
+/** Returns true if at least one survey in the list has active segment filters. */
 export const anySurveyHasFilters = (surveys: TSurvey[]): boolean => {
   return surveys.some((survey) => {
     if ("segment" in survey && survey.segment) {

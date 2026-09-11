@@ -1,3 +1,10 @@
+/**
+ * Formbricks JS Core — browser SDK entry point.
+ *
+ * Exposes the public `formbricks` API (`setup`, `setUserId`, `track`, etc.) that
+ * SDK consumers call.  All operations are serialised through a command queue so
+ * that API calls made before setup finishes are replayed in order.
+ */
 /* eslint-disable import/no-default-export -- required for default export*/
 import { CommandQueue, CommandType } from "@/lib/common/command-queue";
 import * as Setup from "@/lib/common/setup";

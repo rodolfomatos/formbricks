@@ -1,3 +1,8 @@
+/**
+ * Validates uploaded files against allowed extensions and size limits.
+ * Converts HEIC files to JPEG via server action. Shows toast messages for rejected files.
+ * Also provides a helper to check if a URL uses YouTube privacy mode.
+ */
 "use client";
 
 import { toast } from "react-hot-toast";

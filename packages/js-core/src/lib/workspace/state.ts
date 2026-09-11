@@ -1,3 +1,4 @@
+/** Workspace state — fetches survey/action-class data from the backend and maintains a periodic refresh interval. */
 /* eslint-disable no-console -- logging required for error logging */
 import { ApiClient } from "@/lib/common/api";
 import { Config } from "@/lib/common/config";

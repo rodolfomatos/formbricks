@@ -18,6 +18,7 @@ interface LanguageDropdownProps {
   locale: TUserLocale;
 }
 
+/** Dropdown to switch the survey link language. Hidden when the survey has only one language. */
 export const LanguageDropdown = ({ survey, setLanguage, locale }: LanguageDropdownProps) => {
   const { t } = useTranslation();
   const enabledLanguages = getEnabledLanguages(survey.languages ?? []);

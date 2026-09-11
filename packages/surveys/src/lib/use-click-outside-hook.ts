@@ -1,3 +1,4 @@
+/** Click outside hook — Preact hook that fires a handler when a click/touch event occurs outside the referenced element, for dismissing dropdowns/modals. */
 import { MutableRef, useEffect } from "preact/hooks";
 
 // Improved version of https://usehooks.com/useOnClickOutside/

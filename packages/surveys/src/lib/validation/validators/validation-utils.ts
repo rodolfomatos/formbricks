@@ -1,7 +1,4 @@
-/**
- * ReDoS-safe validation utilities
- * These functions avoid using Zod to keep the surveys package lightweight
- */
+/** ReDoS-safe validation utilities — lightweight (no Zod) email, URL, numeric, and phone validators for survey response validation. */
 
 /**
  * Validate email address using a ReDoS-safe regex

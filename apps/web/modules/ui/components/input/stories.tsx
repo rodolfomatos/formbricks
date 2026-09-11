@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the Input component.
+ * Covers default, with-value, invalid, disabled, read-only, required, password, email, number, search, custom, and long-text.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { Input } from "./index";
 

@@ -8,6 +8,12 @@ import { authOptions } from "@/modules/auth/lib/authOptions";
 import { getWorkspaceLayoutData } from "@/modules/workspaces/lib/utils";
 import WorkspaceStorageHandler from "./components/WorkspaceStorageHandler";
 
+/**
+ * Layout for `/workspaces/[workspaceId]/*`.
+ * Provides the authenticated workspace shell: fetches workspace + organization data,
+ * sets up PostHog group identification, initializes workspace storage handling,
+ * and wraps children in the workspace context provider alongside the shared navigation layout.
+ */
 const WorkspaceLayout = async (props: {
   params: Promise<{ workspaceId: string }>;
   children: React.ReactNode;

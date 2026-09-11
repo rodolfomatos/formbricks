@@ -10,6 +10,7 @@ interface ApiKeyListProps {
   workspaces: TOrganizationWorkspace[];
 }
 
+/** Server component that fetches API keys and passes them to the EditAPIKeys client component. */
 export const ApiKeyList = async ({ organizationId, locale, isReadOnly, workspaces }: ApiKeyListProps) => {
   const apiKeys = await getApiKeysWithEnvironmentPermissions(organizationId);
 

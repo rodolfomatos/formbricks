@@ -18,6 +18,11 @@ import { Template } from "./components/template";
 import { TemplateFilters } from "./components/template-filters";
 import { useCreateSurveyFromTemplate } from "./hooks/use-create-survey-from-template";
 
+/**
+ * Displays a grid of survey templates with optional channel/industry/role filters
+ * and a create-from-scratch card. Handles template selection, creation via mutation,
+ * and navigation to the survey editor on success.
+ */
 interface TemplateListProps {
   workspaceId: string;
   workspace: Workspace;
@@ -25,7 +30,7 @@ interface TemplateListProps {
   templateSearch?: string;
   showFilters?: boolean;
   onTemplateClick?: (template: TTemplate) => void;
-  noPreview?: boolean; // single click to create survey
+  noPreview?: boolean;
   showAICreateCard?: boolean;
   language?: TUserLocale;
   isAIAvailable?: boolean;

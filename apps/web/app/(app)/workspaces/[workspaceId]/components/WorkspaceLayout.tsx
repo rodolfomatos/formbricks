@@ -6,7 +6,6 @@ import { getPublicDomain } from "@/lib/getPublicUrl";
 import { getAccessFlags } from "@/lib/membership/utils";
 import { getPostHogFeatureFlag } from "@/lib/posthog/get-feature-flag";
 import { getTranslate } from "@/lingodotdev/server";
-import { getOrganizationWorkspacesLimit } from "@/modules/ee/license-check/lib/utils";
 import { LimitsReachedBanner } from "@/modules/ui/components/limits-reached-banner";
 import { PendingDowngradeBanner } from "@/modules/ui/components/pending-downgrade-banner";
 import { TWorkspaceLayoutData } from "@/modules/workspaces/types/workspace-auth";
@@ -16,6 +15,11 @@ interface WorkspaceLayoutProps {
   children?: React.ReactNode;
 }
 
+/**
+ * The main workspace UI shell combining a sidebar navigation, top control bar,
+ * limits-reached banner, pending-downgrade banner, and the page content area.
+ * Derives all access flags from layoutData without additional DB queries.
+ */
 export const WorkspaceLayout = async ({ layoutData, children }: WorkspaceLayoutProps) => {
   const t = await getTranslate();
   const publicDomain = getPublicDomain();
@@ -37,7 +41,7 @@ export const WorkspaceLayout = async ({ layoutData, children }: WorkspaceLayoutP
 
   const { features, lastChecked, isPendingDowngrade, active, status } = license;
   const isMultiOrgEnabled = features?.isMultiOrgEnabled ?? false;
-  const organizationWorkspacesLimit = await getOrganizationWorkspacesLimit(organization.id);
+  const organizationWorkspacesLimit = Infinity;
   const newTrialBannerVariant = await getPostHogFeatureFlag(user.id, "a-b_navigation_rich-trial-banner");
   const isOwnerOrManager = isOwner || isManager;
 

@@ -1,3 +1,9 @@
+/**
+ * Server actions for the feedback-source (CSV import / hub integration) feature.
+ *
+ * Provides create/read/update/delete/list + CSV import preview & commit operations.
+ * All mutations are authenticated and authorised via the action client middleware.
+ */
 "use server";
 
 import { z } from "zod";

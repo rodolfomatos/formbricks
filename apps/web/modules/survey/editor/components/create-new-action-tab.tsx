@@ -1,3 +1,4 @@
+/** Create-new-action tab — form to define an action's name, trigger type, and trigger-specific filters (URL match, element selector, CSS selector, page URL) before saving. */
 "use client";
 
 import { useRouter } from "next/navigation";

@@ -1,3 +1,8 @@
+/**
+ * Checkbox group for toggling optional fields (variables, hidden fields, metadata, createdAt,
+ * contact attributes) when exporting survey data to an integration. Renders inside integration
+ * configuration dialogs.
+ */
 "use client";
 
 import { useTranslation } from "react-i18next";

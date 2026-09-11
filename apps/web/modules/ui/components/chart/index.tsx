@@ -1,3 +1,8 @@
+/**
+ * Compound chart component wrapping Recharts with theme-aware CSS variable binding.
+ * Provides ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent,
+ * and ChartStyle for building consistent charts with auto-themed colors.
+ */
 "use client";
 
 import * as React from "react";

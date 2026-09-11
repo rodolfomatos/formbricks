@@ -18,6 +18,10 @@ export type TCreateSurveyFromTemplateInput = {
   defaultLanguage: TUserLocale;
 };
 
+/**
+ * Creates a survey from a template via the V3 API. Returns the new survey ID.
+ * Throws a parsed V3ApiError on non-OK responses.
+ */
 export async function createSurveyFromTemplate({
   workspaceId,
   templateId,

@@ -1,3 +1,4 @@
+/** reCAPTCHA integration — loads the Google reCAPTCHA v2/v3 script and executes verification tokens. */
 import { RECAPTCHA_SCRIPT_ID } from "@/lib/common/constants";
 import { Logger } from "./logger";
 

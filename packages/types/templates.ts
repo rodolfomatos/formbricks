@@ -1,3 +1,4 @@
+/** Survey template schemas — predefined survey presets with role/channel/industry filtering. */
 import { z } from "zod";
 import { ZSurveyBlocks } from "./surveys/blocks";
 import {

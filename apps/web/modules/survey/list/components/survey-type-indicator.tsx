@@ -7,6 +7,7 @@ interface SurveyTypeIndicatorProps {
   type: string;
 }
 
+/** Displays an icon and label for the survey type (app or link). */
 export const SurveyTypeIndicator = ({ type }: SurveyTypeIndicatorProps) => {
   const { t } = useTranslation();
   const surveyTypeMapping = {

@@ -1,3 +1,4 @@
+/** SDK initialisation — fetches workspace + user state from the API, syncs updates, and starts the survey widget. */
 /* eslint-disable no-console -- required for logging */
 import { Config } from "@/lib/common/config";
 import { JS_LOCAL_STORAGE_KEY } from "@/lib/common/constants";

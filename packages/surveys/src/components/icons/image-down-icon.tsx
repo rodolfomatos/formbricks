@@ -1,3 +1,4 @@
+/** Image download icon — inline SVG download icon for survey element media with configurable size and className. */
 import { cn } from "@/lib/utils";
 
 interface ImageDownIconProps {

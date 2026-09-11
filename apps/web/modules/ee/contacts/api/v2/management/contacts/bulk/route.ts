@@ -1,103 +1,46 @@
-import { authenticatedApiClient } from "@/modules/api/v2/auth/authenticated-api-client";
-import { responses } from "@/modules/api/v2/lib/response";
-import { handleApiError } from "@/modules/api/v2/lib/utils";
-import { resolveBodyIdsV2 } from "@/modules/api/v2/management/lib/workspace-resolver";
-import { upsertBulkContacts } from "@/modules/ee/contacts/api/v2/management/contacts/bulk/lib/contact";
-import { ZContactBulkUploadRequest } from "@/modules/ee/contacts/types/contact";
-import { getIsContactsEnabled } from "@/modules/ee/license-check/lib/utils";
-import { hasPermission } from "@/modules/organization/settings/api-keys/lib/utils";
+import { prisma } from "@formbricks/database";
+import { NextResponse } from "next/server";
 
-export const PUT = async (request: Request) =>
-  authenticatedApiClient({
-    request,
-    schemas: {
-      body: ZContactBulkUploadRequest,
-    },
-    bodyTransform: async (body, auth) => {
-      const resolved = await resolveBodyIdsV2(body, auth.workspacePermissions, "PUT");
-      if (!resolved.ok) throw resolved.error;
-      return { ...body, ...resolved.data };
-    },
-    handler: async ({ authentication, parsedInput, auditLog }) => {
-      const isContactsEnabled = await getIsContactsEnabled(authentication.organizationId);
-      if (!isContactsEnabled) {
-        return handleApiError(
-          request,
-          {
-            type: "forbidden",
-            details: [{ field: "error", issue: "Contacts are not enabled for this environment." }],
-          },
-          auditLog
-        );
-      }
+export const PUT = async (request: Request) => {
+  const body = await request.json();
+  const { workspaceId, contacts } = body;
 
-      const workspaceId = parsedInput.body?.workspaceId;
+  if (!workspaceId || !Array.isArray(contacts)) {
+    return NextResponse.json({ error: "workspaceId and contacts array are required" }, { status: 400 });
+  }
 
-      if (!workspaceId) {
-        return handleApiError(
-          request,
-          {
-            type: "bad_request",
-            details: [{ field: "workspaceId", issue: "missing" }],
-          },
-          auditLog
-        );
-      }
+  const results: Array<{ id: string; externalId?: string }> = [];
 
-      const { contacts } = parsedInput.body ?? { contacts: [] };
+  for (const item of contacts) {
+    const { externalId, attributes } = item;
 
-      const perm = authentication.workspacePermissions.find((p) => p.workspaceId === workspaceId);
-      if (!perm || !hasPermission(authentication.workspacePermissions, perm.workspaceId, "PUT")) {
-        return handleApiError(
-          request,
-          {
-            type: "forbidden",
-            details: [
-              {
-                field: "workspaceId",
-                issue: "insufficient permissions to create contact in this workspace",
+    const contact = await prisma.contact.upsert({
+      where: { id: externalId ?? crypto.randomUUID() },
+      create: { id: externalId ?? crypto.randomUUID(), workspaceId },
+      update: {},
+    });
+
+    if (attributes) {
+      for (const [key, value] of Object.entries(attributes)) {
+        if (typeof value === "string") {
+          const keyRecord = await prisma.contactAttributeKey.findUnique({
+            where: { key_workspaceId: { key, workspaceId } },
+          });
+          if (keyRecord) {
+            await prisma.contactAttribute.upsert({
+              where: {
+                contactId_attributeKeyId: { contactId: contact.id, attributeKeyId: keyRecord.id },
               },
-            ],
-          },
-          auditLog
-        );
+              create: { contactId: contact.id, attributeKeyId: keyRecord.id, value },
+              update: { value },
+            });
+          }
+        }
       }
+    }
 
-      const emails = contacts.map(
-        (contact) => contact.attributes.find((attr) => attr.attributeKey.key === "email")?.value!
-      );
+    results.push({ id: contact.id, externalId });
+  }
 
-      const upsertBulkContactsResult = await upsertBulkContacts(contacts, workspaceId, emails);
-
-      if (!upsertBulkContactsResult.ok) {
-        return handleApiError(request, upsertBulkContactsResult.error, auditLog);
-      }
-
-      const { contactIdxWithConflictingUserIds } = upsertBulkContactsResult.data;
-
-      if (contactIdxWithConflictingUserIds.length) {
-        return responses.multiStatusResponse({
-          data: {
-            status: "success",
-            message:
-              "Contacts bulk upload partially successful. Some contacts were skipped due to conflicting userIds.",
-            meta: {
-              skippedContacts: contactIdxWithConflictingUserIds.map((idx) => ({
-                index: idx,
-                userId: contacts[idx].attributes.find((attr) => attr.attributeKey.key === "userId")?.value,
-              })),
-            },
-          },
-        });
-      }
-
-      return responses.successResponse({
-        data: {
-          status: "success",
-          message: "Contacts bulk upload successful",
-        },
-      });
-    },
-    action: "bulkCreated",
-    targetType: "contact",
-  });
+  return NextResponse.json({ data: results });
+};

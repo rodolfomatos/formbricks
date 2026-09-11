@@ -1,3 +1,4 @@
+/** I18n provider — wraps the survey render tree with i18next context and react-i18next provider, switching language synchronously on first render and updating on change. */
 import { ComponentChildren } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 import { I18nextProvider } from "react-i18next";

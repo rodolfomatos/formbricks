@@ -11,6 +11,10 @@ interface AccountSecurityProps {
   user: TUser;
 }
 
+/**
+ * Toggle for enabling or disabling two-factor authentication on the user account.
+ * Opens the appropriate modal (enable/disable) based on the switch state.
+ */
 export const AccountSecurity = ({ user }: AccountSecurityProps) => {
   const { t } = useTranslation();
   const [twoFactorModalOpen, setTwoFactorModalOpen] = useState(false);

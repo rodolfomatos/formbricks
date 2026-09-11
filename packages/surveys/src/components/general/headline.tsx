@@ -1,3 +1,4 @@
+/** Headline — renders the survey element title with CSP-safe HTML sanitisation, optional required marker, optional centering, and auto-generated anchor ID. */
 import DOMPurify from "isomorphic-dompurify";
 import { useTranslation } from "react-i18next";
 import { isValidHTML, stripInlineStyles } from "@/lib/html-utils";

@@ -1,3 +1,4 @@
+/** Form editor for the NPS (Net Promoter Score) question element — headline, subheader, lower/upper labels, and optional color coding. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

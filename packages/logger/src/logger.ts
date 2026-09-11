@@ -4,6 +4,10 @@ import { type TLogLevel, ZLogLevel } from "../types/logger";
 const IS_PRODUCTION = !process.env.NODE_ENV || process.env.NODE_ENV === "production";
 const IS_BUILD = process.env.NEXT_PHASE === "phase-production-build";
 
+/**
+ * Resolves the effective log level based on environment and LOG_LEVEL env var.
+ * Defaults to "warn" in production and "error" during builds.
+ */
 const getLogLevel = (): TLogLevel => {
   let logLevel: TLogLevel = "info";
 
@@ -18,6 +22,9 @@ const getLogLevel = (): TLogLevel => {
   return logLevel;
 };
 
+/**
+ * Pino configuration shared by all logger instances.
+ */
 const baseLoggerConfig: LoggerOptions = {
   level: getLogLevel(),
   serializers: {
@@ -39,10 +46,10 @@ const baseLoggerConfig: LoggerOptions = {
 };
 
 /**
- * Build transport configuration based on environment.
- * - Development: pino-pretty for readable console output
- * - Production: JSON to stdout (default Pino behavior)
- * - Both: optional pino-opentelemetry-transport for SigNoz log correlation when OTEL is configured
+ * Builds the Pino transport based on runtime environment:
+ * - Development: pino-pretty for human-readable console output
+ * - Production: JSON to stdout (default Pino behaviour)
+ * - Both: pino-opentelemetry-transport is added when OTEL is configured
  */
 const buildTransport = (): LoggerOptions["transport"] => {
   const isEdgeRuntime = process.env.NEXT_RUNTIME === "edge";

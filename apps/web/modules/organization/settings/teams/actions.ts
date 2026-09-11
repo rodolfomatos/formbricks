@@ -17,7 +17,7 @@ import { getOrganizationIdFromInviteId } from "@/lib/utils/helper";
 import { applyRateLimit } from "@/modules/core/rate-limit/helpers";
 import { rateLimitConfigs } from "@/modules/core/rate-limit/rate-limit-configs";
 import { withAuditLogging } from "@/modules/ee/audit-logs/lib/handler";
-import { getBulkInvitePermission, getIsMultiOrgEnabled } from "@/modules/ee/license-check/lib/utils";
+
 import { checkRoleManagementPermission } from "@/modules/ee/role-management/actions";
 import { getTeamsWhereUserIsAdmin } from "@/modules/ee/teams/lib/roles";
 import { sendInviteMemberEmail } from "@/modules/email";
@@ -36,6 +36,7 @@ const ZDeleteInviteAction = z.object({
   inviteId: ZUuid,
 });
 
+/** Server action that deletes a pending invite. */
 export const deleteInviteAction = authenticatedActionClient.inputSchema(ZDeleteInviteAction).action(
   withAuditLogging("deleted", "invite", async ({ ctx, parsedInput }) => {
     const organizationId = await getOrganizationIdFromInviteId(parsedInput.inviteId);
@@ -61,6 +62,7 @@ const ZCreateInviteTokenAction = z.object({
   inviteId: ZUuid,
 });
 
+/** Server action that creates a shareable invite token and refreshes the invitation expiration. */
 export const createInviteTokenAction = authenticatedActionClient.inputSchema(ZCreateInviteTokenAction).action(
   withAuditLogging("updated", "invite", async ({ parsedInput, ctx }) => {
     const organizationId = await getOrganizationIdFromInviteId(parsedInput.inviteId);
@@ -108,6 +110,7 @@ const ZDeleteMembershipAction = z.object({
   organizationId: ZId,
 });
 
+/** Server action that removes a member from an organization, with ownership and manager safeguards. */
 export const deleteMembershipAction = authenticatedActionClient.inputSchema(ZDeleteMembershipAction).action(
   withAuditLogging("deleted", "membership", async ({ ctx, parsedInput }) => {
     await checkAuthorizationUpdated({
@@ -169,6 +172,7 @@ const ZResendInviteAction = z.object({
   organizationId: ZId,
 });
 
+/** Server action that resends an invitation email and refreshes the invite expiration. */
 export const resendInviteAction = authenticatedActionClient.inputSchema(ZResendInviteAction).action(
   withAuditLogging("updated", "invite", async ({ ctx, parsedInput }) => {
     if (INVITE_DISABLED) {
@@ -248,6 +252,7 @@ const ZInviteUserAction = z.object({
   teamIds: z.array(ZId),
 });
 
+/** Server action that invites a single user to an organization, enforcing role-based permissions and rate limits. */
 export const inviteUserAction = authenticatedActionClient.inputSchema(ZInviteUserAction).action(
   withAuditLogging("created", "invite", async ({ ctx, parsedInput }) => {
     if (INVITE_DISABLED) {
@@ -356,6 +361,7 @@ const ZBulkInviteUsersAction = z.object({
   invitees: ZInvitees,
 });
 
+/** Server action that bulk-invites multiple users via CSV, with entitlement gating and per-invitee error tolerance. */
 export const bulkInviteUsersAction = authenticatedActionClient.inputSchema(ZBulkInviteUsersAction).action(
   withAuditLogging("created", "invite", async ({ ctx, parsedInput }) => {
     if (INVITE_DISABLED) {
@@ -383,14 +389,6 @@ export const bulkInviteUsersAction = authenticatedActionClient.inputSchema(ZBulk
       organizationId,
       access: [{ type: "organization", roles: ["owner", "manager"] }],
     });
-
-    // Entitlement gate: bulk invite is a paid feature. Mitigates the invite-spam abuse vector by
-    // keeping high-volume invites behind the bulk-invite entitlement (Stripe on cloud, license
-    // feature on self-hosted) rather than hardcoding plan names.
-    const isBulkInviteAllowed = await getBulkInvitePermission(organizationId);
-    if (!isBulkInviteAllowed) {
-      throw new OperationNotAllowedError("Bulk invite is not available on your current plan");
-    }
 
     // Validate roles for the whole batch up front.
     if (!IS_FORMBRICKS_CLOUD && invitees.some((invitee) => invitee.role === OrganizationRole.billing)) {
@@ -459,6 +457,7 @@ const ZLeaveOrganizationAction = z.object({
   organizationId: ZId,
 });
 
+/** Server action that lets a non-owner user leave an organization they belong to. */
 export const leaveOrganizationAction = authenticatedActionClient.inputSchema(ZLeaveOrganizationAction).action(
   withAuditLogging("deleted", "membership", async ({ ctx, parsedInput }) => {
     await checkAuthorizationUpdated({
@@ -480,16 +479,8 @@ export const leaveOrganizationAction = authenticatedActionClient.inputSchema(ZLe
 
     const { isOwner } = getAccessFlags(membership.role);
 
-    const isMultiOrgEnabled = await getIsMultiOrgEnabled();
-
     if (isOwner) {
       throw new OperationNotAllowedError("You cannot leave an organization you own");
-    }
-
-    if (!isMultiOrgEnabled) {
-      throw new OperationNotAllowedError(
-        "You cannot leave the organization because you are the only owner and organization deletion is disabled"
-      );
     }
 
     const memberships = await getMembershipsByUserId(ctx.user.id);

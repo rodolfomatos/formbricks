@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the DeleteDialog component.
+ * Covers default, deleting, disabled, with-children, save-instead-of-cancel, saving, and long-text variants.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { fn } from "storybook/test";

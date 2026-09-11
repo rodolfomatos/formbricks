@@ -1,3 +1,4 @@
+/** Airtable integration schemas — OAuth credentials, base/table config, and token exchange types. */
 import { z } from "zod";
 import { ZIntegrationBase, ZIntegrationBaseSurveyData } from "./shared-types";
 

@@ -14,6 +14,7 @@ interface SurveyCheckboxGroupProps {
   allowChanges: boolean;
 }
 
+/** Checkbox group for selecting which surveys a webhook applies to — includes an "all current and new surveys" option. */
 export const SurveyCheckboxGroup: React.FC<SurveyCheckboxGroupProps> = ({
   surveys,
   selectedSurveys,

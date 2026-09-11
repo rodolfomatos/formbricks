@@ -1,3 +1,4 @@
+/** A single survey-variable row — editable name, type selector (string/number/calc), formula editor for calc type, and remove button. */
 "use client";
 
 import { createId } from "@paralleldrive/cuid2";

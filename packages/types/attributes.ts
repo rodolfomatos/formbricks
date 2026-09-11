@@ -1,3 +1,4 @@
+/** Contact attribute schemas — key-value pairs attached to contacts for targeting and personalization. */
 import { z } from "zod";
 
 export const ZAttributeUpdateInput = z.object({

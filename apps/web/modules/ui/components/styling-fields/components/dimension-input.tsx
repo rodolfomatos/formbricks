@@ -1,3 +1,7 @@
+/**
+ * Form field for numeric dimension input with a unit selector (px, %, rem, em).
+ * The stored value is a number for px, or a string like "2rem" for other units.
+ */
 "use client";
 
 import { FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/modules/ui/components/form";

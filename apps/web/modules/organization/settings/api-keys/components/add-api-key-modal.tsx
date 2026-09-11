@@ -56,6 +56,7 @@ interface PermissionRecord {
 
 const permissionOptions = [ApiKeyPermission.read, ApiKeyPermission.write, ApiKeyPermission.manage];
 
+/** Modal for creating a new API key — label, workspace-level permissions, and organization access toggles. */
 export const AddApiKeyModal = ({
   open,
   setOpen,

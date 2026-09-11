@@ -26,6 +26,7 @@ interface SingleResponseCardHeaderProps {
   locale: TUserLocale;
 }
 
+/** Header row for a single response card showing contact info, survey name (on people page), timestamp, and delete action. */
 export const SingleResponseCardHeader = ({
   pageType,
   response,

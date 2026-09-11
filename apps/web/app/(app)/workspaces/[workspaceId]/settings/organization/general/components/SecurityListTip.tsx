@@ -4,6 +4,9 @@ import { ShieldCheckIcon } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
+/**
+ * Informational banner (self-hosted only) encouraging users to join the Formbricks security mailing list.
+ */
 export const SecurityListTip = () => {
   const { t } = useTranslation();
   return (

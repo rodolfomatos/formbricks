@@ -23,6 +23,10 @@ interface CreateFirstSurveyProps {
   aiUnavailableReason?: TAIUnavailableReason;
 }
 
+/**
+ * Onboarding step that presents three survey creation paths: AI-powered, from a template,
+ * or starting from scratch. Tracks the selected path in PostHog.
+ */
 export const CreateFirstSurvey = ({
   organizationId,
   workspaceId,

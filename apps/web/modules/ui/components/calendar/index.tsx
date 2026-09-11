@@ -1,3 +1,7 @@
+/**
+ * Wraps react-day-picker's DayPicker with Formbricks styling defaults (tailored CSS classes,
+ * custom chevron icons). Used by DatePicker for date selection in forms.
+ */
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";

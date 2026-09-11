@@ -1,3 +1,10 @@
+/**
+ * Service layer for third-party Integrations (Google Sheets, Slack, Airtable, Notion, etc.).
+ *
+ * Each workspace can have at most one integration of each type; the service uses
+ * Prisma's `upsert` for create-or-update semantics. Integration configs are returned
+ * with dates materialised into Date objects (they arrive as ISO strings from Prisma).
+ */
 import "server-only";
 import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
@@ -27,6 +34,14 @@ const transformIntegration = (integration: TIntegration): TIntegration => {
   } as TIntegration;
 };
 
+/**
+ * Creates or updates an integration for a workspace (one per type).
+ * If an integration of the same type already exists, its config is replaced.
+ *
+ * @param workspaceId — the owning workspace
+ * @param integrationData — the integration input (type + config)
+ * @returns — the saved integration
+ */
 export const createOrUpdateIntegration = async (
   workspaceId: string,
   integrationData: TIntegrationInput
@@ -60,6 +75,13 @@ export const createOrUpdateIntegration = async (
   }
 };
 
+/**
+ * Lists all integrations for a workspace with optional pagination.
+ *
+ * @param workspaceId — the workspace to query
+ * @param page — page number (1-based); omit for all results
+ * @returns — paginated array of integrations
+ */
 export const getIntegrations = reactCache(
   async (workspaceId: string, page?: number): Promise<TIntegration[]> => {
     validateInputs([workspaceId, ZId], [page, ZOptionalNumber]);
@@ -82,6 +104,12 @@ export const getIntegrations = reactCache(
   }
 );
 
+/**
+ * Retrieves a single integration by its ID.
+ *
+ * @param integrationId — the integration to fetch
+ * @returns — the integration, or null
+ */
 export const getIntegration = reactCache(async (integrationId: string): Promise<TIntegration | null> => {
   try {
     const integration = await prisma.integration.findUnique({
@@ -98,6 +126,13 @@ export const getIntegration = reactCache(async (integrationId: string): Promise<
   }
 });
 
+/**
+ * Retrieves the single integration of a given type for a workspace (e.g. the Slack integration).
+ *
+ * @param workspaceId — the workspace
+ * @param type — the integration type
+ * @returns — the typed integration, or null
+ */
 export const getIntegrationByType = reactCache(
   async <T extends TIntegrationInput["type"]>(
     workspaceId: string,
@@ -122,6 +157,12 @@ export const getIntegrationByType = reactCache(
   }
 );
 
+/**
+ * Deletes an integration by ID.
+ *
+ * @param integrationId — the integration to remove
+ * @returns — the deleted integration
+ */
 export const deleteIntegration = async (integrationId: string): Promise<TIntegration> => {
   validateInputs([integrationId, ZString]);
 

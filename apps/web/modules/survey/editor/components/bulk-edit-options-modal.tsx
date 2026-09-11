@@ -1,3 +1,4 @@
+/** Modal dialog for bulk-editing multiple-choice options — paste each option on a new line with validation against options used in logic before saving. */
 "use client";
 
 import { createId } from "@paralleldrive/cuid2";

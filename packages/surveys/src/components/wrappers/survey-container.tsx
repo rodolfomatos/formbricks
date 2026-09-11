@@ -1,3 +1,4 @@
+/** Survey container — renders the outer modal/inline shell with focus trap, placement-based positioning (bottomRight, bottomLeft, center), close-on-escape, and overlay support. */
 import { type ComponentChildren } from "preact";
 import { useEffect } from "preact/hooks";
 import { useTranslation } from "react-i18next";

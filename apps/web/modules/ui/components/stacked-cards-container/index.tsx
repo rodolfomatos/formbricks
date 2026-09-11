@@ -1,3 +1,7 @@
+/**
+ * Container that renders survey cards in different visual arrangements.
+ * Supports "casual" (rotated stack), "straight" (offset stack), "cardless" (no card), and default (single card) modes.
+ */
 "use client";
 
 import {

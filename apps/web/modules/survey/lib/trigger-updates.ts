@@ -13,6 +13,7 @@ export interface TriggerUpdate {
   };
 }
 
+/** Extracts an array of actionClass IDs from a trigger list. Returns null for falsy input. */
 export const getTriggerIds = (triggers: unknown): string[] | null => {
   if (!triggers) return null;
   if (!Array.isArray(triggers)) {
@@ -29,6 +30,7 @@ export const getTriggerIds = (triggers: unknown): string[] | null => {
   });
 };
 
+/** Validates trigger IDs exist in the available action classes and have no duplicates. */
 export const checkTriggersValidity = (triggers: unknown, actionClasses: TriggerActionClass[]): void => {
   const triggerIds = getTriggerIds(triggers);
   if (!triggerIds) return;
@@ -44,6 +46,7 @@ export const checkTriggersValidity = (triggers: unknown, actionClasses: TriggerA
   }
 };
 
+/** Computes the Prisma update payload (creates and deletes) to reconcile current triggers with updated trigger selections. */
 export const handleTriggerUpdates = (
   updatedTriggers: unknown,
   currentTriggers: unknown,

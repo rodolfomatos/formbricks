@@ -1,3 +1,4 @@
+/** Smiley face SVGs — a full set of SVG emoji faces (tired to happy) used in rating-scale smiley-mode rendering. */
 import type { FunctionComponent } from "react";
 
 export const TiredFace: FunctionComponent<React.SVGProps<SVGCircleElement>> = (props) => {

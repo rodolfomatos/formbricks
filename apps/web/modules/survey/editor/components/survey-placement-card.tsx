@@ -1,3 +1,4 @@
+/** Placement configuration card under settings — selects survey placement type (bottomLeft, bottomRight, centered, etc.) by environment channel (website/survey) with channel-specific options. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

@@ -1,3 +1,4 @@
+/** Matrix element — renders a Likert-scale (matrix) survey question with shuffled rows, TTC tracking, and i18n localisation. */
 import { useMemo, useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { Matrix, type MatrixOption } from "@formbricks/survey-ui";

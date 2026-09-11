@@ -1,3 +1,10 @@
+/**
+ * Transforms a Formbricks survey response into one or more Hub FeedbackRecord payloads.
+ *
+ * Each mapping configured on the feedback source produces one record per response.
+ * Matrix questions expand into one record per row, and ranking questions expand into
+ * one record per item — all sharing a `field_group_id` so the Hub can aggregate them.
+ */
 import "server-only";
 import { TFeedbackSourceFormbricksMapping, THubFieldType } from "@formbricks/types/feedback-source";
 import { TResponse, TResponseData, TResponseDataValue } from "@formbricks/types/responses";

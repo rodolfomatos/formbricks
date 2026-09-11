@@ -16,8 +16,10 @@ type TBasicSurveyMetadata = {
   ogImage?: string;
 };
 
+/** URL-encodes the survey name for use in OG image URLs. */
 export const getNameForURL = (value: string) => encodeURIComponent(value);
 
+/** URL-encodes the brand colour hex value for use in OG image URLs. */
 export const getBrandColorForURL = (value: string) => encodeURIComponent(value);
 
 /**

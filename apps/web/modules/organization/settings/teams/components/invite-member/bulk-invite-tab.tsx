@@ -24,6 +24,7 @@ interface BulkInviteTabProps {
   enterpriseLicenseRequestFormUrl: string;
 }
 
+/** Tab for bulk-inviting members via CSV file upload. Shows an upgrade prompt if bulk invite is not allowed on the current plan. */
 export const BulkInviteTab = ({
   setOpen,
   onSubmit,

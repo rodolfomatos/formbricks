@@ -1,3 +1,7 @@
+/**
+ * Inner badge rendering for IdBadge, handling the copy button, hover state,
+ * tooltip, and visual feedback (copy/check icons) in a single component.
+ */
 "use client";
 
 import { Check, Copy } from "lucide-react";

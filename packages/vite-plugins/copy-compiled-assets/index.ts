@@ -3,12 +3,18 @@ import { access, copyFile, mkdir, readdir, stat } from "node:fs/promises";
 import path from "node:path";
 import { type Plugin, type ResolvedConfig } from "vite";
 
+/**
+ * Options for the copy-compiled-assets Vite plugin.
+ */
 interface CopyCompiledAssetsPluginOptions {
   filename: string;
   distDir: string;
-  skipDirectoryCheck?: boolean; // New option to skip checking non-existent directories
+  skipDirectoryCheck?: boolean;
 }
 
+/**
+ * Creates a directory if it doesn't already exist (recursive).
+ */
 const ensureDirectoryExists = async (dirPath: string): Promise<void> => {
   try {
     await access(dirPath);
@@ -21,6 +27,11 @@ const ensureDirectoryExists = async (dirPath: string): Promise<void> => {
   }
 };
 
+/**
+ * Vite plugin that copies compiled survey bundle assets from the package
+ * dist directory into `apps/web/public/js/` so the Next.js app can serve them
+ * as static files.
+ */
 export function copyCompiledAssetsPlugin(options: CopyCompiledAssetsPluginOptions): Plugin {
   let config: ResolvedConfig;
 

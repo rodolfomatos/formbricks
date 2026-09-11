@@ -1,3 +1,4 @@
+/** Color-picker and palette grid for setting the survey background to a solid colour. */
 import { useState } from "react";
 import { ColorPicker } from "@/modules/ui/components/color-picker";
 

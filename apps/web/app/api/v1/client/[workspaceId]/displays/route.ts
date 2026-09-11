@@ -5,9 +5,7 @@ import { RequestBodyTooLargeError, parseJsonBodyWithLimit } from "@/app/lib/api/
 import { responses } from "@/app/lib/api/response";
 import { transformErrorToDetails } from "@/app/lib/api/validator";
 import { THandlerParams, withV1ApiWrapper } from "@/app/lib/api/with-api-logging";
-import { getOrganizationIdFromWorkspaceId } from "@/lib/utils/helper";
 import { resolveClientApiIds } from "@/lib/utils/resolve-client-id";
-import { getIsContactsEnabled } from "@/modules/ee/license-check/lib/utils";
 import { createDisplay } from "./lib/display";
 
 export const OPTIONS = async (): Promise<Response> => {
@@ -20,6 +18,11 @@ export const OPTIONS = async (): Promise<Response> => {
   );
 };
 
+/**
+ * POST /api/v1/client/[workspaceId]/displays
+ * Records a survey display event (when a survey is shown to a user).
+ * Accepts environmentId or workspaceId. Optionally links to a userId (enterprise only).
+ */
 export const POST = withV1ApiWrapper({
   handler: async ({ req, props }: THandlerParams<{ params: Promise<{ workspaceId: string }> }>) => {
     const params = await props.params;
@@ -65,19 +68,6 @@ export const POST = withV1ApiWrapper({
           true
         ),
       };
-    }
-
-    if (inputValidation.data.userId) {
-      const organizationId = await getOrganizationIdFromWorkspaceId(workspaceId);
-      const isContactsEnabled = await getIsContactsEnabled(organizationId);
-      if (!isContactsEnabled) {
-        return {
-          response: responses.forbiddenResponse(
-            "User identification is only available for enterprise users.",
-            true
-          ),
-        };
-      }
     }
 
     try {

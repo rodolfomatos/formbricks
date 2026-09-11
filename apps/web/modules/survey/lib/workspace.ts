@@ -9,6 +9,7 @@ type WorkspaceWithTeam = Workspace & {
   teamIds: string[];
 };
 
+/** Loads a workspace together with its associated team IDs. Returns null if not found. */
 export const getWorkspaceWithTeamIds = reactCache(
   async (workspaceId: string): Promise<WorkspaceWithTeam | null> => {
     let workspacePrisma: Prisma.WorkspaceGetPayload<{

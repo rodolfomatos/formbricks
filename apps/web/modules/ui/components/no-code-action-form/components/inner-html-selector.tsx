@@ -1,3 +1,7 @@
+/**
+ * Advanced-option toggle for inner text selector input in click-action forms.
+ * Collapses/expands a text input for matching button text content.
+ */
 "use client";
 
 import { UseFormReturn } from "react-hook-form";

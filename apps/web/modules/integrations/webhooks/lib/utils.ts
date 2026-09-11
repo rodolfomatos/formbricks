@@ -1,3 +1,4 @@
+/** Validates a webhook URL — checks protocol (https required by default), domain format, and rejects internal URLs unless explicitly allowed. */
 export const validWebHookURL = (urlInput: string, allowInternalUrls = false) => {
   const trimmedInput = urlInput.trim();
   if (!trimmedInput) {
@@ -43,6 +44,7 @@ export const validWebHookURL = (urlInput: string, allowInternalUrls = false) => 
   }
 };
 
+/** Checks if a URL is a Discord webhook endpoint (not supported as a Formbricks webhook target). */
 export const isDiscordWebhook = (urlString: string) => {
   const url = new URL(urlString);
   const DISCORD_WEBHOOK_URL_PATTERN = /^https:\/\/discord\.com\/api\/webhooks\/\d+\/.+$/;

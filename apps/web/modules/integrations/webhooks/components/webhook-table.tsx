@@ -16,6 +16,7 @@ interface WebhookTableProps {
   allowInternalUrls: boolean;
 }
 
+/** Table displaying all webhooks for a workspace with clickable rows that open the detail modal. Shows an empty state when no webhooks exist. */
 export const WebhookTable = ({
   workspaceId,
   webhooks,

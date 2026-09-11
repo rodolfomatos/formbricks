@@ -11,6 +11,10 @@ interface SentryProviderProps {
   isEnabled?: boolean;
 }
 
+/**
+ * Client component that initializes Sentry in the browser. Only runs once.
+ * Filters out NEXT_NOT_FOUND digests from error reporting.
+ */
 export const SentryProvider = ({
   children,
   sentryDsn,

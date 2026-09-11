@@ -1,55 +1,40 @@
+import { prisma } from "@formbricks/database";
 import { getTranslate } from "@/lingodotdev/server";
-import { ContactsPageLayout } from "@/modules/ee/contacts/components/contacts-page-layout";
-import { getContactAttributeKeys } from "@/modules/ee/contacts/lib/contact-attribute-keys";
-import { SegmentTable } from "@/modules/ee/contacts/segments/components/segment-table";
-import { getSegments } from "@/modules/ee/contacts/segments/lib/segments";
-import { getIsContactsEnabled } from "@/modules/ee/license-check/lib/utils";
 import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
-import { CreateSegmentModal } from "./components/create-segment-modal";
 
-export const SegmentsPage = async ({ params: paramsProps }: { params: Promise<{ workspaceId: string }> }) => {
-  const params = await paramsProps;
+interface SegmentsPageProps {
+  params: Promise<{ workspaceId: string }>;
+}
+
+export const SegmentsPage = async (props: SegmentsPageProps) => {
+  const params = await props.params;
   const t = await getTranslate();
+  const { workspace } = await getWorkspaceAuth(params.workspaceId);
 
-  const { isReadOnly, organization, workspace } = await getWorkspaceAuth(params.workspaceId);
-
-  const [segments, contactAttributeKeys] = await Promise.all([
-    getSegments(workspace.id),
-    getContactAttributeKeys(workspace.id),
-  ]);
-
-  const isContactsEnabled = await getIsContactsEnabled(organization.id);
-
-  if (!segments) {
-    throw new Error("Failed to fetch segments");
-  }
-
-  const filteredSegments = segments.filter((segment) => !segment.isPrivate);
+  const segments = await prisma.segment.findMany({
+    where: { workspaceId: workspace.id },
+    include: {
+      surveys: { select: { name: true, status: true } },
+    },
+    orderBy: { createdAt: "asc" },
+  });
 
   return (
-    <ContactsPageLayout
-      pageTitle={t("common.contacts")}
-      activeId="segments"
-      workspaceId={params.workspaceId}
-      isContactsEnabled={isContactsEnabled}
-      isReadOnly={isReadOnly}
-      cta={
-        <CreateSegmentModal
-          contactAttributeKeys={contactAttributeKeys}
-          segments={filteredSegments}
-          workspaceId={workspace.id}
-        />
-      }
-      upgradePromptTitle={t("workspace.segments.unlock_segments_title")}
-      upgradePromptDescription={t("workspace.segments.unlock_segments_description")}
-      upgradeFeature="segments">
-      <SegmentTable
-        allSegments={segments}
-        segments={filteredSegments}
-        contactAttributeKeys={contactAttributeKeys}
-        isContactsEnabled={isContactsEnabled}
-        isReadOnly={isReadOnly}
-      />
-    </ContactsPageLayout>
+    <div>
+      <h1 className="text-2xl font-semibold">{t("common.segments")}</h1>
+      <p className="text-muted-foreground text-sm">{segments.length} segments</p>
+      <ul className="mt-4 space-y-2">
+        {segments.map((segment) => (
+          <li key={segment.id} className="rounded-md border p-3">
+            <p className="font-medium">{segment.title}</p>
+            <p className="text-muted-foreground text-xs">
+              {segment.surveys.length} survey{segment.surveys.length !== 1 ? "s" : ""}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
+
+export default SegmentsPage;

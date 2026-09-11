@@ -1,3 +1,7 @@
+/**
+ * A segmented control / switch with a sliding highlight that follows the active option.
+ * Each option can be individually disabled. Resize-aware highlight positioning.
+ */
 import React, { useEffect, useRef, useState } from "react";
 
 interface TOption {

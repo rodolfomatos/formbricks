@@ -1,3 +1,4 @@
+/** I18n helpers — resolves i18n-string objects (multi-language values) to the active survey language, with fallback to "default" and HTML newline conversion. */
 import type { TFunction } from "i18next";
 import { TI18nString } from "@formbricks/types/i18n";
 import i18n from "./i18n.config";

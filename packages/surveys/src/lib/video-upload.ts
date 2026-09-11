@@ -1,3 +1,4 @@
+/** Video URL utilities — detects YouTube/Vimeo/Loom URLs, validates them, and converts share links to embed URLs for survey media rendering. */
 export const checkForYoutubeUrl = (url: string): boolean => {
   try {
     const youtubeUrl = new URL(url);

@@ -1,3 +1,7 @@
+/**
+ * A styled tag/pill badge with optional delete button. Used for displaying and
+ * removing response tags. Supports highlight animation and controlled delete.
+ */
 import { XCircleIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
 

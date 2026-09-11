@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 /**
- * Branded type for cache keys to prevent raw string usage
- * This ensures only properly generated cache keys can be used in cache operations
+ * Zod schema for branded cache keys — ensures every key passes minimum length
+ * and non-whitespace validation at runtime, not just at the type level.
  */
 export const ZCacheKey = z
   .string()
@@ -10,10 +10,16 @@ export const ZCacheKey = z
   .refine((key) => key.trim().length > 0, "Cache key cannot be empty or whitespace only")
   .brand("CacheKey");
 
+/**
+ * Branded string type — values can only be created via makeCacheKey() or the
+ * createCacheKey factory. This prevents accidentally passing raw user input
+ * as a cache key.
+ */
 export type CacheKey = z.infer<typeof ZCacheKey>;
 
 /**
- * Possible namespaces for custom cache keys
- * Add new namespaces here as they are introduced
+ * Allowed namespaces for custom cache keys. Add new entries here as new
+ * caching domains are introduced — every namespace maps to a top-level
+ * segment in the Redis key hierarchy.
  */
 export type CustomCacheNamespace = "account_deletion" | "analytics" | "billing" | "oauth";

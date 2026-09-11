@@ -34,6 +34,7 @@ interface PinScreenProps {
   styling: TWorkspaceStyling | TSurveyStyling;
 }
 
+/** PIN-protected survey gate. Shows a 4-digit OTP input; validates via server action and renders the survey on success. */
 export const PinScreen = (props: PinScreenProps) => {
   const {
     surveyId,

@@ -5,6 +5,10 @@ import { LoadingCard } from "@/app/(app)/components/LoadingCard";
 import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper";
 import { PageHeader } from "@/modules/ui/components/page-header";
 
+/**
+ * Loading fallback for the profile settings page.
+ * Displays skeleton cards for personal info and delete account sections.
+ */
 const Loading = () => {
   const { t } = useTranslation();
   const cards = [

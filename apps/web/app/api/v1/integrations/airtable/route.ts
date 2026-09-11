@@ -6,6 +6,11 @@ import { hasUserWorkspaceAccess } from "@/lib/workspace/auth";
 
 const scope = `data.records:read data.records:write schema.bases:read schema.bases:write user.email:read`;
 
+/**
+ * GET /api/v1/integrations/airtable
+ * Initiates Airtable OAuth flow (PKCE). Generates a code challenge+verifier pair,
+ * creates an OAuth state, and returns an authorization URL.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ req, authentication }) => {
     if (!authentication || !("user" in authentication)) {

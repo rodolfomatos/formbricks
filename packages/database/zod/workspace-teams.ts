@@ -1,3 +1,7 @@
+/**
+ * Zod schema for workspace-team associations — validates the many-to-many
+ * relationship between workspaces and teams with permission level.
+ */
 import { z } from "zod";
 import { type WorkspaceTeam, WorkspaceTeamPermission } from "../src/prisma";
 

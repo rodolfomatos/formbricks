@@ -1,3 +1,7 @@
+/**
+ * Zod schemas for API key entities — validates API keys, workspace access
+ * permissions, and create/update inputs against the Prisma model.
+ */
 import { z } from "zod";
 import { ZOrganizationAccess } from "../../types/api-key";
 import { type ApiKey, ApiKeyPermission, type ApiKeyWorkspace } from "../src/prisma";

@@ -30,6 +30,10 @@ interface EditOrganizationNameProps {
 const ZEditOrganizationNameFormSchema = ZOrganization.pick({ name: true });
 type EditOrganizationNameForm = z.infer<typeof ZEditOrganizationNameFormSchema>;
 
+/**
+ * Form for updating the organization name. Only the owner can edit.
+ * Shows a warning alert if the current user lacks owner permissions.
+ */
 export const EditOrganizationNameForm = ({ organization, membershipRole }: EditOrganizationNameProps) => {
   const { t } = useTranslation();
   const form = useForm<EditOrganizationNameForm>({

@@ -11,7 +11,7 @@ import { verifyFeedbackRecordsGatewayToken } from "@/lib/jwt";
 import { checkAuthorizationUpdated } from "@/lib/utils/action-client/action-client-middleware";
 import { getBearerTokenFromHeaders } from "@/modules/api/lib/api-key-auth";
 import { getFeedbackDirectoryAuthContext } from "@/modules/ee/feedback-directory/lib/feedback-directory";
-import { getIsFeedbackDirectoriesEnabled } from "@/modules/ee/license-check/lib/utils";
+
 import {
   TGatewayAuthenticatedPrincipal,
   TGatewayRequestAuthorizer,
@@ -288,13 +288,6 @@ const authorizeFeedbackRecordsGatewayRequest = async (
     return { allowed: false };
   }
 
-  const isFeedbackDirectoriesAllowed = await getIsFeedbackDirectoriesEnabled(
-    feedbackDirectory.organizationId
-  );
-  if (!isFeedbackDirectoriesAllowed) {
-    return { allowed: false };
-  }
-
   if (principal.type === "apiKey") {
     return hasApiKeyImplicitFeedbackDirectoryAccess(
       principal.authentication,
@@ -334,6 +327,12 @@ const authorizeFeedbackRecordsGatewayRequest = async (
   }
 };
 
+/**
+ * Gateway authorizer for the Feedback Records API. Matches routes under
+ * /api/v3/feedbackRecords or /v1/feedback-records, resolves the tenant
+ * (feedback directory ID) from query, body, or record lookup, and
+ * authorises based on API key permissions or user workspace team roles.
+ */
 export const feedbackRecordsGatewayAuthorizer: TGatewayRequestAuthorizer = {
   matches: (originalRequest) => normalizeFeedbackRecordsPath(originalRequest.url.pathname) !== null,
   gatewayToken: {

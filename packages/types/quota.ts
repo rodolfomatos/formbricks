@@ -1,3 +1,4 @@
+/** Quota schemas — survey response quotas, screening logic, and quota linkage to responses. */
 import { z } from "zod";
 import { ZId } from "./common";
 import type { TResponse } from "./responses";

@@ -67,3 +67,8 @@ i18n.cache
 stats.html
 # next-agents-md
 .next-docs/
+
+# Orphan/foreign directories that ship into the Docker image via COPY . .
+# Never re-add: modules/ was a stale duplicate of apps/web/modules/ee
+modules/
+packages/design-system/

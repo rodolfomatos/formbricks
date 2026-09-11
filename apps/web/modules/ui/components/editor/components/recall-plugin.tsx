@@ -1,3 +1,8 @@
+/**
+ * Lexical plugin that manages recall/fallback nodes — special inline placeholders
+ * that reference survey data (e.g. respondent name). Handles @-triggered insertion,
+ * raw recall text conversion, and label syncing when the survey changes.
+ */
 "use client";
 
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";

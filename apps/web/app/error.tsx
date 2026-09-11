@@ -26,6 +26,10 @@ const getErrorMessages = (type: ClientErrorType, t: TFunction) => {
   };
 };
 
+/**
+ * Client error boundary for the root layout. Displays a translated error message
+ * with retry/go-home buttons. Reports unexpected errors to Sentry.
+ */
 const ErrorBoundary = ({ error, reset }: { error: Error; reset: () => void }) => {
   const { t } = useTranslation();
   const errorData = getClientErrorData(error);

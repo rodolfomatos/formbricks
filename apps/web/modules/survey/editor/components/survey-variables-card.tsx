@@ -1,3 +1,4 @@
+/** Survey variables editor card under elements — CRUD list of survey-level variables (string/number/calc types) with add/remove/reorder and auto-animate transitions. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

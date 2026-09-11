@@ -1,3 +1,6 @@
+/**
+ * Tab navigation with underline-based active indicator, optional icons, and disabled support.
+ */
 "use client";
 
 import { cn } from "@/lib/cn";

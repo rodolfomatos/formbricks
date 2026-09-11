@@ -30,6 +30,10 @@ interface ChatwootInstance {
   reset: () => void;
 }
 
+/**
+ * Chatwoot live-chat widget. Loads the Chatwoot SDK, identifies the user, sets
+ * custom attributes, and hides the widget on onboarding pages.
+ */
 export const ChatwootWidget = ({
   userEmail,
   userName,

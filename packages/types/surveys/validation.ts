@@ -1,3 +1,4 @@
+/** Survey validation utilities — HTML content checking, label validation across languages, ID formatting rules, and cyclic logic detection. */
 import { parse } from "node-html-parser";
 import { type z } from "zod";
 import type { TI18nString } from "../i18n";

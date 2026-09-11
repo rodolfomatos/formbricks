@@ -1,3 +1,6 @@
+/**
+ * Client-side wrapper around react-hot-toast's Toaster with themed success/error class names.
+ */
 "use client";
 
 import { Toaster } from "react-hot-toast";

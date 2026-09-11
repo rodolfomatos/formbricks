@@ -1,3 +1,4 @@
+/** Form editor for the Ranking question element — manages sortable choices with drag-reorder, shuffle options, and validation rules. */
 "use client";
 
 import { DndContext } from "@dnd-kit/core";

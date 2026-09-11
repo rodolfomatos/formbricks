@@ -2,6 +2,12 @@ import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
 import { err, ok } from "@formbricks/types/error-handlers";
 
+/**
+ * Cached retrieval of a segment by ID.
+ *
+ * @param segmentId — The segment ID
+ * @returns — The segment with filters and workspaceId
+ */
 export const getSegment = reactCache(async (segmentId: string) => {
   try {
     const segment = await prisma.segment.findUnique({

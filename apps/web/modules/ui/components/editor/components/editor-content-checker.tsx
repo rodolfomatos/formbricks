@@ -1,3 +1,7 @@
+/**
+ * Subscribes to Lexical editor updates and calls onEmptyChange whenever the
+ * editor content transitions between empty and non-empty. Renders nothing.
+ */
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { $getRoot } from "lexical";
 import { useEffect } from "react";

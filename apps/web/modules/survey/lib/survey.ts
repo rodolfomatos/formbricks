@@ -101,6 +101,7 @@ export const selectSurvey = {
   followUps: true,
 } satisfies Prisma.SurveySelect;
 
+/** Fetches billing info for an organization with read-through cache sync. */
 export const getOrganizationBilling = reactCache(
   async (organizationId: string): Promise<TOrganizationBilling> => {
     const billing = await getOrganizationBillingWithReadThroughSync(organizationId);
@@ -109,6 +110,7 @@ export const getOrganizationBilling = reactCache(
   }
 );
 
+/** Loads a full survey by ID with all relations (triggers, segment, languages, follow-ups), cached per request. */
 export const getSurvey = reactCache(async (surveyId: string): Promise<TSurvey> => {
   try {
     const survey = await prisma.survey.findUnique({

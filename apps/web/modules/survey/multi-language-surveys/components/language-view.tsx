@@ -56,6 +56,7 @@ interface ConfirmationModalInfo {
   onConfirm: () => void;
 }
 
+/** Survey language settings panel: activation toggle, default language select, language table with progress bars, enable/disable toggles, and action menus for translations management. */
 export const LanguageView = ({
   localSurvey,
   setLocalSurvey,

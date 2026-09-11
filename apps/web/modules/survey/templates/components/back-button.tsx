@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/modules/ui/components/button";
 
+/** Button that navigates back — either to a specific path or to the previous history entry. */
 interface BackButtonProps {
   path?: string;
 }

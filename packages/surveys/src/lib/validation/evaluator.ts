@@ -1,3 +1,4 @@
+/** Evaluator — traverses survey blocks and applies per-element validators to produce an error map for the current response. */
 import type { TFunction } from "i18next";
 import type { TResponseData, TResponseDataValue } from "@formbricks/types/responses";
 import type { TSurveyElement } from "@formbricks/types/surveys/elements";

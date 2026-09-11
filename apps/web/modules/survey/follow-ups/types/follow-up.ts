@@ -1,9 +1,11 @@
+/** Result of processing a single follow-up action — succeeded, failed with an error message, or skipped because the trigger conditions weren't met. */
 export type FollowUpResult = {
   followUpId: string;
   status: "success" | "error" | "skipped";
   error?: string;
 };
 
+/** Error codes categorising why a follow-up send attempt failed. */
 export enum FollowUpSendError {
   VALIDATION_ERROR = "validation_error",
   ORG_NOT_FOUND = "organization_not_found",

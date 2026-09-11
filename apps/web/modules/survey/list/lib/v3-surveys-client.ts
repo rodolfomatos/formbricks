@@ -69,6 +69,7 @@ function mapSurveyListItem(survey: TV3SurveyListItemResponse): TSurveyListItem {
   };
 }
 
+/** Builds URL search parameters for the V3 survey list API from workspace ID, pagination, and filters. */
 export function buildSurveyListSearchParams({
   workspaceId,
   limit,
@@ -112,6 +113,7 @@ export function buildSurveyListSearchParams({
   return searchParams;
 }
 
+/** Fetches a paginated page of surveys from the V3 API with cursor-based pagination and filters. */
 export async function listSurveys({
   workspaceId,
   limit,
@@ -154,6 +156,7 @@ export async function listSurveys({
   };
 }
 
+/** Deletes a survey via the V3 API. */
 export async function deleteSurvey(surveyId: string): Promise<void> {
   const response = await fetch(`/api/v3/surveys/${surveyId}`, {
     method: "DELETE",
@@ -165,6 +168,7 @@ export async function deleteSurvey(surveyId: string): Promise<void> {
   }
 }
 
+/** Sends a prompt to the AI survey generation endpoint and returns the generated payload. */
 export async function generateSurveyCreatePayload(
   body: TV3SurveyGenerateBody
 ): Promise<TV3GenerateSurveyResponse["data"]> {
@@ -185,6 +189,7 @@ export async function generateSurveyCreatePayload(
   return responseBody.data;
 }
 
+/** Validates a survey create payload against the V3 API's validation endpoint. */
 export async function validateSurveyCreatePayload(
   payload: TV3CreateSurveyBody
 ): Promise<TV3CreateSurveyValidationResponse> {
@@ -210,6 +215,7 @@ export async function validateSurveyCreatePayload(
   return responseBody.data;
 }
 
+/** Creates a survey via the V3 API and returns the new survey ID. */
 export async function createV3Survey(payload: TV3CreateSurveyBody): Promise<TV3CreateSurveyResponse["data"]> {
   const response = await fetch("/api/v3/surveys", {
     method: "POST",

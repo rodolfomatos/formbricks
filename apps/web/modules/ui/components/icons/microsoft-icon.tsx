@@ -1,3 +1,6 @@
+/**
+ * Microsoft brand icon SVG (filled 4-pane window logo).
+ */
 export const MicrosoftIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg

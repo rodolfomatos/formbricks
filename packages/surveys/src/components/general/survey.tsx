@@ -1,3 +1,4 @@
+/** Survey — the main survey orchestration component: manages response state, block navigation, auto-progress, language switching, offline queue, file uploads, and keyboard events. */
 import { type JSX } from "preact";
 import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { SurveyContainerProps } from "@formbricks/types/formbricks-surveys";

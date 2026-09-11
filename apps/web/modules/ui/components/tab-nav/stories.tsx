@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the TabNav component.
+ * Covers default and with-icons variants.
+ */
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BarChart, FileText, Home, InfoIcon, KeyRound, Settings, User, UserIcon } from "lucide-react";
 import { useState } from "react";

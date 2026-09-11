@@ -1,3 +1,4 @@
+/** Main survey question editing view — renders the welcome card, sortable block cards with DnD context, ending cards, hidden fields, survey variables, and element/block CRUD operations with logic/quota/recall validation. */
 "use client";
 
 import {

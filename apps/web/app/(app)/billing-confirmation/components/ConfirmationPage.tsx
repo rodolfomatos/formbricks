@@ -8,6 +8,10 @@ import { Confetti } from "@/modules/ui/components/confetti";
 
 const BILLING_CONFIRMATION_WORKSPACE_ID_KEY = "billingConfirmationWorkspaceId";
 
+/**
+ * Displays the billing upgrade success UI with confetti animation and a link
+ * back to the billing overview page for the workspace stored in session storage.
+ */
 export const ConfirmationPage = () => {
   const { t } = useTranslation();
   const [showConfetti, setShowConfetti] = useState(false);

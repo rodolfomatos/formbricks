@@ -2,6 +2,10 @@ import { Prisma } from "@formbricks/database/prisma";
 import { TContactAttributes } from "@formbricks/types/contact-attribute";
 import { TResponseInput } from "@formbricks/types/responses";
 
+/**
+ * Builds a Prisma ResponseCreateInput from the response input, optional
+ * contact, and TTC map.
+ */
 export const buildPrismaResponseData = (
   responseInput: TResponseInput,
   contact: { id: string; attributes: TContactAttributes } | null,

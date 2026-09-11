@@ -1,3 +1,4 @@
+/** Sortable row or column item for the Matrix element form — drag-reorder handle, inline label editor, and delete button. */
 "use client";
 
 import { useSortable } from "@dnd-kit/sortable";

@@ -26,11 +26,16 @@ type AsyncCacheService = Omit<CacheService, "getRedisClient"> & {
 };
 
 /**
- * Cache facade for the cache service
- * Provides a proxy to the cache service methods
- * Lazy initializes the cache service on first use
- * Handles cache service initialization failures gracefully
- * Avoid the need to use double awaits when using the cache service (e.g. await (await cache).get(key))
+ * Proxy-based cache facade that lazy-initialises the shared cache service on first access.
+ *
+ * Callers use `cache.get(...)`, `cache.set(...)`, etc. without worrying about
+ * whether the underlying Redis connection has been established yet. If the cache
+ * service fails to initialise, mutations degrade gracefully — `withCache` falls
+ * back to executing the wrapped function directly, and data-access methods return
+ * `{ ok: false, error }` instead of throwing.
+ *
+ * This eliminates the double-await pattern (`await (await cache).get(key)`)
+ * everywhere in the codebase.
  */
 export const cache = new Proxy({} as AsyncCacheService, {
   get(_target, prop: keyof CacheService) {

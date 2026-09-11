@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { Button } from "@/modules/ui/components/button";
 
+/**
+ * Route: `*` (catch-all). 404 page with a back-to-home button.
+ */
 const NotFound = () => {
   return (
     <div className="mx-auto flex h-full max-w-xl flex-col items-center justify-center py-16 text-center">

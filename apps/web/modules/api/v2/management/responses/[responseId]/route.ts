@@ -18,6 +18,13 @@ import { hasPermission } from "@/modules/organization/settings/api-keys/lib/util
 import { resolveStorageUrlsInObject, validateFileUploads } from "@/modules/storage/utils";
 import { ZResponseIdSchema, ZResponseUpdateSchema } from "./types/responses";
 
+/**
+ * Handles GET requests for `/api/v2/management/responses/[responseId]`. Requires API key authentication. Returns the requested resource(s).
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export const GET = async (request: Request, props: { params: Promise<{ responseId: string }> }) =>
   authenticatedApiClient({
     request,
@@ -58,6 +65,13 @@ export const GET = async (request: Request, props: { params: Promise<{ responseI
     },
   });
 
+/**
+ * Handles DELETE requests for `/api/v2/management/responses/[responseId]`. Requires API key authentication. Deletes an existing resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export const DELETE = async (request: Request, props: { params: Promise<{ responseId: string }> }) =>
   authenticatedApiClient({
     request,
@@ -114,6 +128,13 @@ export const DELETE = async (request: Request, props: { params: Promise<{ respon
     targetType: "response",
   });
 
+/**
+ * Handles PUT requests for `/api/v2/management/responses/[responseId]`. Requires API key authentication. Updates an existing resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param request — The incoming Next.js Request object with parsed body
+ * @returns — A Next.js Response with the operation result
+ */
 export const PUT = (request: Request, props: { params: Promise<{ responseId: string }> }) =>
   authenticatedApiClient({
     request,

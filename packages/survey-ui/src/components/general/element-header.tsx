@@ -1,3 +1,4 @@
+/** Element header — renders the headline, optional description, media (image/video), and required indicator for a survey element. */
 import DOMPurify from "isomorphic-dompurify";
 import * as React from "react";
 import { ElementMedia } from "@/components/general/element-media";

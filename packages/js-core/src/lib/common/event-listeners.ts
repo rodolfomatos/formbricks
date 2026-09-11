@@ -1,3 +1,4 @@
+/** Event listener manager — registers and tears down all SDK event listeners (page URL, click, exit intent, scroll depth, expiry checks) in one place. */
 import {
   addClickEventListener,
   addExitIntentListener,

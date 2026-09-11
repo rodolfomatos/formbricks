@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the Label component.
+ * Covers default, with-input, required, with-checkbox, with-radio, custom, disabled, long-text, and with-help-text.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { Label } from "./index";
 

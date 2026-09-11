@@ -46,6 +46,7 @@ interface OrganizationActionsProps {
   isBulkInviteAllowed: boolean;
 }
 
+/** Toolbar above the members table — invite member button, leave-organization dialog, and handles both individual and bulk invites. */
 export const OrganizationActions = ({
   role,
   organization,

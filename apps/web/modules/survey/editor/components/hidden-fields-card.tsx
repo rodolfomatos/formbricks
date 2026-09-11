@@ -1,3 +1,4 @@
+/** Hidden fields card under elements — add/remove fields that collect metadata (userId, email, custom) without displaying the input to the respondent. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

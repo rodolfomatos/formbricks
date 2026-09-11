@@ -18,6 +18,11 @@ export const OPTIONS = async (): Promise<Response> => {
   );
 };
 
+/**
+ * GET /api/v1/client/[workspaceId]/environment
+ * Returns the environment state (surveys, action classes, etc.) for the SDK.
+ * Accepts environmentId or workspaceId. Responses are cached aggressively.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ req, props }: THandlerParams<{ params: Promise<{ workspaceId: string }> }>) => {
     const params = await props.params;

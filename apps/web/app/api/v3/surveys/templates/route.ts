@@ -1,5 +1,5 @@
 /**
- * /api/v3/surveys/templates - product-internal trusted template survey creation.
+ * POST /api/v3/surveys/templates - product-internal trusted template survey creation.
  * Session cookie only; templates are reconstructed server-side before creating a survey.
  */
 import { withV3ApiWrapper } from "@/app/api/v3/lib/api-wrapper";

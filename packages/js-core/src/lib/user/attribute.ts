@@ -1,3 +1,4 @@
+/** Attribute handling — sets user/contact attributes (string, number, date) by enqueuing them in the debounced update queue. */
 import { UpdateQueue } from "@/lib/user/update-queue";
 import { type NetworkError, type Result, okVoid } from "@/types/error";
 

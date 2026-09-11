@@ -1,3 +1,7 @@
+/**
+ * A labeled checkbox for opting to decrement survey quotas when bulk-deleting responses.
+ * Shown inside the delete confirmation dialog when the selected responses have associated quotas.
+ */
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@/modules/ui/components/checkbox";
 

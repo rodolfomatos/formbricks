@@ -1,3 +1,4 @@
+/** Ending card — renders the survey completion screen with headline, subheader, optional media/video, redirect URL button, and "create your own" Formbricks link. */
 import { useCallback, useEffect } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { type TJsWorkspaceStateSurvey } from "@formbricks/types/js";

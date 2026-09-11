@@ -86,6 +86,17 @@ interface PreviewChoiceConfig {
   readonly label: Parameters<typeof getLocalizedValue>[0];
 }
 
+/**
+ * Render the preview email template to an HTML string for embedding in an
+ * actual email or preview iframe.
+ *
+ * @param survey — the survey whose first question drives the preview content
+ * @param surveyUrl — the base survey URL used to build prefilled links
+ * @param styling — survey styling tokens mapped to email-safe CSS
+ * @param locale — the locale for localised strings
+ * @param t — i18n translate function
+ * @returns — the fully rendered email HTML string
+ */
 export const getPreviewEmailTemplateHtml = async (
   survey: TSurvey,
   surveyUrl: string,
@@ -277,6 +288,21 @@ const getContactPreviewFields = (
     defaultLanguageCode
   );
 
+/**
+ * Renders a live preview of how a survey question would look when embedded
+ * in an email. Handles all question types (open text, NPS, rating, choice,
+ * CTA, picture selection, Cal, date, matrix, address, contact, file upload).
+ *
+ * Use this component to let users preview their survey's email appearance
+ * before sending.
+ *
+ * @param survey — the survey whose first question is previewed
+ * @param surveyUrl — base URL for building prefilled answer links
+ * @param styling — resolved styling tokens
+ * @param locale — current locale for string localisation
+ * @param t — i18n translate function
+ * @returns — the rendered email template React element
+ */
 export async function PreviewEmailTemplate({
   survey,
   surveyUrl,

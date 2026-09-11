@@ -20,6 +20,7 @@ import { DeleteDialog } from "@/modules/ui/components/delete-dialog";
 import { createApiKeyAction, deleteApiKeyAction, updateApiKeyAction } from "../actions";
 import { AddApiKeyModal } from "./add-api-key-modal";
 
+/** Displays an API key value with a copy-to-clipboard button. Shows a placeholder text if no key is available. */
 const ApiKeyDisplay = ({ apiKey }: Readonly<{ apiKey: string }>) => {
   const { t } = useTranslation();
   const copyToClipboard = async () => {
@@ -60,6 +61,7 @@ interface EditAPIKeysProps {
   workspaces: TOrganizationWorkspace[];
 }
 
+/** Client component that renders the API key list, add modal, edit-permissions modal, and delete dialog. */
 export const EditAPIKeys = ({
   organizationId,
   apiKeys,

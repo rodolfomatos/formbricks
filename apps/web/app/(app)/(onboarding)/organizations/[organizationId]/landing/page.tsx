@@ -5,10 +5,14 @@ import { IS_FORMBRICKS_CLOUD } from "@/lib/constants";
 import { getMembershipByUserIdOrganizationId } from "@/lib/membership/service";
 import { getUser } from "@/lib/user/service";
 import { getTranslate } from "@/lingodotdev/server";
-import { getIsMultiOrgEnabled } from "@/modules/ee/license-check/lib/utils";
 import { getOrganizationAuth } from "@/modules/organization/lib/utils";
 import { Header } from "@/modules/ui/components/header";
 
+/**
+ * Route: `/organizations/[organizationId]/landing` (authenticated, onboarding).
+ * Shows the "no workspaces" warning page with an org/workspace switcher in the sidebar.
+ * Redirects to login if unauthenticated.
+ */
 const Page = async (props: { params: Promise<{ organizationId: string }> }) => {
   const params = await props.params;
   const t = await getTranslate();
@@ -22,14 +26,12 @@ const Page = async (props: { params: Promise<{ organizationId: string }> }) => {
   const user = await getUser(session.user.id);
   if (!user) return notFound();
 
-  const isMultiOrgEnabled = await getIsMultiOrgEnabled();
-
   const membership = await getMembershipByUserIdOrganizationId(session.user.id, organization.id);
   const isMembershipPending = membership?.role === undefined;
 
   return (
     <div className="flex min-h-full min-w-full flex-row">
-      <LandingSidebar user={user} organization={organization} isMultiOrgEnabled={isMultiOrgEnabled} />
+      <LandingSidebar user={user} organization={organization} isMultiOrgEnabled={true} />
       <div className="flex-1">
         <div className="flex h-full flex-col">
           <div className="p-6">
@@ -37,7 +39,7 @@ const Page = async (props: { params: Promise<{ organizationId: string }> }) => {
             <WorkspaceAndOrgSwitch
               currentOrganizationId={organization.id}
               currentOrganizationName={organization.name}
-              isMultiOrgEnabled={isMultiOrgEnabled}
+              isMultiOrgEnabled={true}
               organizationWorkspacesLimit={0}
               isFormbricksCloud={IS_FORMBRICKS_CLOUD}
               isLicenseActive={false}

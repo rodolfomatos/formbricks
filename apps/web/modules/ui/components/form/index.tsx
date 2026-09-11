@@ -1,3 +1,8 @@
+/**
+ * Compound form components built on react-hook-form with Radix Label integration.
+ * Provides FormField, FormItem, FormLabel, FormControl, FormDescription, FormError,
+ * and useFormField hook for accessible form layouts with consistent styling.
+ */
 "use client";
 
 import * as LabelPrimitive from "@radix-ui/react-label";

@@ -1,3 +1,4 @@
+/** Button to append a new ending card at the end of the survey's endings list. */
 "use client";
 
 import { PlusIcon } from "lucide-react";

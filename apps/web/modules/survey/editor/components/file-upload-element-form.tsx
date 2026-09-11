@@ -1,3 +1,4 @@
+/** Form editor for the File Upload question element — headline, subheader, allow-multiple toggle, max file size with billing-aware limits, and validation rules for file types. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

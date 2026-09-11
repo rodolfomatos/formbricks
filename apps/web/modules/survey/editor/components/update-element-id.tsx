@@ -1,3 +1,4 @@
+/** Input to rename a question element's internal ID with validation against duplicates, ending-card IDs, and hidden-field IDs. */
 "use client";
 
 import { useState } from "react";

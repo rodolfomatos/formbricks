@@ -11,6 +11,13 @@ import {
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { ApiResponseWithMeta } from "@/modules/api/v2/types/api-success";
 
+/**
+ * Lists workspace-team associations within an organization with filtering.
+ *
+ * @param organizationId — The organization to scope the query to
+ * @param params — Filter parameters (teamId, workspaceId)
+ * @returns — Paginated list of workspace-team associations
+ */
 export const getWorkspaceTeams = async (
   organizationId: string,
   params: TGetWorkspaceTeamsFilter
@@ -45,6 +52,12 @@ export const getWorkspaceTeams = async (
   }
 };
 
+/**
+ * Associates a team with a workspace, granting the team's permission level on that workspace.
+ *
+ * @param teamInput — The association data (teamId, workspaceId, permission)
+ * @returns — The created workspace-team association
+ */
 export const createWorkspaceTeam = async (
   teamInput: TWorkspaceTeamInput & { workspaceId: string }
 ): Promise<Result<WorkspaceTeam, ApiErrorResponseV2>> => {
@@ -70,6 +83,14 @@ export const createWorkspaceTeam = async (
   }
 };
 
+/**
+ * Updates the permission level of a workspace-team association.
+ *
+ * @param teamId — The team in the association
+ * @param workspaceId — The workspace in the association
+ * @param teamInput — The updated permission
+ * @returns — The updated workspace-team association
+ */
 export const updateWorkspaceTeam = async (
   teamId: string,
   workspaceId: string,
@@ -97,6 +118,13 @@ export const updateWorkspaceTeam = async (
   }
 };
 
+/**
+ * Removes a team's access to a workspace.
+ *
+ * @param teamId — The team to remove
+ * @param workspaceId — The workspace to remove access from
+ * @returns — The deleted workspace-team association
+ */
 export const deleteWorkspaceTeam = async (
   teamId: string,
   workspaceId: string

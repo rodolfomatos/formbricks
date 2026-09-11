@@ -4,6 +4,7 @@ import { PrismaErrorType } from "@formbricks/database/types/error";
 import { TActionClassInput } from "@formbricks/types/action-classes";
 import { DatabaseError, UniqueConstraintError } from "@formbricks/types/errors";
 
+/** Creates a new action class in the database, scoped to the given workspace. Handles unique constraint violations. */
 export const createActionClass = async (
   workspaceId: string,
   actionClass: TActionClassInput

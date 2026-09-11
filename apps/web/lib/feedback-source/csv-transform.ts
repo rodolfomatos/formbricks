@@ -1,3 +1,10 @@
+/**
+ * CSV value transformation for feedback-source imports.
+ *
+ * Coerces raw CSV cell values into the correct hub field types (numeric, boolean,
+ * timestamp, JSON), handles date validation, and maps CSV columns to hub target
+ * fields according to the user's field-mapping configuration.
+ */
 import {
   TFeedbackSourceFieldMapping,
   THubFieldType,

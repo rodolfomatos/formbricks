@@ -1,3 +1,9 @@
+/**
+ * Input validation utility used by all service functions.
+ *
+ * Wraps Zod parsing of multiple input arguments at once. If any validation
+ * fails, throws a `ValidationError` with a combined message of all issues.
+ */
 import { z } from "zod";
 import { logger } from "@formbricks/logger";
 import { ValidationError } from "@formbricks/types/errors";
@@ -17,6 +23,13 @@ function getValuePreview(value: unknown): string {
   }
 }
 
+/**
+ * Validates one or more [value, schema] pairs using Zod.
+ * Throws ValidationError on the first failure.
+ *
+ * @param pairs — alternating value/schema pairs
+ * @returns — the validated values with proper types
+ */
 export function validateInputs<T extends ValidationPair<any>[]>(
   ...pairs: T
 ): { [K in keyof T]: T[K] extends ValidationPair<infer U> ? U : never } {

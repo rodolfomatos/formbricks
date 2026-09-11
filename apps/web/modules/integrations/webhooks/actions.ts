@@ -31,6 +31,7 @@ const ZCreateWebhookAction = z.object({
   webhookSecret: z.string().optional(),
 });
 
+/** Server action that creates a new webhook for a workspace. */
 export const createWebhookAction = authenticatedActionClient.inputSchema(ZCreateWebhookAction).action(
   withAuditLogging("created", "webhook", async ({ ctx, parsedInput }) => {
     const organizationId = await getOrganizationIdFromWorkspaceId(parsedInput.workspaceId);
@@ -76,6 +77,7 @@ const ZDeleteWebhookAction = z.object({
   id: ZId,
 });
 
+/** Server action that deletes a webhook by ID. */
 export const deleteWebhookAction = authenticatedActionClient.inputSchema(ZDeleteWebhookAction).action(
   withAuditLogging("deleted", "webhook", async ({ ctx, parsedInput }) => {
     const organizationId = await getOrganizationIdFromWebhookId(parsedInput.id);
@@ -109,6 +111,7 @@ const ZUpdateWebhookAction = z.object({
   webhookInput: ZWebhookInput,
 });
 
+/** Server action that updates an existing webhook's configuration. */
 export const updateWebhookAction = authenticatedActionClient.inputSchema(ZUpdateWebhookAction).action(
   withAuditLogging("updated", "webhook", async ({ ctx, parsedInput }) => {
     const organizationId = await getOrganizationIdFromWebhookId(parsedInput.webhookId);
@@ -144,6 +147,7 @@ const ZTestEndpointAction = z.object({
   secret: z.string().optional(),
 });
 
+/** Server action that pings a webhook URL to verify the endpoint is reachable and optionally returns a stored/generated signing secret. */
 export const testEndpointAction = authenticatedActionClient
   .inputSchema(ZTestEndpointAction)
   .action(async ({ ctx, parsedInput }) => {

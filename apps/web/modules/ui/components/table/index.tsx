@@ -1,3 +1,7 @@
+/**
+ * Styled table components: Table, TableHeader, TableBody, TableFooter, TableRow,
+ * TableHead, TableCell, TableCaption.
+ */
 import * as React from "react";
 import { cn } from "@/lib/cn";
 

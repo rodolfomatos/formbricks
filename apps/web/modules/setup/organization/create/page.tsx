@@ -1,16 +1,9 @@
 import { Metadata } from "next";
 import { getServerSession } from "next-auth";
-import { notFound } from "next/navigation";
 import { AuthenticationError } from "@formbricks/types/errors";
-import { DISABLE_ACCOUNT_DELETION_SSO_CONFIRMATION, IS_FORMBRICKS_CLOUD } from "@/lib/constants";
-import { getHasNoOrganizations } from "@/lib/instance/service";
-import { getOrganizationsByUserId } from "@/lib/organization/service";
 import { getUser } from "@/lib/user/service";
 import { getTranslate } from "@/lingodotdev/server";
-import { requiresPasswordConfirmationForAccountDeletion } from "@/modules/account/lib/account-deletion-auth";
 import { authOptions } from "@/modules/auth/lib/authOptions";
-import { getIsMultiOrgEnabled } from "@/modules/ee/license-check/lib/utils";
-import { RemovedFromOrganization } from "@/modules/setup/organization/create/components/removed-from-organization";
 import { ClientLogout } from "@/modules/ui/components/client-logout";
 import { CreateOrganization } from "./components/create-organization";
 
@@ -19,6 +12,7 @@ export const metadata: Metadata = {
   description: "Open-source Experience Management. Free & open source.",
 };
 
+/** Serves the `/setup/organization/create` route — allows a user to create their first organization or is redirected to a removed-from-org notice if they have no memberships. */
 export const CreateOrganizationPage = async () => {
   const t = await getTranslate();
   const session = await getServerSession(authOptions);
@@ -30,24 +24,5 @@ export const CreateOrganizationPage = async () => {
     return <ClientLogout />;
   }
 
-  const hasNoOrganizations = await getHasNoOrganizations();
-  const isMultiOrgEnabled = await getIsMultiOrgEnabled();
-  const userOrganizations = await getOrganizationsByUserId(session.user.id);
-
-  if (hasNoOrganizations || isMultiOrgEnabled) {
-    return <CreateOrganization />;
-  }
-
-  if (userOrganizations.length === 0) {
-    return (
-      <RemovedFromOrganization
-        user={user}
-        isFormbricksCloud={IS_FORMBRICKS_CLOUD}
-        isSsoIdentityConfirmationDisabled={DISABLE_ACCOUNT_DELETION_SSO_CONFIRMATION}
-        requiresPasswordConfirmation={requiresPasswordConfirmationForAccountDeletion(user)}
-      />
-    );
-  }
-
-  return notFound();
+  return <CreateOrganization />;
 };

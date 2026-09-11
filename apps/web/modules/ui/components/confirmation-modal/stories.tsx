@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the ConfirmationModal component.
+ * Covers default, loading, disabled, no-description, long-content, and custom-styling variants.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { AlertTriangle, Download, Pencil, RefreshCw } from "lucide-react";
 import { useState } from "react";

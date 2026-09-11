@@ -1,3 +1,10 @@
+/**
+ * Workspace authorisation helpers.
+ *
+ * Two entry points:
+ * 1. `hasUserWorkspaceAccess` — broad check (does the user have any membership/team link?).
+ * 2. `hasUserWorkspaceAccessForAction` — action-gated check using workspace-team permission levels.
+ */
 import { prisma } from "@formbricks/database";
 import { Prisma } from "@formbricks/database/prisma";
 import { ZId } from "@formbricks/types/common";
@@ -38,6 +45,14 @@ const teamPermissionSatisfies = (
  *
  * The broader {@link hasUserWorkspaceAccess} helper does not gate by action and
  * should not be used for routes that mutate or expose workspace data.
+ */
+/**
+ * Checks whether a user has sufficient permission for a specific action on a workspace.
+ * Billing role is never authorised; members must have team-level permission matching the action.
+ *
+ * @param userId — the user
+ * @param workspaceId — the target workspace
+ * @param action — the action type (GET → read, POST/PUT/PATCH → readWrite, DELETE → manage)
  */
 export const hasUserWorkspaceAccessForAction = async (
   userId: string,
@@ -94,6 +109,13 @@ export const hasUserWorkspaceAccessForAction = async (
   }
 };
 
+/**
+ * Checks whether a user has any access to a workspace (owner/manager/billing/member via team).
+ * Does NOT gate by action — only use for routes that do not mutate or expose workspace data.
+ *
+ * @param userId — the user
+ * @param workspaceId — the target workspace
+ */
 export const hasUserWorkspaceAccess = async (userId: string, workspaceId: string) => {
   validateInputs([userId, ZId], [workspaceId, ZId]);
 

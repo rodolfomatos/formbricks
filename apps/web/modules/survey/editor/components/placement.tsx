@@ -1,3 +1,4 @@
+/** Placement selection form used inside placement-card — renders a radio group of placement options (centered, bottomLeft, bottomRight, fullScreen, bottomCenter, topLeft, topRight) with visual selection feedback. */
 "use client";
 
 import { useTranslation } from "react-i18next";

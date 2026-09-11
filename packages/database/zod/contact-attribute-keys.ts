@@ -1,3 +1,7 @@
+/**
+ * Zod schemas for contact attribute key entities — defines the shape of custom
+ * and default attributes that can be assigned to contacts.
+ */
 import { z } from "zod";
 import { ContactAttributeDataType, type ContactAttributeKey, ContactAttributeType } from "../src/prisma";
 

@@ -16,6 +16,7 @@ import { createI18nString } from "@/lib/i18n/utils";
  * @param blocks - Array of all blocks in the survey
  * @returns true if the element ID is unique, false otherwise
  */
+/** Checks if an element ID is unique across all survey blocks. Used to prevent duplicate IDs when adding/updating elements. */
 export const isElementIdUnique = (elementId: string, blocks: TSurveyBlock[]): boolean => {
   for (const block of blocks) {
     if (block.elements.some((e) => e.id === elementId)) {
@@ -31,6 +32,7 @@ export const isElementIdUnique = (elementId: string, blocks: TSurveyBlock[]): bo
  * @param elementId - The ID of the element to find
  * @returns Object containing blockId, blockIndex, elementIndex and the block
  */
+/** Finds the location (blockId, blockIndex, elementIndex) of an element within the survey blocks. Returns nulls if not found. */
 export const findElementLocation = (
   survey: TSurvey,
   elementId: string
@@ -58,6 +60,7 @@ export const findElementLocation = (
  * @param blocks - Array of blocks to renumber
  * @returns Array of blocks with updated sequential names
  */
+/** Renumbers all blocks sequentially (Block 1, Block 2, etc.) to keep names in sync with their positions. */
 export const renumberBlocks = (blocks: TSurveyBlock[]): TSurveyBlock[] => {
   return blocks.map((block, index) => ({
     ...block,
@@ -72,6 +75,7 @@ export const renumberBlocks = (blocks: TSurveyBlock[]): TSurveyBlock[] => {
  * @param index - Optional index to insert the block at (appends if not provided)
  * @returns Result with updated survey or Error
  */
+/** Adds a new block to the survey with a generated CUID. Auto-renumbers all blocks. */
 export const addBlock = (
   t: TFunction,
   survey: TSurvey,
@@ -114,6 +118,7 @@ export const addBlock = (
  * @param updatedAttributes - Partial block object with fields to update
  * @returns Result with updated survey or Error
  */
+/** Updates an existing block's attributes (name, button labels, etc.). Rejects attempts to change the block ID. */
 export const updateBlock = (
   survey: TSurvey,
   blockId: string,
@@ -148,6 +153,7 @@ export const updateBlock = (
  * @param blockId - The CUID of the block to delete
  * @returns Result with updated survey or Error
  */
+/** Deletes a block from the survey. Prevents removing the last remaining block. Auto-renumbers remaining blocks. */
 export const deleteBlock = (survey: TSurvey, blockId: string): Result<TSurvey, Error> => {
   // Prevent deleting the last block
   if (survey.blocks?.length === 1) {
@@ -177,6 +183,7 @@ export const deleteBlock = (survey: TSurvey, blockId: string): Result<TSurvey, E
  * @param blockId - The CUID of the block to duplicate
  * @returns Result with updated survey or Error
  */
+/** Duplicates a block with new CUIDs for the block and all elements. Clears logic as it would reference old IDs. Auto-renumbers. */
 export const duplicateBlock = (survey: TSurvey, blockId: string): Result<TSurvey, Error> => {
   const blocks = survey.blocks || [];
   const blockIndex = blocks.findIndex((b) => b.id === blockId);
@@ -225,6 +232,7 @@ export const duplicateBlock = (survey: TSurvey, blockId: string): Result<TSurvey
  * @param direction - Direction to move ("up" or "down")
  * @returns Result with updated survey (or unchanged if at boundary) or Error
  */
+/** Moves a block up or down in the survey order. Returns unchanged survey if already at boundary. Auto-renumbers. */
 export const moveBlock = (
   survey: TSurvey,
   blockId: string,
@@ -273,6 +281,7 @@ export const moveBlock = (
  * @param index - Optional index to insert the element at (appends if not provided)
  * @returns Result with updated survey or Error
  */
+/** Adds a new element to the specified block. Validates element ID uniqueness and sets isDraft: true. */
 export const addElementToBlock = (
   survey: TSurvey,
   blockId: string,
@@ -322,6 +331,7 @@ export const addElementToBlock = (
  * @param updatedAttributes - Partial element object with fields to update
  * @returns Result with updated survey or Error
  */
+/** Updates an existing element's attributes. Validates new element ID uniqueness if the ID is being changed. */
 export const updateElementInBlock = (
   survey: TSurvey,
   blockId: string,
@@ -371,6 +381,7 @@ export const updateElementInBlock = (
  * @param elementId - The ID of the element to delete
  * @returns Result with updated survey or Error
  */
+/** Deletes an element from the specified block. */
 export const deleteElementFromBlock = (
   survey: TSurvey,
   blockId: string,
@@ -408,6 +419,7 @@ export const deleteElementFromBlock = (
  * @param elementId - The ID of the element to duplicate
  * @returns Result with updated survey or Error
  */
+/** Duplicates an element within the same block. Generates a new CUID and sets isDraft: true. */
 export const duplicateElementInBlock = (
   survey: TSurvey,
   blockId: string,
@@ -453,6 +465,7 @@ export const duplicateElementInBlock = (
  * @param direction - Direction to move ("up" or "down")
  * @returns Result with updated survey (or unchanged if at boundary) or Error
  */
+/** Moves an element up or down within its block. Returns unchanged survey if already at boundary. */
 export const moveElementInBlock = (
   survey: TSurvey,
   blockId: string,

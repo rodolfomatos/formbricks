@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the Card component.
+ * Covers default, header-only, and long-content layouts.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "../button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./index";

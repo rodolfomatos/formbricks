@@ -5,6 +5,7 @@ import { ActionClass } from "@formbricks/database/prisma";
 import { DatabaseError } from "@formbricks/types/errors";
 import { validateInputs } from "@/lib/utils/validate";
 
+/** Fetches all action classes (event triggers) for a workspace, cached per request. */
 export const getActionClasses = reactCache(async (workspaceId: string): Promise<ActionClass[]> => {
   validateInputs([workspaceId, z.cuid2()]);
 

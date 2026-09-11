@@ -27,6 +27,12 @@ import { DeleteOrganization } from "./components/DeleteOrganization";
 import { EditOrganizationNameForm } from "./components/EditOrganizationNameForm";
 import { SecurityListTip } from "./components/SecurityListTip";
 
+/**
+ * Route: `/workspaces/[workspaceId]/settings/organization/general` (authenticated).
+ * Organization general settings: name editing, AI tools toggle, email customization,
+ * delete organization (multi-org only), and storage/security alerts.
+ * Redirects billing-only users away.
+ */
 const Page = async (props: Readonly<{ params: Promise<{ workspaceId: string }> }>) => {
   const params = await props.params;
   await redirectBillingRoleFromRestrictedSettings(params.workspaceId);

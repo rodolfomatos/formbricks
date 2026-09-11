@@ -1,3 +1,7 @@
+/**
+ * Renders a rating response value for number, star, or smiley scales.
+ * Supports default, individual, aggregated, and scale variants with optional color highlights.
+ */
 import { StarIcon } from "lucide-react";
 import { RatingSmiley } from "@/modules/analysis/components/RatingSmiley";
 

@@ -1,3 +1,4 @@
+/** Contact info element — renders a name/email/phone multi-field form survey question using the survey-ui FormField component with TTC tracking. */
 import { useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { FormField, type FormFieldConfig } from "@formbricks/survey-ui";

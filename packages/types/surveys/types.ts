@@ -1,3 +1,4 @@
+/** Survey definition schemas — core survey model including endings, welcome card, variables, logic actions, questions, blocks, and styling. */
 import { z } from "zod";
 import { ZActionClass, ZActionClassNoCodeConfig } from "../action-classes";
 import { ZColor, ZEndingCardUrl, ZId, ZOverlay, ZPlacement, ZStorageUrl, getZSafeUrl } from "../common";

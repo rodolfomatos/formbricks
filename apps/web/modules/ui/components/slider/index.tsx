@@ -1,3 +1,6 @@
+/**
+ * Styled range slider built on Radix Slider primitive with track, range, and draggable thumb.
+ */
 "use client";
 
 import * as SliderPrimitive from "@radix-ui/react-slider";

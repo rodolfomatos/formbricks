@@ -4,6 +4,9 @@ import { Prisma } from "@formbricks/database/prisma";
 import { TContactAttributes } from "@formbricks/types/contact-attribute";
 import { DatabaseError } from "@formbricks/types/errors";
 
+/**
+ * Fetches a contact by ID (returns only the id). Cached per request.
+ */
 export const getContact = reactCache(async (contactId: string) => {
   try {
     const contact = await prisma.contact.findUnique({
@@ -19,6 +22,10 @@ export const getContact = reactCache(async (contactId: string) => {
   }
 });
 
+/**
+ * Looks up a contact by workspace ID and userId attribute value, returning
+ * full id and attributes.
+ */
 export const getContactByUserId = reactCache(
   async (
     workspaceId: string,

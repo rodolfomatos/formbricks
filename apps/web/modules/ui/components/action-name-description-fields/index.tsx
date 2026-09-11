@@ -1,3 +1,7 @@
+/**
+ * Renders name and description text inputs for an action class form.
+ * Used inside action-class creation/editing flows.
+ */
 import { Control } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { TActionClassInput } from "@formbricks/types/action-classes";

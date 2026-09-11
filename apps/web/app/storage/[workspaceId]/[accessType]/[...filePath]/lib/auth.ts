@@ -6,6 +6,10 @@ import { hasUserWorkspaceAccessForAction } from "@/lib/workspace/auth";
 import { authOptions } from "@/modules/auth/lib/authOptions";
 import { hasPermission } from "@/modules/organization/settings/api-keys/lib/utils";
 
+/**
+ * Authorizes a private file download/delete request. Tries session auth first,
+ * then falls back to API key authentication. Returns the auth type on success.
+ */
 export const authorizePrivateDownload = async (
   request: NextRequest,
   workspaceId: string,

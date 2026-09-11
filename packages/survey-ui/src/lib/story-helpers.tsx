@@ -1,3 +1,4 @@
+/** Storybook helpers — shared argTypes, CSS variable decorators, and stateful render wrappers for survey-ui component stories. */
 import type { Decorator, StoryContext } from "@storybook/react";
 import React, { useEffect, useState } from "react";
 

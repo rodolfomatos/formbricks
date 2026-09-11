@@ -10,6 +10,7 @@ interface OfflineAlertProps {
   readonly pendingSyncCount: number;
 }
 
+/** Shows an alert bar when the respondent goes offline, during sync, and briefly after sync completes. */
 export function OfflineAlert({ isOnline, isSyncing, pendingSyncCount }: OfflineAlertProps) {
   const { t } = useTranslation();
   const [showSyncDone, setShowSyncDone] = useState(false);

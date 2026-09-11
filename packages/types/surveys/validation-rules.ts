@@ -1,3 +1,4 @@
+/** Validation rule schemas — per-element validation rules (min/max length, pattern, email, URL, etc.) for survey form fields. */
 import { z } from "zod";
 
 // Field types for field-specific validation (address and contact info elements)

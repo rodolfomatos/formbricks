@@ -1,3 +1,4 @@
+/** Input — Preact forwardRef input with survey styling and className merging. */
 import { InputHTMLAttributes, forwardRef } from "preact/compat";
 import { cn } from "@/lib/utils";
 

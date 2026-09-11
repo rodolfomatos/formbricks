@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper";
 import { PageHeader } from "@/modules/ui/components/page-header";
 
+/** Skeleton loading card for the API keys list. */
 const LoadingCard = () => {
   const { t } = useTranslation();
   return (
@@ -43,6 +44,7 @@ const LoadingCard = () => {
   );
 };
 
+/** Loading state for the API keys page. */
 const Loading = () => {
   const { t } = useTranslation();
   return (

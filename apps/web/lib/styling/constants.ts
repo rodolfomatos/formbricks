@@ -1,8 +1,17 @@
-// https://github.com/airbnb/javascript/#naming--uppercase
+/**
+ * Styling constants and colour derivation helpers.
+ *
+ * The default colour palette is computed from a single brand colour and
+ * exposed both as individual constants (`COLOR_DEFAULTS`) and as a full
+ * `TWorkspaceStyling` object (`STYLE_DEFAULTS`). The `getSuggestedColors`
+ * and `buildStylingFromBrandColor` utilities let the UI generate a coherent
+ * theme from any brand colour input.
+ */
 import { TWorkspaceStyling } from "@formbricks/types/workspace";
 import { DEFAULT_BRAND_COLOR } from "@/lib/brand-color";
 import { isLight, mixColor } from "@/lib/utils/colors";
 
+/** Raw colour hex values for the default theme, before they are split into light/dark pairs. */
 export const COLOR_DEFAULTS = {
   brandColor: "#1e40af",
   elementHeadlineColor: "#142a72",

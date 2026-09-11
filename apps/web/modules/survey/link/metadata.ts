@@ -8,6 +8,7 @@ import {
   getSurveyOpenGraphMetadata,
 } from "./lib/metadata-utils";
 
+/** Builds full Next.js Metadata for the link survey page, including OG image with brand color, canonical URL, custom favicon, and no-index robots directive. */
 export const getMetadataForLinkSurvey = async (
   surveyId: string,
   languageCode?: string

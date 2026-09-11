@@ -14,6 +14,7 @@ import { PreviewSurvey } from "@/modules/ui/components/preview-survey";
 import { SearchBar } from "@/modules/ui/components/search-bar";
 import { getMinimalSurvey } from "../lib/minimal-survey";
 
+/** Layout that combines the template grid with a live preview sidebar for the currently selected template. */
 type TemplateContainerWithPreviewProps = {
   workspace: Workspace;
   isTemplatePage?: boolean;

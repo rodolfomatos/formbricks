@@ -1,3 +1,4 @@
+/** Survey element schemas — individual question/element types (OpenText, NPS, Rating, Matrix, etc.) with type-specific validation. */
 import { z } from "zod";
 import { ZStorageUrl, ZUrl } from "../common";
 import { ZI18nString } from "../i18n";

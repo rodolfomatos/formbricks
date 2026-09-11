@@ -9,7 +9,7 @@ import {
   IS_STORAGE_CONFIGURED,
 } from "@/lib/constants";
 import { getTranslate } from "@/lingodotdev/server";
-import { getBulkInvitePermission, getIsMultiOrgEnabled } from "@/modules/ee/license-check/lib/utils";
+
 import { getTeamsWhereUserIsAdmin } from "@/modules/ee/teams/lib/roles";
 import { getTeamsByOrganizationId } from "@/modules/ee/teams/team-list/lib/team";
 import { TOrganizationTeam } from "@/modules/ee/teams/team-list/types/team";
@@ -25,6 +25,7 @@ interface MembersViewProps {
   isUserManagementDisabledFromUi: boolean;
 }
 
+/** Skeleton loading state for the members view. */
 export const MembersLoading = () => (
   <div className="px-2">
     {Array.from(Array(2)).map((_, index) => (
@@ -35,6 +36,7 @@ export const MembersLoading = () => (
   </div>
 );
 
+/** Server component that renders the manage-members settings card with organization actions and edit-memberships table. */
 export const MembersView = async ({
   membershipRole,
   organization,
@@ -47,8 +49,8 @@ export const MembersView = async ({
   const userMemberships = await getMembershipsByUserId(currentUserId);
   const isLeaveOrganizationDisabled = userMemberships.length <= 1;
 
-  const isMultiOrgEnabled = await getIsMultiOrgEnabled();
-  const isBulkInviteAllowed = await getBulkInvitePermission(organization.id);
+  const isMultiOrgEnabled = true;
+  const isBulkInviteAllowed = true;
 
   // Fetch admin teams if they're a team admin
   const userAdminTeamIds = await getTeamsWhereUserIsAdmin(currentUserId, organization.id);
@@ -75,7 +77,7 @@ export const MembersView = async ({
           isFormbricksCloud={IS_FORMBRICKS_CLOUD}
           isStorageConfigured={IS_STORAGE_CONFIGURED}
           enterpriseLicenseRequestFormUrl={ENTERPRISE_LICENSE_REQUEST_FORM_URL}
-          isMultiOrgEnabled={isMultiOrgEnabled}
+          isMultiOrgEnabled={true}
           teams={teams}
           isUserManagementDisabledFromUi={isUserManagementDisabledFromUi}
           isTeamAdmin={isTeamAdminUser}

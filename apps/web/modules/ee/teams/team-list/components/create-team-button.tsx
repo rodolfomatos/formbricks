@@ -1,29 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { CreateTeamModal } from "@/modules/ee/teams/team-list/components/create-team-modal";
-import { Button } from "@/modules/ui/components/button";
+import { Button } from "@formbricks/ui/components/Button";
 
-interface CreateTeamButtonProps {
-  organizationId: string;
+export function CreateTeamButton({ onCreateTeam }: { onCreateTeam?: () => void }) {
+  return <Button onClick={onCreateTeam}>Create Team</Button>;
 }
-
-export const CreateTeamButton = ({ organizationId }: CreateTeamButtonProps) => {
-  const { t } = useTranslation();
-  const [openCreateTeamModal, setOpenCreateTeamModal] = useState<boolean>(false);
-  return (
-    <>
-      <Button size="sm" variant="secondary" onClick={() => setOpenCreateTeamModal(true)}>
-        {t("workspace.settings.teams.create_new_team")}
-      </Button>
-      {openCreateTeamModal && (
-        <CreateTeamModal
-          open={openCreateTeamModal}
-          setOpen={setOpenCreateTeamModal}
-          organizationId={organizationId}
-        />
-      )}
-    </>
-  );
-};

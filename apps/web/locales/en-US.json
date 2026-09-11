@@ -2171,6 +2171,7 @@
       "advanced_styling_section_options": "Options (Radio/Checkbox)",
       "app_survey_placement": "App Survey Placement",
       "app_survey_placement_settings_description": "Change where surveys will be shown in your web app or website.",
+      "branding_updated_successfully": "Branding updated successfully",
       "email_customization": "Email Customization",
       "email_customization_description": "Change the look and feel of emails Formbricks sends out on your behalf.",
       "enable_custom_styling": "Enable custom styling",
@@ -2414,6 +2415,7 @@
         "workspace": "Workspace"
       },
       "enterprise": {
+        "ai_smart_tools": "AI Smart Tools",
         "audit_logs": "Audit Logs",
         "coming_soon": "Coming soon",
         "contacts_and_segments": "Contact management & segments",

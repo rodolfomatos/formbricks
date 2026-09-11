@@ -10,6 +10,13 @@ import {
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { ApiResponseWithMeta } from "@/modules/api/v2/types/api-success";
 
+/**
+ * Creates a new team within an organization.
+ *
+ * @param teamInput — The team data (name)
+ * @param organizationId — The organization to create the team under
+ * @returns — The created team
+ */
 export const createTeam = async (
   teamInput: TTeamInput,
   organizationId: string
@@ -33,6 +40,13 @@ export const createTeam = async (
   }
 };
 
+/**
+ * Lists teams within an organization with filtering and pagination.
+ *
+ * @param organizationId — The organization to list teams for
+ * @param params — Filter and pagination parameters
+ * @returns — Paginated list of teams
+ */
 export const getTeams = async (
   organizationId: string,
   params: TGetTeamsFilter

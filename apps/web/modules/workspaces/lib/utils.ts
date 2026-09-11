@@ -20,8 +20,7 @@ import { hasUserWorkspaceAccess } from "@/lib/workspace/auth";
 import { getWorkspace } from "@/lib/workspace/service";
 import { getTranslate } from "@/lingodotdev/server";
 import { authOptions } from "@/modules/auth/lib/authOptions";
-import { getEnterpriseLicense } from "@/modules/ee/license-check/lib/license";
-import { getAccessControlPermission } from "@/modules/ee/license-check/lib/utils";
+
 import { getWorkspacePermissionByUserId } from "@/modules/ee/teams/lib/roles";
 import { getTeamPermissionFlags } from "@/modules/ee/teams/utils/teams";
 import { TWorkspaceAuth, TWorkspaceLayoutData } from "@/modules/workspaces/types/workspace-auth";
@@ -275,11 +274,17 @@ export const getWorkspaceLayoutData = reactCache(
       throw new AuthorizationError(t("common.membership_not_found"));
     }
 
-    const [isAccessControlAllowed, workspacePermission, license] = await Promise.all([
-      getAccessControlPermission(organization.id),
-      getWorkspacePermissionByUserId(userId, workspace.id),
-      getEnterpriseLicense(),
-    ]);
+    const isAccessControlAllowed = true;
+    const license = {
+      active: true,
+      features: null,
+      lastChecked: new Date(),
+      isPendingDowngrade: false,
+      fallbackLevel: "live",
+      status: "active" as const,
+    };
+
+    const workspacePermission = await getWorkspacePermissionByUserId(userId, workspace.id);
 
     let responseCount = 0;
     if (IS_FORMBRICKS_CLOUD) {

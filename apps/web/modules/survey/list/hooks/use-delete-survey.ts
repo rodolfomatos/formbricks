@@ -4,6 +4,7 @@ import { InfiniteData, useMutation, useQueryClient } from "@tanstack/react-query
 import { removeSurveyFromInfiniteData, surveyKeys } from "@/modules/survey/list/lib/query";
 import { TSurveyListPage, deleteSurvey } from "@/modules/survey/list/lib/v3-surveys-client";
 
+/** Mutation hook that deletes a survey optimistically — removes it from the infinite query cache on mutate and rolls back on error. */
 export const useDeleteSurvey = ({ queryKey }: { queryKey: ReturnType<typeof surveyKeys.list> }) => {
   const queryClient = useQueryClient();
 

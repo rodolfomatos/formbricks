@@ -1,3 +1,8 @@
+/**
+ * Render helpers — produce HTML strings from React Email components for every
+ * email template. Each render* function assembles the component props and
+ * calls @react-email/render.
+ */
 import { render } from "@react-email/render";
 import { ForgotPasswordEmail } from "../../emails/auth/forgot-password-email";
 import { NewEmailVerification } from "../../emails/auth/new-email-verification";

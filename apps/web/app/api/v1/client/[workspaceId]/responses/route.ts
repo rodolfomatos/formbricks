@@ -13,10 +13,8 @@ import { THandlerParams, withV1ApiWrapper } from "@/app/lib/api/with-api-logging
 import { sendToPipeline } from "@/app/lib/pipelines";
 import { getSurvey } from "@/lib/survey/service";
 import { getClientIpFromHeaders } from "@/lib/utils/client-ip";
-import { getOrganizationIdFromWorkspaceId } from "@/lib/utils/helper";
 import { resolveClientApiIds } from "@/lib/utils/resolve-client-id";
 import { formatValidationErrorsForV1Api, validateResponseData } from "@/modules/api/lib/validation";
-import { getIsContactsEnabled } from "@/modules/ee/license-check/lib/utils";
 import { createQuotaFullObject } from "@/modules/ee/quotas/lib/helpers";
 import { validateClientFileUploads } from "@/modules/storage/utils";
 import { createResponseWithQuotaEvaluation } from "./lib/response";
@@ -51,6 +49,11 @@ const validateResponse = (responseInputData: TResponseInput, survey: TSurvey) =>
   }
 };
 
+/**
+ * POST /api/v1/client/[workspaceId]/responses
+ * Creates a new survey response. Validates single-use IDs, file uploads, response data,
+ * captures user agent / country / IP, and triggers pipeline events.
+ */
 export const POST = withV1ApiWrapper({
   handler: async ({ req, props }: THandlerParams<{ params: Promise<{ workspaceId: string }> }>) => {
     const params = await props.params;
@@ -105,19 +108,6 @@ export const POST = withV1ApiWrapper({
       requestHeaders.get("CF-IPCountry") || requestHeaders.get("CloudFront-Viewer-Country") || undefined;
 
     const responseInputData = responseInputValidation.data;
-
-    if (responseInputData.userId) {
-      const organizationId = await getOrganizationIdFromWorkspaceId(workspaceId);
-      const isContactsEnabled = await getIsContactsEnabled(organizationId);
-      if (!isContactsEnabled) {
-        return {
-          response: responses.forbiddenResponse(
-            "User identification is only available for enterprise users.",
-            true
-          ),
-        };
-      }
-    }
 
     // get and check survey
     const survey = await getSurvey(responseInputData.surveyId);

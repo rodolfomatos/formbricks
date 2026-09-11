@@ -17,6 +17,7 @@ const ZDeleteApiKeyAction = z.object({
   id: ZId,
 });
 
+/** Server action that deletes an API key. */
 export const deleteApiKeyAction = authenticatedActionClient.inputSchema(ZDeleteApiKeyAction).action(
   withAuditLogging("deleted", "apiKey", async ({ ctx, parsedInput }) => {
     const organizationId = await getOrganizationIdFromApiKeyId(parsedInput.id);
@@ -45,6 +46,7 @@ const ZCreateApiKeyAction = z.object({
   apiKeyData: ZApiKeyCreateInput,
 });
 
+/** Server action that creates a new API key for an organization. */
 export const createApiKeyAction = authenticatedActionClient.inputSchema(ZCreateApiKeyAction).action(
   withAuditLogging("created", "apiKey", async ({ ctx, parsedInput }) => {
     await checkAuthorizationUpdated({
@@ -72,6 +74,7 @@ const ZUpdateApiKeyAction = z.object({
   apiKeyData: ZApiKeyUpdateInput,
 });
 
+/** Server action that updates an API key's label. */
 export const updateApiKeyAction = authenticatedActionClient.inputSchema(ZUpdateApiKeyAction).action(
   withAuditLogging("updated", "apiKey", async ({ ctx, parsedInput }) => {
     const organizationId = await getOrganizationIdFromApiKeyId(parsedInput.apiKeyId);

@@ -1,3 +1,7 @@
+/**
+ * Radio-style toggle with pill-button appearance. Renders a row of options where
+ * the selected one is highlighted with a white background. Supports disabled state.
+ */
 import React, { useState } from "react";
 import { cn } from "@/lib/cn";
 

@@ -4,6 +4,10 @@ import { queueAuditEvent } from "@/modules/ee/audit-logs/lib/handler";
 import { TAuditAction, TAuditTarget } from "@/modules/ee/audit-logs/types/audit-log";
 import type { TV3AuditLog, TV3Authentication } from "./types";
 
+/**
+ * Builds an audit log object for v3 API calls, populating the user/api key
+ * identity from the authentication result.
+ */
 export function buildV3AuditLog(
   authentication: TV3Authentication,
   action?: TAuditAction,
@@ -28,6 +32,10 @@ export function buildV3AuditLog(
   return auditLog;
 }
 
+/**
+ * Queues a v3 audit event, swallowing errors so audit failures never
+ * affect the API response.
+ */
 export async function queueV3AuditLog(
   auditLog: TV3AuditLog | undefined,
   requestId: string,

@@ -8,7 +8,7 @@ import {
   NEXT_AUTH_SESSION_COOKIE_NAMES,
   getSessionTokenFromCookieHeader,
 } from "@/modules/auth/lib/session-cookie";
-import { completeSsoRecovery, getSsoRecoveryFailureRedirectUrl } from "@/modules/ee/sso/lib/sso-recovery";
+import { completeSsoRecovery, getSsoRecoveryFailureRedirectUrl } from "@/modules/auth/sso/lib/sso-recovery";
 
 const clearSessionCookies = (response: NextResponse) => {
   for (const cookieName of NEXT_AUTH_SESSION_COOKIE_NAMES) {
@@ -40,6 +40,12 @@ const buildFailedRecoveryResponse = async (request: Request, callbackUrl?: strin
   return response;
 };
 
+/**
+ * GET /api/auth/sso/recovery/complete
+ * Completes an SSO account recovery flow. Verifies the intent token, re-links
+ * the user to the OIDC provider, clears old session cookies, and redirects
+ * to the callback URL. On failure, redirects to the SSO recovery failure page.
+ */
 export const GET = async (request: Request) => {
   const url = new URL(request.url);
   const intentToken = url.searchParams.get("intent");

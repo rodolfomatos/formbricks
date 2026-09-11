@@ -1,3 +1,4 @@
+/** Settings view for the survey editor — composes how-to-send, targeting, when-to-send, quotas, response options, recontact, and placement cards. */
 import { type Dispatch, type SetStateAction } from "react";
 import { ActionClass, OrganizationRole } from "@formbricks/database/prisma-browser";
 import { TContactAttributeKey } from "@formbricks/types/contact-attribute-key";

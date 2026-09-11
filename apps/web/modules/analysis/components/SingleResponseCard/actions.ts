@@ -23,6 +23,7 @@ const ZCreateTagAction = z.object({
   tagName: z.string(),
 });
 
+/** Server action that creates a new tag in a workspace. */
 export const createTagAction = authenticatedActionClient.inputSchema(ZCreateTagAction).action(
   withAuditLogging("created", "tag", async ({ parsedInput, ctx }) => {
     const organizationId = await getOrganizationIdFromWorkspaceId(parsedInput.workspaceId);
@@ -61,6 +62,7 @@ const ZCreateTagToResponseAction = z.object({
   tagId: ZId,
 });
 
+/** Server action that associates an existing tag with a response. */
 export const createTagToResponseAction = authenticatedActionClient
   .inputSchema(ZCreateTagToResponseAction)
   .action(
@@ -109,6 +111,7 @@ const ZDeleteTagOnResponseAction = z.object({
   tagId: ZId,
 });
 
+/** Server action that removes a tag association from a response. */
 export const deleteTagOnResponseAction = authenticatedActionClient
   .inputSchema(ZDeleteTagOnResponseAction)
   .action(
@@ -155,6 +158,7 @@ const ZDeleteResponseAction = z.object({
   decrementQuotas: z.boolean().prefault(false),
 });
 
+/** Server action that deletes a response, optionally decrementing quotas. */
 export const deleteResponseAction = authenticatedActionClient.inputSchema(ZDeleteResponseAction).action(
   withAuditLogging("deleted", "response", async ({ parsedInput, ctx }) => {
     const organizationId = await getOrganizationIdFromResponseId(parsedInput.responseId);
@@ -188,6 +192,7 @@ const ZGetResponseAction = z.object({
   responseId: ZId,
 });
 
+/** Server action that fetches a single response by ID. */
 export const getResponseAction = authenticatedActionClient
   .inputSchema(ZGetResponseAction)
   .action(async ({ parsedInput, ctx }) => {

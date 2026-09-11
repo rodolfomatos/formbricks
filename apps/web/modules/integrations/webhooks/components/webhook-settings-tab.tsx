@@ -29,6 +29,7 @@ interface WebhookSettingsTabProps {
   allowInternalUrls: boolean;
 }
 
+/** Settings tab for editing a webhook — name, URL with endpoint testing, signing secret display, trigger/survey selection, save, and delete. */
 export const WebhookSettingsTab = ({
   webhook,
   surveys,

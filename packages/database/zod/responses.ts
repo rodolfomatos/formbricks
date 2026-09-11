@@ -1,3 +1,7 @@
+/**
+ * Zod schema for survey Response entities — validates response data, TTC,
+ * meta info, contact attributes, and language.
+ */
 import { z } from "zod";
 import type { Response } from "../src/prisma";
 

@@ -1,3 +1,4 @@
+/** User state expiry — periodic heartbeat that extends the user state TTL in the local config store. */
 import { Config } from "@/lib/common/config";
 import type { TUserState } from "@/types/config";
 

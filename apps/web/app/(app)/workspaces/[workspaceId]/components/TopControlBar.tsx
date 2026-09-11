@@ -15,6 +15,10 @@ interface TopControlBarProps {
   membershipRole?: TOrganizationRole;
 }
 
+/**
+ * Top bar displayed above the main content area across workspace pages.
+ * Renders the workspace + organization breadcrumb switcher.
+ */
 export const TopControlBar = ({
   currentOrganizationId,
   isMultiOrgEnabled,

@@ -1,3 +1,4 @@
+/** Render survey — top-level survey renderer that manages open/close state, handles survey completion redirects/closes, and detects RTL language. */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SurveyContainerProps } from "@formbricks/types/formbricks-surveys";
 import { isRTLLanguage } from "@/lib/utils";

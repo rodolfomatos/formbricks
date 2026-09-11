@@ -1,3 +1,4 @@
+/** Progress bar — Radix UI progress primitive with survey-branded fill color and animated transitions. */
 import * as ProgressPrimitive from "@radix-ui/react-progress";
 import * as React from "react";
 import { cn } from "@/lib/utils";

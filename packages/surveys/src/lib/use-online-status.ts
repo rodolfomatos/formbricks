@@ -1,3 +1,4 @@
+/** Online status hook — tracks browser online/offline state via `navigator.onLine` and `online`/`offline` events for offline queue management. */
 import { useEffect, useState } from "preact/hooks";
 
 export function useOnlineStatus(): boolean {

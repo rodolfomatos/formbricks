@@ -1,3 +1,8 @@
+/**
+ * Email module — React Email templates and rendering utilities for auth,
+ * invite, survey, and follow-up emails. Re-exports @react-email/components
+ * so consumers don't need a direct dependency.
+ */
 export { VerificationEmail } from "../emails/auth/verification-email";
 export { ForgotPasswordEmail } from "../emails/auth/forgot-password-email";
 export { NewEmailVerification } from "../emails/auth/new-email-verification";

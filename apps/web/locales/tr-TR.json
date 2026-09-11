@@ -2414,6 +2414,7 @@
         "workspace": "Çalışma Alanı"
       },
       "enterprise": {
+        "ai_smart_tools": "Yapay zeka akıllı araçları",
         "audit_logs": "Denetim Kayıtları",
         "coming_soon": "Yakında",
         "contacts_and_segments": "Kişi yönetimi ve segmentler",

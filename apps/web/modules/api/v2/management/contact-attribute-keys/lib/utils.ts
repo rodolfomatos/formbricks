@@ -2,6 +2,13 @@ import { Prisma } from "@formbricks/database/prisma";
 import { TGetContactAttributeKeysFilter } from "@/modules/api/v2/management/contact-attribute-keys/types/contact-attribute-keys";
 import { buildCommonFilterQuery, pickCommonFilter } from "@/modules/api/v2/management/lib/utils";
 
+/**
+ * Builds a Prisma query filter for listing contact attribute keys.
+ *
+ * @param workspaceIds — The workspaces to scope the query to
+ * @param params — Optional filter/sort/pagination parameters
+ * @returns — Prisma find-many arguments
+ */
 export const getContactAttributeKeysQuery = (
   workspaceIds: string[],
   params?: TGetContactAttributeKeysFilter

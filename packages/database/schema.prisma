@@ -663,6 +663,7 @@ model Organization {
   teams                 Team[]
   apiKeys               ApiKey[]
   feedbackDirectories   FeedbackDirectory[]
+  auditLogs             AuditLog[]
 }
 
 /// Stores billing and Stripe synchronization data for an organization.
@@ -919,6 +920,7 @@ model User {
   dashboards                Dashboard[]         @relation("dashboardCreatedBy")
   feedbackSources           FeedbackSource[]
   teamUsers                 TeamUser[]
+  auditLogs                 AuditLog[]
   lastLoginAt               DateTime?
   isActive                  Boolean             @default(true)
 }
@@ -1289,4 +1291,41 @@ model FeedbackDirectoryWorkspace {
 
   @@id([feedbackDirectoryId, workspaceId])
   @@index([workspaceId])
+}
+
+/// Records of user actions for auditing and compliance.
+/// Every server action that modifies data should create an audit trail entry.
+///
+/// @property id - Unique identifier
+/// @property createdAt - When the action occurred
+/// @property organizationId - Scopes the audit log to an organization
+/// @property organization - The organization this log belongs to
+/// @property userId - Who performed the action (nullable for system actions)
+/// @property user - The user who performed the action
+/// @property apiKeyId - Optional API key used for the action
+/// @property action - What type of action was performed (create, update, delete, etc.)
+/// @property target - What was acted upon (survey, response, workspace, etc.)
+/// @property targetId - The ID of the target entity
+/// @property description - Human-readable description of the action
+/// @property status - Whether the action succeeded or failed
+/// @property metadata - Additional structured data about the action
+model AuditLog {
+  id             String        @id @default(cuid())
+  createdAt      DateTime      @default(now()) @map(name: "created_at")
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  apiKeyId       String?
+  action         String
+  target         String
+  targetId       String?
+  description    String?
+  status         String        @default("success")
+  metadata       Json?
+
+  @@index([organizationId, createdAt(sort: Desc)])
+  @@index([organizationId, action])
+  @@index([organizationId, target])
+  @@map("audit_logs")
 }

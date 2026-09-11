@@ -1,3 +1,4 @@
+/** SDK configuration types — workspace state, user state, styling, and setup input shapes for the browser widget. */
 type TJsonObject = Record<string, unknown>;
 
 export type TActionClassPageUrlRule =

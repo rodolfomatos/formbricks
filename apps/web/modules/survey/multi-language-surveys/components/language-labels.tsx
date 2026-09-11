@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Label } from "@/modules/ui/components/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/modules/ui/components/tooltip";
 
+/** Column headers for the language editor grid: Language, Identifier, and Alias with tooltip. */
 export function LanguageLabels() {
   const { t } = useTranslation();
   return (

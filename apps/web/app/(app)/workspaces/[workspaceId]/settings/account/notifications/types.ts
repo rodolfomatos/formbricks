@@ -1,5 +1,6 @@
 import { TUserNotificationSettings } from "@formbricks/types/user";
 
+/** Shape of a membership with nested organization and workspace data for notification settings. */
 export interface Membership {
   organization: {
     id: string;

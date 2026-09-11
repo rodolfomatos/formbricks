@@ -1,3 +1,4 @@
+/** Textarea — survey-styled multi-line text input with error state and RTL direction support. */
 import { cn } from "@/lib/utils";
 
 type TextareaProps = React.ComponentProps<"textarea"> & {

@@ -1,3 +1,4 @@
+/** Scrollable container — a scrollable survey card wrapper with a bottom scroll-for-more indicator (chevron + text) and imperative scroll-to-top control. */
 import type { JSX, Ref } from "preact";
 import { forwardRef } from "preact/compat";
 import { useEffect, useImperativeHandle, useRef, useState } from "preact/hooks";

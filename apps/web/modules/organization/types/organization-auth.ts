@@ -3,6 +3,7 @@ import { ZMembership } from "@formbricks/types/memberships";
 import { ZOrganization } from "@formbricks/types/organizations";
 import { ZUser } from "@formbricks/types/user";
 
+/** Zod schema for the organization auth context — session, membership, and access flags. */
 export const ZOrganizationAuth = z.object({
   organization: ZOrganization,
   session: z.object({

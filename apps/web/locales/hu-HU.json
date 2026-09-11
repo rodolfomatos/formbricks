@@ -2414,6 +2414,7 @@
         "workspace": "Munkaterület"
       },
       "enterprise": {
+        "ai_smart_tools": "MI intelligens eszközök",
         "audit_logs": "Auditálási naplók",
         "coming_soon": "Hamarosan",
         "contacts_and_segments": "Partnerkezelés és szegmensek",

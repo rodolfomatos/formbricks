@@ -6,6 +6,11 @@ import { getSurvey } from "@/lib/survey/service";
 import { generateSurveySingleUseLinkParamsList } from "@/lib/utils/single-use-surveys";
 import { hasPermission } from "@/modules/organization/settings/api-keys/lib/utils";
 
+/**
+ * GET /api/v1/management/surveys/[surveyId]/singleUseIds
+ * Generates single-use survey links. Requires `singleUse` to be enabled on the
+ * survey. Accepts `limit` query param (1–5000).
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({
     req,

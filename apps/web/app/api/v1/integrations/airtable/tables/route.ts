@@ -5,6 +5,11 @@ import { getAirtableToken, getTables } from "@/lib/airtable/service";
 import { getIntegrationByType } from "@/lib/integration/service";
 import { hasUserWorkspaceAccess } from "@/lib/workspace/auth";
 
+/**
+ * GET /api/v1/integrations/airtable/tables
+ * Fetches the list of tables for a given Airtable base. Refreshes the access token
+ * if expired before querying Airtable's API.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ req, authentication }) => {
     if (!authentication || !("user" in authentication)) {

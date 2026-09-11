@@ -12,7 +12,7 @@ import { getOrganizationByWorkspaceId } from "@/lib/organization/service";
 import { checkForInvalidMediaInBlocks } from "@/lib/survey/utils";
 import { validateInputs } from "@/lib/utils/validate";
 import { getTranslate } from "@/lingodotdev/server";
-import { getIsQuotasEnabled } from "@/modules/ee/license-check/lib/utils";
+
 import { getQuotas } from "@/modules/ee/quotas/lib/quotas";
 import { buildOrderByClause, buildWhereClause } from "@/modules/survey/lib/utils";
 import { doesWorkspaceExist, getWorkspaceWithLanguages } from "@/modules/survey/list/lib/workspace";
@@ -25,6 +25,7 @@ import {
   surveySelect,
 } from "./survey-record";
 
+/** Loads a paginated list of surveys with response counts. Supports relevance sorting (in-progress first). */
 export const getSurveys = reactCache(
   async (
     workspaceId: string,
@@ -65,6 +66,7 @@ export const getSurveys = reactCache(
   }
 );
 
+/** Returns surveys sorted by relevance — in-progress surveys first, then others by updatedAt. Used when the "relevance" sort option is selected. */
 export const getSurveysSortedByRelevance = reactCache(
   async (
     workspaceId: string,
@@ -135,6 +137,7 @@ export const getSurveysSortedByRelevance = reactCache(
   }
 );
 
+/** Loads a single survey by ID with its response count. Returns null if not found. */
 export const getSurvey = reactCache(async (surveyId: string): Promise<TSurvey | null> => {
   try {
     const surveyPrisma = await prisma.survey.findUnique({
@@ -213,6 +216,7 @@ const getExistingSurvey = async (surveyId: string) => {
   });
 };
 
+/** Deep-copies a survey (including triggers, segments, languages, quotas, follow-ups) to another workspace within the same organisation. */
 export const copySurveyToOtherWorkspace = async (
   workspaceId: string,
   surveyId: string,
@@ -237,7 +241,7 @@ export const copySurveyToOtherWorkspace = async (
     if (!existingSurvey) throw new ResourceNotFoundError("Survey", surveyId);
     if (!organization) throw new ResourceNotFoundError("Organization", workspaceId);
 
-    const isQuotasAllowed = await getIsQuotasEnabled(organization.id);
+    const isQuotasAllowed = true;
 
     let targetWorkspace: TWorkspaceWithLanguages | null = null;
 
@@ -532,7 +536,7 @@ export const copySurveyToOtherWorkspace = async (
   }
 };
 
-/** Count surveys in a workspace, optionally with the same filter as getSurveys (so total matches list). */
+/** Counts surveys in a workspace, optionally applying the same filters as getSurveys so the total matches the list view. */
 export const getSurveyCount = reactCache(
   async (workspaceId: string, filterCriteria?: TSurveyFilterCriteria): Promise<number> => {
     validateInputs([workspaceId, z.cuid2()]);

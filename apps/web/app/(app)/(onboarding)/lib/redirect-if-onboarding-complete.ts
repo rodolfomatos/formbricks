@@ -4,6 +4,10 @@ import { TWorkspace } from "@formbricks/types/workspace";
 import { IS_FORMBRICKS_CLOUD } from "@/lib/constants";
 import { getSurveyCount } from "@/lib/survey/service";
 
+/**
+ * Redirects the user away from the onboarding flow if they already have surveys.
+ * Prevents re-showing onboarding to users who have completed it.
+ */
 export const redirectIfOnboardingComplete = async (workspaceId: string): Promise<void> => {
   const surveyCount = await getSurveyCount(workspaceId);
 
@@ -12,6 +16,11 @@ export const redirectIfOnboardingComplete = async (workspaceId: string): Promise
   }
 };
 
+/**
+ * Determines where a user should be redirected during onboarding:
+ * - No surveys yet: cloud users go to plan selection, self-hosted to survey creation
+ * - Has surveys: returns null (stay on current page)
+ */
 export const getOnboardingRedirectPath = async ({
   organizationId,
   workspace,

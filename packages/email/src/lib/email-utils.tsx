@@ -3,7 +3,10 @@ import { FileIcon } from "lucide-react";
 import { TSurveyElementTypeEnum } from "@formbricks/types/surveys/elements";
 import { TFunction } from "../types/translations";
 
-// Simplified version - just get the filename from URL
+/**
+ * Extracts the original filename from a URL path — used to display a
+ * human-readable name for file-upload responses in emails.
+ */
 const getOriginalFileNameFromUrl = (url: string): string => {
   try {
     const urlObj = new URL(url);
@@ -15,6 +18,17 @@ const getOriginalFileNameFromUrl = (url: string): string => {
   }
 };
 
+/**
+ * Renders a survey response value as a React Email element, with special
+ * handling for file uploads (shows filename + icon), picture selection (image
+ * grid), and ranking (numbered list). Falls back to plain text for other types.
+ *
+ * @param response — The raw response value (string or array)
+ * @param questionType — The element type from the survey definition
+ * @param t — i18n translation function
+ * @param overrideFileUploadResponse — When true, hides file-upload links (used when links aren't available)
+ * @returns — A React Email element for embedding in email templates
+ */
 export const renderEmailResponseValue = (
   response: string | string[],
   questionType: TSurveyElementTypeEnum,

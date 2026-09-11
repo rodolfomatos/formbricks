@@ -31,6 +31,14 @@ interface DeleteAccountModalProps {
   isSsoIdentityConfirmationDisabled: boolean;
 }
 
+/**
+ * Modal dialog for permanent account deletion. Requires the user to type
+ * their email to confirm, and optionally their password (email/password
+ * accounts) or SSO re-authentication (social login accounts).
+ *
+ * Displays warnings about data loss and orgs that would lose their only
+ * owner. On Formbricks Cloud, redirects to an exit survey after deletion.
+ */
 export const DeleteAccountModal = ({
   requiresPasswordConfirmation,
   setOpen,

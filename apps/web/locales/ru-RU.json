@@ -2414,6 +2414,7 @@
         "workspace": "Рабочее пространство"
       },
       "enterprise": {
+        "ai_smart_tools": "Умные инструменты ИИ",
         "audit_logs": "Журналы аудита",
         "coming_soon": "Скоро будет",
         "contacts_and_segments": "Управление контактами и сегментами",

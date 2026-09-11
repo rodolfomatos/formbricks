@@ -1,3 +1,7 @@
+/**
+ * A ghost button that resets the survey preview progress.
+ * Used in the preview panel to restart the survey from the beginning.
+ */
 "use client";
 
 import { Repeat2 } from "lucide-react";

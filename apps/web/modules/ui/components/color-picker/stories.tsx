@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the ColorPicker component.
+ * Interactive story with color state tracking via Storybook args.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useArgs } from "storybook/preview-api";
 import { fn } from "storybook/test";

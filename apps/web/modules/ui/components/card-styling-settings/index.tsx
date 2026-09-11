@@ -1,3 +1,8 @@
+/**
+ * Collapsible card for configuring survey card appearance: roundness, background color,
+ * border color, card arrangement, card width (link surveys), highlight border, and progress bar.
+ * Used in survey editor styling and workspace look settings.
+ */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

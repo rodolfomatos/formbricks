@@ -1,3 +1,4 @@
+/** Consent — checkbox-based consent/opt-in element with rich HTML label, optional badge, and required validation. */
 import * as React from "react";
 import { Checkbox } from "@/components/general/checkbox";
 import { ElementError } from "@/components/general/element-error";

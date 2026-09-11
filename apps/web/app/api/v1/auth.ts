@@ -12,6 +12,10 @@ import {
   authenticateApiKeyFromHeaders,
 } from "@/modules/api/lib/api-key-auth";
 
+/**
+ * Authenticates a v1 API request by extracting and validating an API key
+ * from the request headers.
+ */
 export const authenticateRequest = async (
   request: NextRequest,
   options: AuthenticateApiKeyOptions = {}
@@ -19,6 +23,9 @@ export const authenticateRequest = async (
   return await authenticateApiKeyFromHeaders(request.headers, options);
 };
 
+/**
+ * Maps known error types to standardised HTTP error responses.
+ */
 export const handleErrorResponse = (error: any): Response => {
   switch (error.message) {
     case "NotAuthenticated":

@@ -1,3 +1,7 @@
+/**
+ * Video URL input with add/remove controls, YouTube privacy mode toggle,
+ * and platform support warnings for YouTube, Vimeo, and Loom.
+ */
 "use client";
 
 import { useState } from "react";

@@ -1,33 +1,15 @@
 "use client";
 
-import { RepeatIcon, Trash2Icon } from "lucide-react";
+import { useCallback, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { TOrganization } from "@formbricks/types/organizations";
-import { TAllowedFileExtension } from "@formbricks/types/storage";
 import { TUser } from "@formbricks/types/user";
-import { useWorkspace } from "@/app/(app)/workspaces/[workspaceId]/context/workspace-context";
-import { SettingsCard } from "@/app/(app)/workspaces/[workspaceId]/settings/components/SettingsCard";
-import { cn } from "@/lib/cn";
 import { getFormattedErrorMessage } from "@/lib/utils/helper";
-import {
-  removeOrganizationEmailLogoUrlAction,
-  sendTestEmailAction,
-  updateOrganizationEmailLogoUrlAction,
-} from "@/modules/ee/whitelabel/email-customization/actions";
-import { handleFileUpload } from "@/modules/storage/file-upload";
-import { showFileUploadErrorToast } from "@/modules/storage/file-upload-error";
-import { Alert, AlertDescription } from "@/modules/ui/components/alert";
 import { Button } from "@/modules/ui/components/button";
-import { Uploader } from "@/modules/ui/components/file-input/components/uploader";
-import { showStorageNotConfiguredToast } from "@/modules/ui/components/storage-not-configured-toast/lib/utils";
-import { Muted, P, Small } from "@/modules/ui/components/typography";
-import { ModalButton, UpgradePrompt } from "@/modules/ui/components/upgrade-prompt";
-
-const allowedFileExtensions: TAllowedFileExtension[] = ["jpeg", "png", "jpg", "webp"];
+import { Input } from "@/modules/ui/components/input";
+import { updateOrganizationWhitelabelAction } from "@/modules/ee/whitelabel/actions";
 
 interface EmailCustomizationSettingsProps {
   organization: TOrganization;
@@ -35,289 +17,71 @@ interface EmailCustomizationSettingsProps {
   workspaceId: string;
   isReadOnly: boolean;
   isFormbricksCloud: boolean;
-  user: TUser | null;
   fbLogoUrl: string;
+  user: TUser | null;
   isStorageConfigured: boolean;
   enterpriseLicenseRequestFormUrl: string;
 }
 
-export const EmailCustomizationSettings = ({
+export function EmailCustomizationSettings({
   organization,
   hasWhiteLabelPermission,
-  workspaceId,
   isReadOnly,
-  isFormbricksCloud,
-  user,
-  fbLogoUrl,
-  isStorageConfigured,
-  enterpriseLicenseRequestFormUrl,
-}: EmailCustomizationSettingsProps) => {
-  const { workspace } = useWorkspace();
-  const workspaceBasePath = `/workspaces/${workspace?.id}`;
+}: EmailCustomizationSettingsProps) {
   const { t } = useTranslation();
-
-  const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [logoUrl, setLogoUrl] = useState<string>(organization.whitelabel?.logoUrl || fbLogoUrl);
+  const [logoUrl, setLogoUrl] = useState(organization.whitelabel?.logoUrl ?? "");
   const [isSaving, setIsSaving] = useState(false);
-  const inputRef = useRef<HTMLInputElement | null>(null) as React.RefObject<HTMLInputElement>;
 
-  const isDefaultLogo = logoUrl === fbLogoUrl;
-
-  const router = useRouter();
-
-  const onFileInputChange = (files: File[]) => {
-    if (!isStorageConfigured) {
-      showStorageNotConfiguredToast();
-      return;
-    }
-
-    const file = files[0];
-    if (!file) return;
-
-    // Revoke any previous object URL so we don't leak memory
-    if (logoUrl) {
-      URL.revokeObjectURL(logoUrl);
-    }
-
-    setLogoFile(file);
-    setLogoUrl(URL.createObjectURL(file));
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.dropEffect = "copy";
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!isStorageConfigured) {
-      showStorageNotConfiguredToast();
-      return;
-    }
-
-    const files = Array.from(e.dataTransfer.files);
-    const file = files[0];
-    if (!file) return;
-
-    const extension = file.name.split(".").pop()! as TAllowedFileExtension;
-    if (!allowedFileExtensions.includes(extension)) {
-      toast.error(t("common.invalid_file_type"));
-      return;
-    }
-    onFileInputChange(files);
-  };
-
-  const removeLogo = async () => {
-    if (logoUrl) {
-      URL.revokeObjectURL(logoUrl);
-    }
-    setLogoFile(null);
-    setLogoUrl("");
-
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
-
-    if (isDefaultLogo || !organization.whitelabel?.logoUrl) return;
-
-    const removeLogoResponse = await removeOrganizationEmailLogoUrlAction({
-      organizationId: organization.id,
-    });
-
-    if (removeLogoResponse?.data) {
-      toast.success(t("workspace.settings.general.logo_removed_successfully"));
-      router.refresh();
-    } else {
-      const errorMessage = getFormattedErrorMessage(removeLogoResponse);
-      toast.error(errorMessage);
-    }
-  };
-
-  const handleSave = async () => {
-    if (!logoFile) return;
+  const handleSave = useCallback(async () => {
     setIsSaving(true);
-    const { url, error } = await handleFileUpload(logoFile, workspaceId, allowedFileExtensions);
-
-    if (error) {
-      showFileUploadErrorToast(error, t);
-      setIsSaving(false);
-      return;
-    }
-
-    const updateLogoResponse = await updateOrganizationEmailLogoUrlAction({
+    const result = await updateOrganizationWhitelabelAction({
       organizationId: organization.id,
-      logoUrl: url,
+      whitelabel: { logoUrl: logoUrl || null, faviconUrl: organization.whitelabel?.faviconUrl ?? null },
     });
-
-    if (updateLogoResponse?.data) {
-      toast.success(t("workspace.settings.general.logo_saved_successfully"));
-      setLogoUrl(url);
-      router.refresh();
+    if (result?.data) {
+      toast.success(t("workspace.look.logo_updated_successfully"));
     } else {
-      const errorMessage = getFormattedErrorMessage(updateLogoResponse);
+      const errorMessage = getFormattedErrorMessage(result);
       toast.error(errorMessage);
     }
-
     setIsSaving(false);
-  };
+  }, [organization.id, organization.whitelabel?.faviconUrl, logoUrl, t]);
 
-  const sendTestEmail = async () => {
-    if (!logoUrl) {
-      toast.error(t("workspace.settings.general.please_add_a_logo"));
-      return;
-    }
-    if (logoUrl !== organization.whitelabel?.logoUrl && !isDefaultLogo) {
-      toast.error(t("workspace.settings.general.please_save_logo_before_sending_test_email"));
-      return;
-    }
-    const sendTestEmailResponse = await sendTestEmailAction({
-      organizationId: organization.id,
-    });
-
-    if (sendTestEmailResponse?.data) {
-      toast.success(t("workspace.settings.general.test_email_sent_successfully"));
-    } else {
-      const errorMessage = getFormattedErrorMessage(sendTestEmailResponse);
-      toast.error(errorMessage);
-    }
-  };
-
-  const buttons: [ModalButton, ModalButton] = [
-    {
-      text: isFormbricksCloud ? t("common.upgrade_plan") : t("common.request_trial_license"),
-      href: isFormbricksCloud
-        ? `${workspaceBasePath}/settings/organization/billing`
-        : enterpriseLicenseRequestFormUrl,
-    },
-    {
-      text: t("common.learn_more"),
-      href: isFormbricksCloud
-        ? `${workspaceBasePath}/settings/organization/billing`
-        : "https://formbricks.com/learn-more-self-hosting-license",
-    },
-  ];
+  const disabled = isReadOnly || !hasWhiteLabelPermission;
 
   return (
-    <SettingsCard
-      className="overflow-hidden pb-0"
-      title={t("workspace.look.email_customization")}
-      description={t("workspace.look.email_customization_description")}
-      noPadding>
-      <div className="px-6 pt-6">
-        {hasWhiteLabelPermission ? (
-          <div className="flex items-end justify-between gap-4">
-            <div className="mb-10">
-              <Small>{t("workspace.settings.general.logo_in_email_header")}</Small>
-
-              <div className="mb-6 mt-2 flex items-center gap-4">
-                {logoUrl && (
-                  <div className="flex flex-col gap-2">
-                    <div className="flex w-max items-center justify-center rounded-lg border border-slate-200 px-4 py-2">
-                      <Image
-                        src={logoUrl}
-                        alt="Logo"
-                        className="max-h-24 max-w-full object-contain"
-                        width={192}
-                        height={192}
-                      />
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Button
-                        data-testid="replace-logo-button"
-                        variant="secondary"
-                        onClick={() => {
-                          if (!isStorageConfigured) {
-                            showStorageNotConfiguredToast();
-                            return;
-                          }
-                          inputRef.current?.click();
-                        }}
-                        disabled={isReadOnly || isSaving}>
-                        <RepeatIcon className="size-4" />
-                        {t("workspace.settings.general.replace_logo")}
-                      </Button>
-                      <Button
-                        data-testid="remove-logo-button"
-                        onClick={removeLogo}
-                        variant="outline"
-                        disabled={isReadOnly || isSaving}>
-                        <Trash2Icon className="size-4" />
-                        {t("workspace.settings.general.remove_logo")}
-                      </Button>
-                    </div>
-                  </div>
-                )}
-                <Uploader
-                  ref={inputRef}
-                  allowedFileExtensions={allowedFileExtensions}
-                  id="email-customization"
-                  name="email-customization"
-                  handleDragOver={handleDragOver}
-                  uploaderClassName={cn(
-                    "h-20 w-96 border border-slate-200 bg-white",
-                    logoUrl ? "hidden" : "block"
-                  )}
-                  handleDrop={handleDrop}
-                  multiple={false}
-                  handleUpload={onFileInputChange}
-                  disabled={isReadOnly}
-                  isStorageConfigured={isStorageConfigured}
-                />
-              </div>
-
-              <div className="flex gap-4">
-                <Button
-                  data-testid="send-test-email-button"
-                  variant="secondary"
-                  disabled={isReadOnly || isSaving}
-                  onClick={sendTestEmail}>
-                  {t("common.send_test_email")}
-                </Button>
-                <Button onClick={handleSave} disabled={!logoFile || isReadOnly} loading={isSaving}>
-                  {t("common.save")}
-                </Button>
-              </div>
-            </div>
-            <div className="min-h-52 w-[446px] rounded-t-lg border border-slate-100 px-10 pb-4 pt-10 shadow-card-xl">
-              <Image
-                data-testid="email-customization-preview-image"
-                src={logoUrl || fbLogoUrl}
-                alt="Logo"
-                className="mx-auto max-h-[100px] max-w-full object-contain"
-                width={192}
-                height={192}
-              />
-              <P className="font-bold">
-                {t("workspace.settings.general.email_customization_preview_email_heading", {
-                  userName: user?.name,
-                })}
-              </P>
-              <Muted className="text-slate-500">
-                {t("workspace.settings.general.email_customization_preview_email_text")}
-              </Muted>
-            </div>
-          </div>
-        ) : (
-          <UpgradePrompt
-            title={t("workspace.settings.general.customize_email_with_a_higher_plan")}
-            description={t("workspace.settings.general.eliminate_branding_with_whitelabel")}
-            buttons={buttons}
-            feature="email_customization"
-          />
-        )}
-
-        {hasWhiteLabelPermission && isReadOnly && (
-          <Alert variant="warning" className="mb-6 mt-4">
-            <AlertDescription>
-              {t("common.only_owners_managers_and_manage_access_members_can_perform_this_action")}
-            </AlertDescription>
-          </Alert>
-        )}
+    <div className="relative my-4 w-full max-w-4xl rounded-xl border border-slate-200 bg-white py-4 text-left shadow-sm">
+      <div className="flex justify-between border-b border-slate-200 px-4 pb-4">
+        <div>
+          <h4 className="text-lg font-medium tracking-normal">{t("workspace.look.email_customization")}</h4>
+          <p className="mt-1 text-sm text-slate-500">
+            {t("workspace.look.email_customization_description")}
+          </p>
+        </div>
       </div>
-    </SettingsCard>
+      <div className="space-y-4 px-4 pt-4">
+        {logoUrl && (
+          <div className="flex items-center gap-4">
+            <Image
+              src={logoUrl}
+              alt="Email Logo"
+              width={256}
+              height={56}
+              className="h-14 w-auto max-w-48 rounded border object-contain p-1"
+            />
+          </div>
+        )}
+        <Input
+          type="text"
+          placeholder="https://example.com/logo.png"
+          value={logoUrl}
+          onChange={(e) => setLogoUrl(e.target.value)}
+          disabled={disabled}
+        />
+        <Button type="button" size="sm" loading={isSaving} disabled={disabled} onClick={handleSave}>
+          {t("common.save")}
+        </Button>
+      </div>
+    </div>
   );
-};
+}

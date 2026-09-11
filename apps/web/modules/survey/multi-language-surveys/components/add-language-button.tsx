@@ -11,6 +11,7 @@ interface AddLanguageButtonProps {
   workspace: TWorkspace;
 }
 
+/** Button shown in editor mode to add a new language row (only visible when all existing languages are already displayed). */
 export const AddLanguageButton: React.FC<AddLanguageButtonProps> = ({
   onClick,
   isEditing,

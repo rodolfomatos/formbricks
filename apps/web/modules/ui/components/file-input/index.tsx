@@ -1,3 +1,8 @@
+/**
+ * Full file upload component supporting images (single/multiple) and video (YouTube/Vimeo/Loom).
+ * Handles drag-and-drop, file validation, HEIC conversion, and upload progress.
+ * Used in survey editor for file upload questions and background images.
+ */
 "use client";
 
 import { FileIcon, XIcon } from "lucide-react";

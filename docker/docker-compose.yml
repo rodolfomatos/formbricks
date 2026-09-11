@@ -154,11 +154,12 @@ x-environment: &environment
     # AZUREAD_TENANT_ID:
 
     # Set the below to OpenID Connect Provider if you want to enable OIDC
-    # OIDC_CLIENT_ID:
-    # OIDC_CLIENT_SECRET:
-    # OIDC_ISSUER:
-    # OIDC_DISPLAY_NAME:
-    # OIDC_SIGNING_ALGORITHM:
+    OIDC_OAUTH_ENABLED: 1
+    OIDC_CLIENT_ID:
+    OIDC_CLIENT_SECRET:
+    OIDC_ISSUER:
+    OIDC_DISPLAY_NAME:
+    OIDC_SIGNING_ALGORITHM:
 
     # Set the below to SAML Provider if you want to enable SAML
     # SAML_DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/formbricks-saml?sslmode=disable"
@@ -200,8 +201,9 @@ x-environment: &environment
     # Set the below to 1 to disable Rate Limiting across Formbricks
     # RATE_LIMITING_DISABLED: 1
 
-    # Set the below to 1 to disable telemetry reporting (ignored when EE license is active)
-    # TELEMETRY_DISABLED: 1
+    # Telemetry is disabled by default in this AGPL fork (no phone-home).
+    # The Formbricks enterprise telemetry endpoint is never contacted.
+    TELEMETRY_DISABLED: 1
 
     # Set the below to send OpenTelemetry data via OTLP to your collector
     # OTEL_EXPORTER_OTLP_ENDPOINT: http://localhost:4318
@@ -268,7 +270,10 @@ services:
 
   # Run Formbricks Prisma migrations before Hub writes tables to the shared database.
   formbricks-migrate:
-    image: ghcr.io/formbricks/formbricks:latest
+    build:
+      context: /opt/forms/formbricks
+      dockerfile: apps/web/Dockerfile
+    image: formbricks-fork:latest
     restart: "no"
     entrypoint: ["sh", "-c"]
     command:
@@ -282,7 +287,10 @@ services:
 
   formbricks:
     restart: always
-    image: ghcr.io/formbricks/formbricks:latest
+    build:
+      context: /opt/forms/formbricks
+      dockerfile: apps/web/Dockerfile
+    image: formbricks-fork:latest
     env_file:
       - path: .env
         required: false
@@ -297,6 +305,23 @@ services:
       - 3000:3000
     volumes:
       - ./saml-connection:/home/nextjs/apps/web/saml-connection
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.formbricks.rule=Host(`forms.ilab.uporto.pt`)"
+      - "traefik.http.routers.formbricks.entrypoints=websecure"
+      - "traefik.http.routers.formbricks.tls=true"
+      - "traefik.http.routers.formbricks.tls.certresolver=default"
+      - "traefik.http.services.formbricks.loadbalancer.server.port=3000"
+      - "traefik.http.routers.feedback-records-token.rule=Host(`forms.ilab.uporto.pt`) && Path(`/api/v3/feedbackRecords/token`)"
+      - "traefik.http.routers.feedback-records-token.entrypoints=websecure"
+      - "traefik.http.routers.feedback-records-token.tls=true"
+      - "traefik.http.routers.feedback-records-token.tls.certresolver=default"
+      - "traefik.http.routers.feedback-records-token.service=formbricks"
+      - "traefik.http.routers.feedback-records-token.priority=200"
+      - "traefik.http.middlewares.hstsHeader.headers.stsSeconds=31536000"
+      - "traefik.http.middlewares.hstsHeader.headers.forceSTSHeader=true"
+      - "traefik.http.middlewares.hstsHeader.headers.stsPreload=true"
+      - "traefik.http.middlewares.hstsHeader.headers.stsIncludeSubdomains=true"
     environment:
       <<: *app-environment
       SKIP_STARTUP_MIGRATION: "true"
@@ -469,6 +494,22 @@ services:
       timeout: 5s
       retries: 12
       start_period: 30s
+
+  traefik:
+    image: "traefik:v3.6.4"
+    restart: always
+    container_name: "traefik"
+    depends_on:
+      formbricks:
+        condition: service_started
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /opt/formbricks/traefik.yaml:/traefik.yaml
+      - /opt/formbricks/traefik-dynamic.yaml:/traefik-dynamic.yaml
+      - /opt/formbricks/acme.json:/acme.json
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
   postgres:

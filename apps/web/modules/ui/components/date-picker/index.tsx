@@ -1,3 +1,7 @@
+/**
+ * A calendar date picker with a button trigger showing the selected date, a popover calendar
+ * (react-calendar), and a clear button. Used for scheduling surveys and setting date filters.
+ */
 "use client";
 
 import { CalendarCheckIcon, CalendarIcon, XIcon } from "lucide-react";

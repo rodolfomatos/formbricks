@@ -10,6 +10,10 @@ interface PostHogIdentifyProps {
   name: string | null;
 }
 
+/**
+ * Client component that initializes PostHog and identifies the current user.
+ * Handles user switching by resetting PostHog state.
+ */
 export const PostHogIdentify = ({ posthogKey, userId, email, name }: PostHogIdentifyProps) => {
   const lastIdentifiedUserId = useRef<string | null>(null);
 

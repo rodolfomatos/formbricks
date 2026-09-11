@@ -13,8 +13,6 @@ import {
 } from "@/modules/account/constants";
 import { requiresPasswordConfirmationForAccountDeletion } from "@/modules/account/lib/account-deletion-auth";
 import { consumeAccountDeletionSsoReauthentication } from "@/modules/account/lib/account-deletion-sso-reauth";
-import { getIsMultiOrgEnabled } from "@/modules/ee/license-check/lib/utils";
-
 const getPasswordOrThrow = (password?: string) => {
   if (!password) {
     throw new InvalidInputError(ACCOUNT_DELETION_CONFIRMATION_REQUIRED_ERROR_CODE);
@@ -56,6 +54,18 @@ const assertAccountDeletionSsoIdentityConfirmation = async ({
   });
 };
 
+/**
+ * Core account-deletion logic: validates email confirmation, checks
+ * password (email/password accounts) or SSO re-authentication marker
+ * (social accounts), verifies the user is not the sole owner of an org
+ * (when multi-org is disabled), and finally deletes the user record.
+ *
+ * @param confirmationEmail — the user's email typed for confirmation
+ * @param password — required for email/password accounts
+ * @param userEmail — the user's current email (from session)
+ * @param userId — the user to delete
+ * @returns — the old user snapshot (for audit)
+ */
 export const deleteUserWithAccountDeletionAuthorization = async ({
   confirmationEmail,
   password,
@@ -76,16 +86,6 @@ export const deleteUserWithAccountDeletionAuthorization = async ({
     const isCorrectPassword = await verifyUserPassword(userId, getPasswordOrThrow(password));
     if (!isCorrectPassword) {
       throw new AuthorizationError(DELETE_ACCOUNT_WRONG_PASSWORD_ERROR);
-    }
-  }
-
-  const isMultiOrgEnabled = await getIsMultiOrgEnabled();
-  if (!isMultiOrgEnabled) {
-    const organizationsWithSingleOwner = await getOrganizationsWhereUserIsSingleOwner(userId);
-    if (organizationsWithSingleOwner.length > 0) {
-      throw new OperationNotAllowedError(
-        "You are the only owner of this organization. Please transfer ownership to another member first."
-      );
     }
   }
 

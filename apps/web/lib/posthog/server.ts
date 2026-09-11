@@ -1,3 +1,10 @@
+/**
+ * Singleton PostHog Node.js server client.
+ *
+ * Initialised lazily only when POSTHOG_KEY is present. Flushes synchronously
+ * (flushAt: 1, flushInterval: 0) so events are sent immediately in server
+ * contexts. Registers SIGTERM/SIGINT handlers to flush on shutdown.
+ */
 import "server-only";
 import { PostHog } from "posthog-node";
 import { logger } from "@formbricks/logger";

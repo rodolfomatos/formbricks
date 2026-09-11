@@ -1,3 +1,6 @@
+/**
+ * Form field for text input.
+ */
 "use client";
 
 import { FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/modules/ui/components/form";

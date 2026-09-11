@@ -1,3 +1,7 @@
+/**
+ * Zod schemas for Webhook entities — validates webhook URL, trigger events,
+ * survey scoping, and HMAC signing secret.
+ */
 import { z } from "zod";
 import type { Webhook } from "../src/prisma";
 

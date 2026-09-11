@@ -1,42 +1,38 @@
 ---
-title: "License Activation"
-description: "How to activate your Formbricks Enterprise License"
+title: "All Features Included"
+description: "The AGPL fork includes all features with no license key required"
 icon: "key"
 ---
 
-To unlock Formbricks Enterprise Edition features, you need to activate your Enterprise License Key. Follow these steps to activate your license:
+This is the **AGPL fork** of Formbricks. Enterprise Edition gates have been removed entirely. Every feature is available without a license key.
 
-<Steps>
-  <Step title="Set the License Key">
-    Add your Enterprise License Key as an environment variable in your deployment:
+## No License Key Needed
 
-    ```bash
-    ENTERPRISE_LICENSE_KEY=
-    ```
+- The `ENTERPRISE_LICENSE_KEY` environment variable is **not used** by this fork.
+- There are **no license gates** — all features are always enabled.
+- There is **no phone-home** to `ee.formbricks.com`. No license checks are performed, and no daily network call to Formbricks occurs.
 
-    - Add your Enterprise License Key after `ENTERPRISE_LICENSE_KEY=` with the key you received from Formbricks.
-    - How you set environment variables depends on your deployment (Docker, Kubernetes, .env file, etc.).
-  </Step>
+## What This Means For Your Deployment
 
-  <Step title="Restart Your Instance">
-    After setting the environment variable, **restart your Formbricks instance** to apply the changes.
-  </Step>
+1. **Skip license activation** — there is nothing to activate.
+2. **No firewall exceptions** — you do not need to whitelist `ee.formbricks.com` or any external license server.
+3. **No grace periods** — there is no license that can expire or be revoked.
 
-  <Step title="Verify License Activation">
-    To verify if your license is active, visit `Organization Settings` -> `Enterprise License` to check the confirmation screen.
-  </Step>
+## Features That Were Enterprise-Only Upstream
 
-  <Step title="Ensure License Server is Reachable">
-    Your Formbricks instance performs a daily license check to verify your Enterprise License. If you're deploying Formbricks behind a firewall or have network restrictions, you need to whitelist the following:
+The following features are unlocked and always available in this fork:
 
-    - **Domain**: `ee.formbricks.com`
-    - **URL**: `https://ee.formbricks.com/api/licenses/check`
-    - **Protocol**: HTTPS (Port 443)
-    - **Method**: POST
-    - **Frequency**: Every 24 hours
+- Audit logging
+- Contacts + Segments
+- Teams and role management
+- Response quotas
+- White-labeling (remove branding, custom email/favicon)
+- Analysis dashboards
+- SAML 2.0 SSO
+- TOTP two-factor authentication
+- AI translation (add your own AI API key)
+- Unify feedback + feedback directories
 
-    The license check includes a 3-day grace period. If the check fails temporarily, your instance will continue using cached license information for up to 3 days.
-  </Step>
-</Steps>
+## Legal Note
 
-    If you have questions or need assistance with network configuration, please reach out to hola@formbricks.com.
+All Enterprise Edition features have been **rewritten from scratch** as original AGPLv3 code. No proprietary Formbricks enterprise source code is used in `apps/web/modules/ee/`. See the root `LICENSE` file for details.

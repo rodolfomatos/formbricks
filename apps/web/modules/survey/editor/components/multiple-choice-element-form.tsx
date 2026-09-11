@@ -1,3 +1,4 @@
+/** Form editor for Multiple Choice (single/multi) question elements — manages sortable choice options, special choices (Other/None), shuffle options, display type (list/dropdown), bulk editing, and validation rules for multi-select. */
 "use client";
 
 import { DndContext } from "@dnd-kit/core";

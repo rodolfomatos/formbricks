@@ -8,6 +8,7 @@ export const viewport: Viewport = {
   viewportFit: "contain",
 };
 
+/** Root layout for the link survey pages. Sets viewport for mobile with user-scalable disabled. */
 export const LinkSurveyLayout = ({ children }: { children: React.ReactNode }) => {
   return <div className="h-dvh">{children}</div>;
 };

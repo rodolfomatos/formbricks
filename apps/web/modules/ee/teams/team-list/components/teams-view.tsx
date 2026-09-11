@@ -1,76 +1,23 @@
-import { ResourceNotFoundError } from "@formbricks/types/errors";
-import { TOrganizationRole } from "@formbricks/types/memberships";
-import { SettingsCard } from "@/app/(app)/workspaces/[workspaceId]/settings/components/SettingsCard";
-import { ENTERPRISE_LICENSE_REQUEST_FORM_URL, IS_FORMBRICKS_CLOUD } from "@/lib/constants";
-import { getTranslate } from "@/lingodotdev/server";
-import { TeamsTable } from "@/modules/ee/teams/team-list/components/teams-table";
-import { getTeams } from "@/modules/ee/teams/team-list/lib/team";
-import { getWorkspacesByOrganizationId } from "@/modules/ee/teams/team-list/lib/workspace";
-import { getMembersByOrganizationId } from "@/modules/organization/settings/teams/lib/membership";
-import { ModalButton, UpgradePrompt } from "@/modules/ui/components/upgrade-prompt";
+import type { TOrganizationTeam } from "../types/team";
 
-interface TeamsViewProps {
-  organizationId: string;
-  membershipRole?: TOrganizationRole;
-  currentUserId: string;
-  isAccessControlAllowed: boolean;
-  workspaceId: string;
-}
-
-export const TeamsView = async ({
-  organizationId,
-  membershipRole,
-  currentUserId,
-  isAccessControlAllowed,
-  workspaceId,
-}: TeamsViewProps) => {
-  const t = await getTranslate();
-  const workspaceBasePath = `/workspaces/${workspaceId}`;
-
-  const [teams, orgMembers, orgWorkspaces] = await Promise.all([
-    getTeams(currentUserId, organizationId),
-    getMembersByOrganizationId(organizationId),
-    getWorkspacesByOrganizationId(organizationId),
-  ]);
-
-  if (!teams) {
-    throw new ResourceNotFoundError(t("common.teams"), null);
-  }
-
-  const buttons: [ModalButton, ModalButton] = [
-    {
-      text: IS_FORMBRICKS_CLOUD ? t("common.upgrade_plan") : t("common.request_trial_license"),
-      href: IS_FORMBRICKS_CLOUD
-        ? `${workspaceBasePath}/settings/organization/billing`
-        : ENTERPRISE_LICENSE_REQUEST_FORM_URL,
-    },
-    {
-      text: t("common.learn_more"),
-      href: "https://formbricks.com/docs/self-hosting/license",
-    },
-  ];
-
+export function TeamsView({ teams }: { teams: TOrganizationTeam[] }) {
   return (
-    <SettingsCard
-      title={t("workspace.settings.teams.teams")}
-      description={t("workspace.settings.teams.teams_description")}>
-      {isAccessControlAllowed ? (
-        <TeamsTable
-          teams={teams}
-          membershipRole={membershipRole}
-          organizationId={organizationId}
-          orgMembers={orgMembers}
-          orgWorkspaces={orgWorkspaces}
-          currentUserId={currentUserId}
-        />
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">Teams</h2>
+      {teams.length === 0 ? (
+        <p className="text-muted-foreground text-sm">No teams found.</p>
       ) : (
-        <UpgradePrompt
-          title={t("workspace.settings.teams.unlock_teams_title")}
-          description={t("workspace.settings.teams.unlock_teams_description")}
-          buttons={buttons}
-          feature="teams"
-        />
+        <ul className="divide-y rounded-md border">
+          {teams.map((team) => (
+            <li key={team.id} className="flex items-center justify-between p-4">
+              <div>
+                <p className="font-medium">{team.name}</p>
+                <p className="text-muted-foreground text-sm">{team.memberCount} members</p>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
-    </SettingsCard>
+    </div>
   );
-};
+}

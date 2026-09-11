@@ -1,3 +1,11 @@
+/**
+ * Integration service for Google Sheets.
+ *
+ * Handles OAuth token lifecycle (refresh on expiry with 5-minute buffer), writes survey
+ * response data into spreadsheets (header row + data rows), and validates connectivity.
+ * Errors are mapped to domain-level error types so callers (server actions) can surface
+ * user-friendly messages for invalid grants, insufficient permissions, etc.
+ */
 import "server-only";
 import { z } from "zod";
 import { Prisma } from "@formbricks/database/prisma";
@@ -28,6 +36,15 @@ import { validateInputs } from "../utils/validate";
 
 const { google } = require("googleapis");
 
+/**
+ * Writes a header row (element/question labels) and a data row (responses) to a Google Sheet.
+ * If a response exceeds the message limit it is truncated.
+ *
+ * @param integrationData — the Google Sheets integration config (credentials + metadata)
+ * @param spreadsheetId — target spreadsheet ID
+ * @param responses — one response value per element
+ * @param elements — element headlines acting as column headers
+ */
 export const writeData = async (
   integrationData: TIntegrationGoogleSheets,
   spreadsheetId: string,
@@ -90,6 +107,12 @@ export const writeData = async (
   }
 };
 
+/**
+ * Checks whether the stored Google Sheets OAuth credentials still work by calling the
+ * Sheets API. Throws on failure so the UI can display a re-authorisation prompt.
+ *
+ * @param googleSheetIntegrationData — the integration config to validate
+ */
 export const validateGoogleSheetsConnection = async (
   googleSheetIntegrationData: TIntegrationGoogleSheets
 ): Promise<void> => {
@@ -101,6 +124,13 @@ export const validateGoogleSheetsConnection = async (
   await authorize(integrationData);
 };
 
+/**
+ * Fetches the human-readable title of a Google Sheet by its ID.
+ *
+ * @param googleSheetIntegrationData — the integration config for auth
+ * @param spreadsheetId — the spreadsheet to query
+ * @returns — the spreadsheet title
+ */
 export const getSpreadsheetNameById = async (
   googleSheetIntegrationData: TIntegrationGoogleSheets,
   spreadsheetId: string

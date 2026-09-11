@@ -19,6 +19,10 @@ type DeleteOrganizationProps = {
   isUserOwner?: boolean;
 };
 
+/**
+ * Delete organization UI with a confirmation dialog that requires typing the org name.
+ * Disabled when the user is not the owner or deletion is unavailable.
+ */
 export const DeleteOrganization = ({
   organization,
   isDeleteDisabled = false,

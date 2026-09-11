@@ -1,3 +1,4 @@
+/** Internationalization — multi-locale string schema requiring a `default` key for fallback display. */
 import { z } from "zod";
 
 export const ZI18nString = z.record(z.string(), z.string()).refine((obj) => "default" in obj, {

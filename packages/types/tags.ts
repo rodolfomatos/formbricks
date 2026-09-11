@@ -1,3 +1,4 @@
+/** Tag schemas — labels attached to responses for filtering and organization. */
 import { z } from "zod";
 
 export const ZTag = z.object({

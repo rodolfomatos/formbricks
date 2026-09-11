@@ -41,6 +41,13 @@ export type ParsedSchemas<S extends ExtendedSchemas | undefined> = S extends obj
     }
   : {};
 
+/**
+ * Wraps an API handler with authentication, schema validation (body/query/params), rate limiting, and audit logging.
+ * Parses and validates request inputs according to the provided Zod schemas.
+ *
+ * @param options — Configuration including request, schemas, rate limit toggle, handler, audit log, and body transform
+ * @returns — The response from the handler or an error response
+ */
 export const apiWrapper = async <S extends ExtendedSchemas>({
   request,
   schemas,

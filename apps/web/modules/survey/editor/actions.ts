@@ -33,6 +33,7 @@ type SurveyEditDiffContext = {
   workspaceId: string;
 };
 
+/** Compares old and new survey state and fires PostHog events for detected changes: hidden fields added, conditional logic added, variables created, languages enabled/added, and follow-ups added. */
 const captureSurveyEditDiffEvents = (
   oldSurvey: TSurvey | null,
   newSurvey: TSurvey,
@@ -181,6 +182,7 @@ const checkSurveyFollowUpsPermission = async (
   }
 };
 
+/** Persists in-progress survey editor changes (draft, no validation). Checks auth, spam protection, follow-up limits, external URLs, and fires PostHog diff events. */
 export const updateSurveyDraftAction = authenticatedActionClient.inputSchema(ZSurveyDraft).action(
   withAuditLogging("updated", "survey", async ({ ctx, parsedInput }) => {
     // Cast to TSurvey - ZSurveyDraft validates structure, full validation happens on publish
@@ -241,6 +243,7 @@ export const updateSurveyDraftAction = authenticatedActionClient.inputSchema(ZSu
   })
 );
 
+/** Persists a fully validated survey (used on publish). Same checks as draft + fires publish/update PostHog events. */
 export const updateSurveyAction = authenticatedActionClient.inputSchema(ZSurvey).action(
   withAuditLogging("updated", "survey", async ({ ctx, parsedInput }) => {
     const organizationId = await getOrganizationIdFromSurveyId(parsedInput.id);
@@ -325,6 +328,7 @@ const ZRefetchWorkspaceAction = z.object({
   workspaceId: z.cuid2(),
 });
 
+/** Refetches workspace data (styling, branding) for the editor. */
 export const refetchWorkspaceAction = authenticatedActionClient
   .inputSchema(ZRefetchWorkspaceAction)
   .action(async ({ ctx, parsedInput }) => {
@@ -351,6 +355,7 @@ const ZGetWorkspaceLanguagesAction = z.object({
   workspaceId: ZId,
 });
 
+/** Fetches languages configured for the workspace. */
 export const getWorkspaceLanguagesAction = authenticatedActionClient
   .inputSchema(ZGetWorkspaceLanguagesAction)
   .action(async ({ ctx, parsedInput }) => {
@@ -378,6 +383,7 @@ const ZGetImagesFromUnsplashAction = z.object({
   page: z.number().optional(),
 });
 
+/** Searches Unsplash for background images matching the query (no auth required). */
 export const getImagesFromUnsplashAction = actionClient
   .inputSchema(ZGetImagesFromUnsplashAction)
   .action(async ({ parsedInput }) => {
@@ -427,6 +433,7 @@ export const getImagesFromUnsplashAction = actionClient
     );
   });
 
+/** Validates that a URL uses HTTPS and is from an allowed Unsplash domain. */
 const isValidUnsplashUrl = (url: string): boolean => {
   try {
     const parsedUrl = new URL(url);
@@ -440,6 +447,7 @@ const ZTriggerDownloadUnsplashImageAction = z.object({
   downloadUrl: z.url(),
 });
 
+/** Triggers the Unsplash download event for attribution tracking. */
 export const triggerDownloadUnsplashImageAction = actionClient
   .inputSchema(ZTriggerDownloadUnsplashImageAction)
   .action(async ({ parsedInput }) => {
@@ -462,6 +470,7 @@ const ZCreateActionClassAction = z.object({
   action: ZActionClassInput,
 });
 
+/** Creates a new action class (code/no-code) for survey triggers. Audited and PostHog-tracked. */
 export const createActionClassAction = authenticatedActionClient.inputSchema(ZCreateActionClassAction).action(
   withAuditLogging("created", "actionClass", async ({ ctx, parsedInput }) => {
     const workspaceId = parsedInput.action.workspaceId;

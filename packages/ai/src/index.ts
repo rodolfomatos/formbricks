@@ -1,3 +1,18 @@
+/**
+ * AI module — unified interface for text and structured-object generation
+ * across multiple LLM providers (AWS Bedrock, Google Vertex, Azure OpenAI,
+ * OpenAI-compatible). Handles provider discovery, credential validation, and
+ * LanguageModel caching.
+ *
+ * @example
+ * ```typescript
+ * import { generateText, isAiConfigured } from "@formbricks/ai";
+ *
+ * if (isAiConfigured()) {
+ *   const result = await generateText({ prompt: "Summarise:" });
+ * }
+ * ```
+ */
 export {
   AIConfigurationError,
   getActiveAiProvider,

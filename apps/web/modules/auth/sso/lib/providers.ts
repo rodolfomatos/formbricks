@@ -1,6 +1,7 @@
 import AzureAD from "next-auth/providers/azure-ad";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import { SamlProvider } from "@/modules/ee/saml-sso/lib/saml-provider";
 import {
   AZUREAD_CLIENT_ID,
   AZUREAD_CLIENT_SECRET,
@@ -18,6 +19,7 @@ import {
   OIDC_ISSUER,
   OIDC_OAUTH_ENABLED,
   OIDC_SIGNING_ALGORITHM,
+  SAML_OAUTH_ENABLED,
 } from "@/lib/constants";
 
 /**
@@ -62,6 +64,10 @@ export const getSSOProviders = () => {
         tenantId: AZUREAD_TENANT_ID,
       })
     );
+  }
+
+  if (SAML_OAUTH_ENABLED) {
+    providers.push(SamlProvider());
   }
 
   if (OIDC_OAUTH_ENABLED) {

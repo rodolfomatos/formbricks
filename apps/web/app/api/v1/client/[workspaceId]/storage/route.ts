@@ -29,6 +29,11 @@ export const OPTIONS = async (): Promise<Response> => {
 // uploading private files requires no authentication
 // use this to let users upload files to a file upload element response for example
 
+/**
+ * POST /api/v1/client/[workspaceId]/storage
+ * Returns a signed upload URL for a private file (e.g. file upload response).
+ * Validates that the survey allows file uploads and checks file size limits.
+ */
 export const POST = withV1ApiWrapper({
   handler: async ({ req, props }: THandlerParams<{ params: Promise<{ workspaceId: string }> }>) => {
     const params = await props.params;

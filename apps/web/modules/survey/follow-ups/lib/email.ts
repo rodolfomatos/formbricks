@@ -17,6 +17,11 @@ import { getTranslate } from "@/lingodotdev/server";
 import { sendEmail } from "@/modules/email";
 import { resolveStorageUrl } from "@/modules/storage/utils";
 
+/**
+ * Renders and sends a single follow-up email. Parses recall tags in the body,
+ * resolves storage URLs for media responses, optionally attaches response data,
+ * variables, and hidden fields, then delivers via the configured email provider.
+ */
 export const sendFollowUpEmail = async ({
   followUp,
   to,

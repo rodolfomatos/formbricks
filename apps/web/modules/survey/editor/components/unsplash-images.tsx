@@ -1,3 +1,4 @@
+/** Unsplash image search and inline picker for the survey background — supports debounced search, pagination, and proper download attribution. */
 "use client";
 
 import { SearchIcon } from "lucide-react";

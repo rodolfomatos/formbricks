@@ -1,3 +1,7 @@
+/**
+ * Secondary tab-style navigation bar with active indicator, loading state,
+ * disabled items (with optional popover message), and Link/button support.
+ */
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { Popover, PopoverContent, PopoverTrigger } from "@/modules/ui/components/popover";

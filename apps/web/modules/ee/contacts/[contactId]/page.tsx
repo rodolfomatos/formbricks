@@ -1,76 +1,68 @@
+import { prisma } from "@formbricks/database";
 import { ResourceNotFoundError } from "@formbricks/types/errors";
-import { getTagsByWorkspaceId } from "@/lib/tag/service";
 import { getTranslate } from "@/lingodotdev/server";
-import { AttributesSection } from "@/modules/ee/contacts/[contactId]/components/attributes-section";
-import { ContactControlBar } from "@/modules/ee/contacts/[contactId]/components/contact-control-bar";
-import { getContactAttributeKeys } from "@/modules/ee/contacts/lib/contact-attribute-keys";
-import { getContactAttributesWithKeyInfo } from "@/modules/ee/contacts/lib/contact-attributes";
-import { getContact } from "@/modules/ee/contacts/lib/contacts";
-import { getPublishedLinkSurveys } from "@/modules/ee/contacts/lib/surveys";
-import { getIsQuotasEnabled } from "@/modules/ee/license-check/lib/utils";
-import { GoBackButton } from "@/modules/ui/components/go-back-button";
-import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper";
-import { PageHeader } from "@/modules/ui/components/page-header";
 import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
-import { ActivitySection } from "./components/activity-section";
 
-export const SingleContactPage = async (props: {
+interface SingleContactPageProps {
   params: Promise<{ workspaceId: string; contactId: string }>;
-}) => {
+}
+
+export const SingleContactPage = async (props: SingleContactPageProps) => {
   const params = await props.params;
   const t = await getTranslate();
+  await getWorkspaceAuth(params.workspaceId);
 
-  const { isReadOnly, organization, workspace } = await getWorkspaceAuth(params.workspaceId);
-
-  const [environmentTags, contact, publishedLinkSurveys, attributesWithKeyInfo, allAttributeKeys] =
-    await Promise.all([
-      getTagsByWorkspaceId(workspace.id),
-      getContact(params.contactId),
-      getPublishedLinkSurveys(workspace.id),
-      getContactAttributesWithKeyInfo(params.contactId),
-      getContactAttributeKeys(workspace.id),
-    ]);
+  const contact = await prisma.contact.findUnique({
+    where: { id: params.contactId },
+    include: {
+      attributes: {
+        include: { attributeKey: { select: { key: true, name: true } } },
+      },
+      responses: {
+        select: { id: true, surveyId: true, createdAt: true },
+        orderBy: { createdAt: "desc" },
+        take: 10,
+      },
+    },
+  });
 
   if (!contact) {
-    throw new ResourceNotFoundError(t("common.contact"), params.contactId);
+    throw new ResourceNotFoundError("Contact", params.contactId);
   }
 
-  const isQuotasAllowed = await getIsQuotasEnabled(organization.id);
-
-  // Derive contact identifier from metadata array
-  const getAttributeValue = (key: string): string | undefined => {
-    return attributesWithKeyInfo.find((attr) => attr.key === key)?.value;
-  };
-
-  const contactIdentifier = getAttributeValue("email") || getAttributeValue("userId") || "";
-
-  const getContactControlBar = () => {
-    return (
-      <ContactControlBar
-        contactId={params.contactId}
-        isReadOnly={isReadOnly}
-        isQuotasAllowed={isQuotasAllowed}
-        publishedLinkSurveys={publishedLinkSurveys}
-        currentAttributes={attributesWithKeyInfo}
-        allAttributeKeys={allAttributeKeys}
-      />
-    );
-  };
-
   return (
-    <PageContentWrapper>
-      <GoBackButton url={`/workspaces/${workspace.id}/contacts`} />
-      <PageHeader pageTitle={contactIdentifier} cta={getContactControlBar()} />
-      <section className="pb-24 pt-6">
-        <div className="grid grid-cols-4 gap-x-8">
-          <AttributesSection contactId={params.contactId} />
-          <ActivitySection
-            workspaceId={workspace.id}
-            contactId={params.contactId}
-            environmentTags={environmentTags}
-          />
-        </div>
+    <div>
+      <h1 className="text-2xl font-semibold">{t("common.contact")}</h1>
+      <p className="font-mono text-xs text-slate-500">{contact.id}</p>
+      <section className="mt-6">
+        <h2 className="text-lg font-medium">Attributes</h2>
+        <dl className="mt-2 space-y-1">
+          {contact.attributes.map((attr) => (
+            <div key={attr.id} className="flex gap-2 text-sm">
+              <dt className="font-medium">{attr.attributeKey.name ?? attr.attributeKey.key}:</dt>
+              <dd>{attr.value}</dd>
+            </div>
+          ))}
+          {contact.attributes.length === 0 && (
+            <p className="text-muted-foreground text-sm">No attributes</p>
+          )}
+        </dl>
       </section>
-    </PageContentWrapper>
+      <section className="mt-6">
+        <h2 className="text-lg font-medium">Recent Responses</h2>
+        <ul className="mt-2 space-y-1">
+          {contact.responses.map((r) => (
+            <li key={r.id} className="text-sm">
+              {r.surveyId} — {r.createdAt.toISOString()}
+            </li>
+          ))}
+          {contact.responses.length === 0 && (
+            <p className="text-muted-foreground text-sm">No responses</p>
+          )}
+        </ul>
+      </section>
+    </div>
   );
 };
+
+export default SingleContactPage;

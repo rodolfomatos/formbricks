@@ -1,3 +1,4 @@
+/** Language icon — inline SVG globe icon for the survey language-switcher dropdown trigger. */
 interface LanguageIconProps {
   className?: string;
 }

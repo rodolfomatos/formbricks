@@ -4,7 +4,7 @@ import { PrismaErrorType } from "@formbricks/database/types/error";
 import { ResourceNotFoundError } from "@formbricks/types/errors";
 import { TUser, TUserUpdateInput } from "@formbricks/types/user";
 
-// function to update a user's user
+/** Updates a user record by ID. Throws ResourceNotFoundError if the user does not exist. */
 export const updateUser = async (personId: string, data: TUserUpdateInput): Promise<TUser> => {
   try {
     const updatedUser = await prisma.user.update({

@@ -1,3 +1,4 @@
+/** TTC (Time To Complete) — accumulates per-question elapsed time and provides a React effect to track active-question timing. */
 import { useEffect } from "react";
 import { type TResponseTtc } from "@formbricks/types/responses";
 

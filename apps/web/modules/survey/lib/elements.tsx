@@ -26,6 +26,7 @@ import { TSurveyElementTypeEnum } from "@formbricks/types/surveys/elements";
 import { createI18nString } from "@/lib/i18n/utils";
 import { replaceElementPresetPlaceholders } from "@/lib/utils/templates";
 
+/** Describes a survey question type — its display name, icon, and default preset configuration. */
 export type TElement = {
   id: string;
   label: string;
@@ -34,6 +35,7 @@ export type TElement = {
   preset: any;
 };
 
+/** Returns the full catalog of available survey question types with localized labels and default presets. */
 export const getElementTypes = (t: TFunction): TElement[] => [
   {
     id: TSurveyElementTypeEnum.OpenText,
@@ -273,6 +275,7 @@ export const getElementTypes = (t: TFunction): TElement[] => [
   },
 ];
 
+/** Returns only the CX (customer experience) subset of question types excluding technical types like file upload, picture selection, etc. */
 export const getCXElementTypes = (t: TFunction) =>
   getElementTypes(t).filter((elementType) => {
     return [
@@ -288,6 +291,7 @@ export const getCXElementTypes = (t: TFunction) =>
     ].includes(elementType.id as TSurveyElementTypeEnum);
   });
 
+/** Builds a lookup map from element type to its rendered icon component. */
 export const getElementIconMap = (t: TFunction): Record<TSurveyElementTypeEnum, JSX.Element> =>
   getElementTypes(t).reduce(
     (prev, curr) => ({
@@ -297,6 +301,7 @@ export const getElementIconMap = (t: TFunction): Record<TSurveyElementTypeEnum, 
     {} as Record<TSurveyElementTypeEnum, JSX.Element>
   );
 
+/** Builds a lookup map from element type to its localized display name. */
 export const getElementNameMap = (t: TFunction) =>
   getElementTypes(t).reduce(
     (prev, curr) => ({
@@ -306,6 +311,7 @@ export const getElementNameMap = (t: TFunction) =>
     {}
   ) as Record<TSurveyElementTypeEnum, string>;
 
+/** Returns the icon component class for a given survey element type. */
 export const getElementIcon = (type: TSurveyElementTypeEnum, t: TFunction) => {
   return getElementTypes(t).find((elementType) => elementType.id === type)?.icon;
 };
@@ -324,15 +330,18 @@ export const getCXElementNameMap = (t: TFunction) =>
     {}
   ) as Record<TSurveyElementTypeEnum, string>;
 
+/** Default properties applied to every new question element. */
 export const universalElementPresets = {
   required: false,
 };
 
+/** Returns the default preset for a given element type, with workspace-specific placeholder replacements. */
 export const getElementDefaults = (id: string, workspace: any, t: TFunction) => {
   const elementType = getElementTypes(t).find((elementType) => elementType.id === id);
   return replaceElementPresetPlaceholders(elementType?.preset, workspace);
 };
 
+/** Returns the localized display name for a survey element type ID. */
 export const getTSurveyElementTypeEnumName = (id: string, t: TFunction) => {
   const elementType = getElementTypes(t).find((elementType) => elementType.id === id);
   return elementType?.label;

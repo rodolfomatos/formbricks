@@ -1,3 +1,11 @@
+/**
+ * Utility functions for CSV feedback source field mapping validation and sanitization.
+ *
+ * These helpers ensure that CSV field mappings are complete (required fields present),
+ * valid (no protected target IDs exposed to users), and sanitized (hidden static mappings
+ * appended automatically). Also provides routing logic to map `THubFieldType` to the
+ * correct value payload field.
+ */
 import type {
   TFeedbackSourceFieldMappingCreateInput,
   THubFieldType,

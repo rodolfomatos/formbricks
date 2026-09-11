@@ -1,3 +1,4 @@
+/** Calendar — react-day-picker wrapper with month/year navigation, locale-aware date-fns formatting, and survey-branded styling. */
 import { type Locale, format } from "date-fns";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import * as React from "react";

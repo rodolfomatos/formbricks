@@ -11,6 +11,10 @@ const ZGetSlackChannelsAction = z.object({
   workspaceId: ZId,
 });
 
+/**
+ * Fetches the list of Slack channels for a workspace integration.
+ * Requires owner, manager, or readWrite workspace team permission.
+ */
 export const getSlackChannelsAction = authenticatedActionClient
   .inputSchema(ZGetSlackChannelsAction)
   .action(async ({ ctx, parsedInput }) => {

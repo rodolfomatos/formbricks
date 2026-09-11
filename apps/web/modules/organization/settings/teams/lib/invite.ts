@@ -13,6 +13,7 @@ import { getMembershipByUserIdOrganizationId } from "@/lib/membership/service";
 import { validateInputs } from "@/lib/utils/validate";
 import { type InviteWithCreator, type TInvite, type TInvitee } from "../types/invites";
 
+/** Extends an invite's expiration by 7 days from the current time. */
 export const refreshInviteExpiration = async (inviteId: string): Promise<Invite> => {
   try {
     const updatedInvite = await prisma.invite.update({
@@ -35,6 +36,7 @@ export const refreshInviteExpiration = async (inviteId: string): Promise<Invite>
   }
 };
 
+/** Refreshes an invite's expiration and returns its email and name for resending. */
 export const resendInvite = async (inviteId: string): Promise<Pick<Invite, "email" | "name">> => {
   // Refresh expiration and return the updated invite (single query)
   const updatedInvite = await refreshInviteExpiration(inviteId);
@@ -45,6 +47,7 @@ export const resendInvite = async (inviteId: string): Promise<Pick<Invite, "emai
   };
 };
 
+/** Fetches all pending invites for an organization, with optional pagination. */
 export const getInvitesByOrganizationId = reactCache(
   async (organizationId: string, page?: number): Promise<TInvite[]> => {
     validateInputs([organizationId, z.string()], [page, z.number().optional()]);
@@ -75,6 +78,7 @@ export const getInvitesByOrganizationId = reactCache(
   }
 );
 
+/** Creates an invite record for a new organization member, checking for duplicates, existing memberships, and valid team IDs. */
 export const inviteUser = async ({
   invitee,
   organizationId,
@@ -146,6 +150,7 @@ export const inviteUser = async ({
   }
 };
 
+/** Deletes a pending invite by ID. */
 export const deleteInvite = async (inviteId: string): Promise<boolean> => {
   try {
     const invite = await prisma.invite.delete({
@@ -172,6 +177,7 @@ export const deleteInvite = async (inviteId: string): Promise<boolean> => {
   }
 };
 
+/** Fetches an invite by ID including the creator's name. */
 export const getInvite = reactCache(async (inviteId: string): Promise<InviteWithCreator | null> => {
   try {
     const invite = await prisma.invite.findUnique({

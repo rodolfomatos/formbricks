@@ -1,3 +1,4 @@
+/** API key access control — enums and schemas for organization-level API key permissions and access types. */
 import { z } from "zod";
 
 export enum OrganizationAccessType {

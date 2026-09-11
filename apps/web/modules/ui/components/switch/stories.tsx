@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the Switch component.
+ * Covers default, with-label, disabled, and right-aligned variants.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { Label } from "../label";
 import { Switch } from "./index";

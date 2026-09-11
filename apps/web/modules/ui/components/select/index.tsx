@@ -1,3 +1,7 @@
+/**
+ * Styled select component built on Radix Select primitive.
+ * Provides Root, Trigger, Content, Item, Group, Label, Separator, and Value sub-components.
+ */
 "use client";
 
 import * as SelectPrimitive from "@radix-ui/react-select";

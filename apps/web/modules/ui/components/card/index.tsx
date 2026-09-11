@@ -1,3 +1,7 @@
+/**
+ * Compound card component with header, title, description, content, and footer sub-components.
+ * Provides a consistent bordered container pattern used throughout the UI for grouping content.
+ */
 import * as React from "react";
 import { cn } from "@/lib/cn";
 

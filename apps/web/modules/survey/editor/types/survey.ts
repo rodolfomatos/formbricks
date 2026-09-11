@@ -21,4 +21,5 @@ export const ZSurveyDraft = z.looseObject({
   segment: z.record(z.string(), z.unknown()).nullable().optional(),
 }); // Allow all other fields without validation
 
+/** Inferred type for draft survey payloads (lenient validation). */
 export type TSurveyDraft = z.infer<typeof ZSurveyDraft>;

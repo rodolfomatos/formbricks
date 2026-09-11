@@ -1,3 +1,10 @@
+/**
+ * Billing usage cycle window calculation.
+ *
+ * Computes the start/end of the current billing period given an anchor date.
+ * If no anchor is set, falls back to the calendar month. Used by the quota
+ * and billing modules to determine what counts toward the current cycle.
+ */
 import { TOrganizationBilling } from "@formbricks/types/organizations";
 
 type TBillingInput = Pick<TOrganizationBilling, "usageCycleAnchor">;
@@ -48,6 +55,15 @@ const getCalendarMonthWindow = (now: Date): TUsageCycleWindow => {
   return { start, end };
 };
 
+/**
+ * Computes the current monthly usage window based on the organisation's anchor date.
+ * Walks forward/backward in month increments to find the period containing `now`.
+ * Falls back to calendar month if anchor is null.
+ *
+ * @param usageCycleAnchor — the anchor date for the billing cycle
+ * @param now — the reference "now" time
+ * @returns — { start, end } of the current cycle window
+ */
 export const getMonthlyUsageCycleWindow = (
   usageCycleAnchor: Date | null,
   now = new Date()
@@ -79,6 +95,7 @@ export const getMonthlyUsageCycleWindow = (
   return { start, end };
 };
 
+/** Convenience wrapper: extracts `usageCycleAnchor` from the billing object and computes the window. */
 export const getBillingUsageCycleWindow = (billing: TBillingInput, now = new Date()): TUsageCycleWindow => {
   return getMonthlyUsageCycleWindow(billing.usageCycleAnchor, now);
 };

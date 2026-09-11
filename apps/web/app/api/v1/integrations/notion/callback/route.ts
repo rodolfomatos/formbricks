@@ -20,6 +20,11 @@ import { capturePostHogEvent } from "@/lib/posthog";
 import { getOrganizationIdFromWorkspaceId } from "@/lib/utils/helper";
 import { hasUserWorkspaceAccess } from "@/lib/workspace/auth";
 
+/**
+ * GET /api/v1/integrations/notion/callback
+ * Handles the Notion OAuth callback. Exchanges the authorization code for a token,
+ * encrypts and stores it, and redirects back to the integration settings page.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ req, authentication }) => {
     if (!authentication || !("user" in authentication)) {

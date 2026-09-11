@@ -3,15 +3,18 @@ import { prisma } from "@formbricks/database";
 import type { IdentityProvider } from "@formbricks/database/prisma";
 import { logger } from "@formbricks/logger";
 import type { TUser } from "@formbricks/types/user";
-import { WEBAPP_URL } from "@/lib/constants";
+import { SKIP_INVITE_FOR_SSO, WEBAPP_URL } from "@/lib/constants";
 import { getIsFreshInstance } from "@/lib/instance/service";
 import { verifyInviteToken } from "@/lib/jwt";
 import { createMembership } from "@/lib/membership/service";
+import { createOrganization } from "@/lib/organization/service";
+import { DEFAULT_WORKSPACE_NAME } from "@/lib/workspace/constants";
 import { findMatchingLocale } from "@/lib/utils/locale";
 import { redactPII } from "@/lib/utils/logger-helpers";
 import { createBrevoCustomer } from "@/modules/auth/lib/brevo";
 import { createUser, getUserByEmail, updateUser } from "@/modules/auth/lib/user";
 import { getIsValidInviteToken } from "@/modules/auth/signup/lib/invite";
+import { createWorkspace } from "@/modules/workspaces/settings/lib/workspace";
 import { LINKED_SSO_LOOKUP_SELECT, syncSsoIdentityForUser } from "./account-linking";
 import { getSsoProviderLookupCandidates, normalizeSsoProvider } from "./provider-normalization";
 import { startSsoRecovery } from "./sso-recovery";
@@ -135,7 +138,9 @@ const provisionNewSsoUser = async ({
   const isFirstUser = await getIsFreshInstance();
 
   if (!isFirstUser) {
-    if (callbackUrl) {
+    if (SKIP_INVITE_FOR_SSO) {
+      logger.debug("SKIP_INVITE_FOR_SSO is enabled, bypassing invite check for SSO user");
+    } else if (callbackUrl) {
       try {
         const parsedUrl = new URL(callbackUrl);
         const inviteToken = parsedUrl.searchParams.get("token");
@@ -207,6 +212,10 @@ const provisionNewSsoUser = async ({
   });
 
   logger.debug({ newUserId: userProfile.id, identityProvider: provider }, "New SSO user created");
+
+  const organization = await createOrganization({ name: `${userProfile.name}'s Organization` });
+  await createMembership(organization.id, userProfile.id, { role: "owner", accepted: true });
+  await createWorkspace(organization.id, { name: DEFAULT_WORKSPACE_NAME });
 
   createBrevoCustomer({ id: userProfile.id, email: userProfile.email });
 

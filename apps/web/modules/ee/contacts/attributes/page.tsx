@@ -1,40 +1,47 @@
-import { getLocale } from "@/lingodotdev/language";
+import { prisma } from "@formbricks/database";
 import { getTranslate } from "@/lingodotdev/server";
-import { ContactsPageLayout } from "@/modules/ee/contacts/components/contacts-page-layout";
-import { getContactAttributeKeys } from "@/modules/ee/contacts/lib/contact-attribute-keys";
-import { getIsContactsEnabled } from "@/modules/ee/license-check/lib/utils";
 import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
-import { AttributesTable } from "./components/attributes-table";
-import { CreateAttributeModal } from "./components/create-attribute-modal";
 
-export const AttributesPage = async ({
-  params: paramsProps,
-}: {
+interface AttributesPageProps {
   params: Promise<{ workspaceId: string }>;
-}) => {
-  const params = await paramsProps;
-  const locale = await getLocale();
+}
+
+export const AttributesPage = async (props: AttributesPageProps) => {
+  const params = await props.params;
   const t = await getTranslate();
-  const { isReadOnly, organization, workspace } = await getWorkspaceAuth(params.workspaceId);
+  const { workspace } = await getWorkspaceAuth(params.workspaceId);
 
-  const contactAttributeKeys = await getContactAttributeKeys(workspace.id);
-
-  const isContactsEnabled = await getIsContactsEnabled(organization.id);
+  const keys = await prisma.contactAttributeKey.findMany({
+    where: { workspaceId: workspace.id },
+    orderBy: { createdAt: "asc" },
+  });
 
   return (
-    <ContactsPageLayout
-      pageTitle={t("common.contacts")}
-      activeId="attributes"
-      workspaceId={params.workspaceId}
-      isContactsEnabled={isContactsEnabled}
-      isReadOnly={isReadOnly}
-      cta={<CreateAttributeModal workspaceId={workspace.id} />}>
-      <AttributesTable
-        contactAttributeKeys={contactAttributeKeys}
-        isReadOnly={isReadOnly}
-        workspaceId={params.workspaceId}
-        locale={locale}
-      />
-    </ContactsPageLayout>
+    <div>
+      <h1 className="text-2xl font-semibold">{t("common.attributes")}</h1>
+      <p className="text-muted-foreground text-sm">{keys.length} keys</p>
+      <table className="mt-4 w-full text-left text-sm">
+        <thead>
+          <tr className="border-b">
+            <th className="py-2 pr-4 font-medium">Key</th>
+            <th className="py-2 pr-4 font-medium">Name</th>
+            <th className="py-2 pr-4 font-medium">Type</th>
+            <th className="py-2 pr-4 font-medium">Data Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {keys.map((key) => (
+            <tr key={key.id} className="border-b">
+              <td className="py-2 pr-4 font-mono text-xs">{key.key}</td>
+              <td className="py-2 pr-4">{key.name}</td>
+              <td className="py-2 pr-4">{key.type}</td>
+              <td className="py-2 pr-4">{key.dataType}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
+
+export default AttributesPage;

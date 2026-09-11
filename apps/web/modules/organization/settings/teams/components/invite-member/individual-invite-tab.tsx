@@ -32,6 +32,7 @@ interface IndividualInviteTabProps {
   enterpriseLicenseRequestFormUrl: string;
 }
 
+/** Form tab for inviting a single member — name, email, role selection, and optional team assignment. */
 export const IndividualInviteTab = ({
   setOpen,
   onSubmit,

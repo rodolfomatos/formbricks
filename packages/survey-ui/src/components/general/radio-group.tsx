@@ -1,3 +1,4 @@
+/** Radio group — Radix UI radio group with survey styling, error state, and RTL direction support. */
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { CircleIcon } from "lucide-react";
 import * as React from "react";

@@ -1,3 +1,4 @@
+/** Generic dropdown with optional icon per option — used by rating-scale/range selectors in CES/CSAT/Rating element forms. */
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ChevronDownIcon } from "lucide-react";
 import { useEffect, useState } from "react";

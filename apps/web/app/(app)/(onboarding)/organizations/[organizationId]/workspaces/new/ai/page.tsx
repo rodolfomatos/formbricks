@@ -13,6 +13,11 @@ interface AIOnboardingPageProps {
   }>;
 }
 
+/**
+ * Route: `/organizations/[organizationId]/workspaces/new/ai` (onboarding).
+ * Shows the AI-powered survey creation form for building the first survey via a text prompt.
+ * Redirects back to survey options if AI is unavailable.
+ */
 const Page = async (props: AIOnboardingPageProps) => {
   const params = await props.params;
 

@@ -10,6 +10,9 @@ export interface SurveyContextType {
 const SurveyContext = createContext<SurveyContextType | null>(null);
 SurveyContext.displayName = "SurveyContext";
 
+/**
+ * Returns the survey from context. Throws if used outside a SurveyContextWrapper.
+ */
 export const useSurvey = () => {
   const context = useContext(SurveyContext);
   if (!context) {
@@ -24,6 +27,10 @@ interface SurveyContextWrapperProps {
   children: React.ReactNode;
 }
 
+/**
+ * Provider component that makes the current survey data available to the client component tree.
+ * Memoizes the context value to prevent unnecessary re-renders.
+ */
 export const SurveyContextWrapper = ({ survey, children }: SurveyContextWrapperProps) => {
   const surveyContextValue = useMemo(
     () => ({

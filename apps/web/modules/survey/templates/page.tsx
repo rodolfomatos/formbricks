@@ -8,6 +8,11 @@ import { getWorkspaceWithTeamIds } from "@/modules/survey/lib/workspace";
 import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
 import { TemplateContainerWithPreview } from "./components/template-container";
 
+/**
+ * Server-rendered page at the `/workspaces/[workspaceId]/templates` route.
+ * Authenticates the user, loads workspace data, and renders the template
+ * picker with a live preview sidebar.
+ */
 interface SurveyTemplateProps {
   params: Promise<{
     workspaceId: string;

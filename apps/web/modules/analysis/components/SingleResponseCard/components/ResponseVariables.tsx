@@ -6,12 +6,13 @@ import { TResponseVariables } from "@formbricks/types/responses";
 import { TSurveyVariables } from "@formbricks/types/surveys/types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/modules/ui/components/tooltip";
 
-interface HiddenFieldsProps {
+interface ResponseVariablesProps {
   variables: TSurveyVariables;
   variablesData: TResponseVariables;
 }
 
-export const ResponseVariables = ({ variables, variablesData }: HiddenFieldsProps) => {
+/** Displays the computed survey variable values (string/number only) at the end of a response card. */
+export const ResponseVariables = ({ variables, variablesData }: ResponseVariablesProps) => {
   const { t } = useTranslation();
   return (
     <div className="mt-6 flex flex-col gap-6">

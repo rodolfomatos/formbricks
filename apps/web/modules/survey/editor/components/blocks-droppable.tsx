@@ -1,3 +1,4 @@
+/** Sortable container that renders all survey blocks — wraps each block in a BlockCard and provides DnD context for block reordering. */
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Workspace } from "@formbricks/database/prisma-browser";

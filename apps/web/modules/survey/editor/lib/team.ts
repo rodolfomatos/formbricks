@@ -2,6 +2,7 @@ import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
 import { TFollowUpEmailToUser } from "@/modules/survey/editor/types/survey-follow-up";
 
+/** Fetches unique team member email+name details for all given team IDs. Used for follow-up email recipient selection. */
 export const getTeamMemberDetails = reactCache(async (teamIds: string[]): Promise<TFollowUpEmailToUser[]> => {
   if (teamIds.length === 0) {
     return [];

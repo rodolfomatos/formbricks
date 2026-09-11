@@ -4,6 +4,10 @@ import { responses } from "@/app/lib/api/response";
 import { THandlerParams, withV1ApiWrapper } from "@/app/lib/api/with-api-logging";
 import { hasPermission } from "@/modules/organization/settings/api-keys/lib/utils";
 
+/**
+ * GET /api/v1/webhooks/[webhookId]
+ * Returns a single webhook by ID. Authorizes against the webhook's workspace.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ props, authentication }: THandlerParams<{ params: Promise<{ webhookId: string }> }>) => {
     if (!authentication || !("apiKeyId" in authentication)) {
@@ -29,6 +33,11 @@ export const GET = withV1ApiWrapper({
   },
 });
 
+/**
+ * DELETE /api/v1/webhooks/[webhookId]
+ * Deletes a webhook by ID. Authorizes against the webhook's workspace and
+ * logs an audit event on success.
+ */
 export const DELETE = withV1ApiWrapper({
   handler: async ({
     req,

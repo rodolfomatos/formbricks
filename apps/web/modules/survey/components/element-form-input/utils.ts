@@ -9,7 +9,14 @@ import { TSurvey } from "@formbricks/types/surveys/types";
 import { createI18nString } from "@/lib/i18n/utils";
 import { isLabelValidForAllLanguages } from "@/lib/i18n/utils";
 
-// Function to get index for choice /rowLabel /columnLabel
+/**
+ * Parses the numeric index from a compound field ID (e.g., "choice-2" returns 2).
+ * Used to locate which choice, row, or column within a survey element an input field belongs to.
+ *
+ * @param id — the field identifier which may contain a suffix like "-0", "-1" etc.
+ * @param isChoice — whether the field is a choice/row/column that uses indexed IDs
+ * @returns — the parsed index, or null if the ID has no index suffix
+ */
 export const getIndex = (id: string, isChoice: boolean) => {
   if (!isChoice) return null;
 
@@ -20,6 +27,10 @@ export const getIndex = (id: string, isChoice: boolean) => {
   return null;
 };
 
+/**
+ * Retrieves the i18n label for a specific choice within a multiple-choice question.
+ * Falls back to an empty i18n string if the choice index is out of range.
+ */
 export const getChoiceLabel = (
   question: TSurveyElement,
   choiceIdx: number,
@@ -29,6 +40,10 @@ export const getChoiceLabel = (
   return choiceQuestion.choices[choiceIdx]?.label || createI18nString("", surveyLanguageCodes);
 };
 
+/**
+ * Retrieves the i18n label for a specific row or column within a matrix question.
+ * Falls back to an empty i18n string if the index is out of range.
+ */
 export const getMatrixLabel = (
   question: TSurveyElement,
   idx: number,
@@ -40,6 +55,10 @@ export const getMatrixLabel = (
   return matrixFields[idx]?.label || createI18nString("", surveyLanguageCodes);
 };
 
+/**
+ * Extracts a localized text field from the welcome card of a survey by property ID.
+ * Used by ElementFormInput to display and edit welcome-card properties like headline or subheader.
+ */
 export const getWelcomeCardText = (
   survey: TSurvey,
   id: string,
@@ -49,6 +68,11 @@ export const getWelcomeCardText = (
   return (card[id as keyof typeof card] as TI18nString) || createI18nString("", surveyLanguageCodes);
 };
 
+/**
+ * Extracts a localized text field from an ending card (end-screen) by property ID.
+ * Non-end-screen endings return an empty i18n string. The ending card is identified
+ * by offsetting the question index past the total question count.
+ */
 export const getEndingCardText = (
   survey: TSurvey,
   questions: TSurveyElement[],
@@ -66,6 +90,11 @@ export const getEndingCardText = (
   }
 };
 
+/**
+ * Decides whether the image/video uploader button should be visible for a given question slot.
+ * Always hidden for the welcome card (index -1); for regular questions it is shown only when
+ * an image or video URL is already set.
+ */
 export const determineImageUploaderVisibility = (questionIdx: number, questions: TSurveyElement[]) => {
   switch (questionIdx) {
     case -1: // Welcome Card
@@ -78,6 +107,10 @@ export const determineImageUploaderVisibility = (questionIdx: number, questions:
   }
 };
 
+/**
+ * Returns the translation-key-based placeholder text for a given input field ID.
+ * Headlines and subheaders get contextual placeholders; all other fields get empty string.
+ */
 export const getPlaceHolderById = (id: string, t: TFunction) => {
   switch (id) {
     case "headline":
@@ -89,6 +122,12 @@ export const getPlaceHolderById = (id: string, t: TFunction) => {
   }
 };
 
+/**
+ * Checks whether a multi-language field value is incomplete for validation purposes.
+ * A value is incomplete when the field is marked invalid, the label fails validation
+ * across all survey languages, and (for known label IDs) the default value is non-empty
+ * but not fully translated.
+ */
 export const isValueIncomplete = (
   id: string,
   isInvalid: boolean,

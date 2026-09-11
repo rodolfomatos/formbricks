@@ -1,3 +1,8 @@
+/**
+ * Renders the workspace or survey logo. Supports overlay (absolute positioned) and inline positions.
+ * In preview mode, clicking navigates to logo settings. Handles the case where no logo is set
+ * by showing a dashed placeholder.
+ */
 "use client";
 
 import { ArrowUpRight } from "lucide-react";

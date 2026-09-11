@@ -1,3 +1,4 @@
+/** Form editor for the Date question element — headline, subheader, and date validation rules editor. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

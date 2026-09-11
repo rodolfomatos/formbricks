@@ -4,9 +4,17 @@ import { TGatewayOriginalRequest, buildGatewayStatusResponse } from "@/modules/g
 
 const TRAEFIK_AUTH_PREFIX = "/api/traefik-auth";
 
+/**
+ * Guard that the pathname starts with the Traefik auth prefix to reject
+ * requests hitting this handler from the wrong route.
+ */
 const isTraefikAuthPath = (pathname: string): boolean =>
   pathname === TRAEFIK_AUTH_PREFIX || pathname.startsWith(`${TRAEFIK_AUTH_PREFIX}/`);
 
+/**
+ * Reconstruct the full upstream URL from Traefik's forwarded headers,
+ * falling back to the x-forwarded-proto/host when the URI is relative.
+ */
 const buildForwardedRequestUrl = (request: NextRequest, forwardedUri: string): URL => {
   if (forwardedUri.startsWith("http://") || forwardedUri.startsWith("https://")) {
     return new URL(forwardedUri);
@@ -19,8 +27,20 @@ const buildForwardedRequestUrl = (request: NextRequest, forwardedUri: string): U
   return new URL(normalizedUri, `${proto}://${host}`);
 };
 
+/**
+ * Build a simple 200 response that signals Traefik to forward the request.
+ *
+ * @returns — an empty 200 response
+ */
 export const buildTraefikAllowResponse = (): Response => new Response(null, { status: 200 });
 
+/**
+ * Extract the original request method and URI from Traefik's
+ * x-forwarded-method and x-forwarded-uri headers.
+ *
+ * @param request — the forward-auth check request
+ * @returns — the reconstructed original request or an error response
+ */
 export const parseTraefikRequestMetadata = (
   request: NextRequest
 ): { originalRequest: TGatewayOriginalRequest } | { errorResponse: Response } => {

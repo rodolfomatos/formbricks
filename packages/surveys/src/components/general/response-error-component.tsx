@@ -1,3 +1,4 @@
+/** Response error component — displays a server-side error summary with question-by-question error details and a retry button. */
 import { useTranslation } from "react-i18next";
 import { type TResponseData } from "@formbricks/types/responses";
 import { type TSurveyElement } from "@formbricks/types/surveys/elements";

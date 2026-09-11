@@ -1,3 +1,4 @@
+/** Dropdown to choose between AND/OR validation logic combinators for multi-rule validation. */
 "use client";
 
 import { useTranslation } from "react-i18next";

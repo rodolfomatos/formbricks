@@ -1,3 +1,4 @@
+/** Action toolbar (move up/down, duplicate, delete) for reordering blocks in the survey editor. */
 "use client";
 
 import { ArrowDownIcon, ArrowUpIcon, CopyIcon, TrashIcon } from "lucide-react";

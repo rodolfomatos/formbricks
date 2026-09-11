@@ -15,6 +15,11 @@ import { getErrorResponseFromStorageError } from "@/modules/storage/utils";
 // uploading public files requires authentication
 // use this to get a signed url for uploading a public file for a specific resource, e.g. a survey's background image
 
+/**
+ * POST /api/v1/management/storage
+ * Returns a signed upload URL for a public file (e.g. survey background image).
+ * Max file size is 5 MB. Requires authentication.
+ */
 export const POST = withV1ApiWrapper({
   handler: async ({ req, authentication }) => {
     let storageInput;

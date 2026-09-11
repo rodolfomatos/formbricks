@@ -99,6 +99,7 @@ const getSmiley = ({
   );
 };
 
+/** Renders a smiley-face icon for rating-type survey elements, selecting the appropriate face icon based on position and range. */
 export const RatingSmiley = ({
   active,
   idx,

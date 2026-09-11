@@ -12,6 +12,14 @@ import {
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { ApiResponseWithMeta } from "@/modules/api/v2/types/api-success";
 
+/**
+ * Lists users within an organization with filtering and pagination.
+ * Enriches users with role and team memberships.
+ *
+ * @param organizationId — The organization to list users for
+ * @param params — Filter and pagination parameters
+ * @returns — Paginated list of enriched user objects
+ */
 export const getUsers = async (
   organizationId: string,
   params: TGetUsersFilter
@@ -72,6 +80,13 @@ export const getUsers = async (
   }
 };
 
+/**
+ * Creates a new user in an organization with optional team memberships.
+ *
+ * @param userInput — The user data (name, email, role, teams, isActive)
+ * @param organizationId — The organization to create the user in
+ * @returns — The created user with role and teams
+ */
 export const createUser = async (
   userInput: TUserInput,
   organizationId: string
@@ -164,6 +179,14 @@ export const createUser = async (
   }
 };
 
+/**
+ * Updates an existing user's profile, role, team memberships, and active status.
+ * Handles adding/removing team memberships within the authenticated organization.
+ *
+ * @param userInput — The fields to update (name, email, role, teams, isActive)
+ * @param organizationId — The organization context for the update
+ * @returns — The updated user with role and teams
+ */
 export const updateUser = async (
   userInput: TUserInputPatch,
   organizationId: string

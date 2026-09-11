@@ -11,6 +11,7 @@ interface SurveyCompletedMessageProps {
   workspace?: Pick<Workspace, "linkSurveyBranding">;
 }
 
+/** Shows a "survey already answered" message for single-use surveys that have been completed. */
 export const SurveyCompletedMessage = async ({
   singleUseMessage,
   workspace,

@@ -1,3 +1,6 @@
+/**
+ * npm brand icon SVG (filled red npm logo).
+ */
 export const NpmIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg

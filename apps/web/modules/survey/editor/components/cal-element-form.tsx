@@ -1,3 +1,4 @@
+/** Form editor for the Cal.com booking question element — headline, subheader, Cal username, and optional custom hostname. */
 "use client";
 
 import { PlusIcon } from "lucide-react";

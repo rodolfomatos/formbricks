@@ -1,3 +1,9 @@
+/**
+ * reCAPTCHA v3 utilities: loads the Google reCAPTCHA script and executes verification.
+ * Returns a token string that can be verified server-side for spam protection.
+ */
+export {};
+
 declare global {
   interface Window {
     grecaptcha: {

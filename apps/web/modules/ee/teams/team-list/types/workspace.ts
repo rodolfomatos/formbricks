@@ -1,8 +1,6 @@
-import { z } from "zod";
-
-export const ZOrganizationWorkspace = z.object({
-  id: z.string(),
-  name: z.string(),
-});
-
-export type TOrganizationWorkspace = z.infer<typeof ZOrganizationWorkspace>;
+export interface TOrganizationWorkspace {
+  id: string;
+  name: string;
+  teamId: string;
+  permission: string;
+}

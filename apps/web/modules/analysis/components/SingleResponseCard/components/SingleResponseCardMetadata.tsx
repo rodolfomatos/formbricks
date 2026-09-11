@@ -16,6 +16,7 @@ interface InfoIconButtonProps {
   maxWidth?: string;
 }
 
+/** Icon button that shows a tooltip on hover, used for contact attributes, device info, and language metadata. */
 const InfoIconButton = ({
   icon: Icon,
   tooltipContent,
@@ -43,6 +44,7 @@ interface SingleResponseCardMetadataProps {
   locale: TUserLocale;
 }
 
+/** Displays metadata badges for a response — contact attributes, user-agent/device info, and response language. */
 export const SingleResponseCardMetadata = ({ response, locale }: SingleResponseCardMetadataProps) => {
   const { t } = useTranslation();
 

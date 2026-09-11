@@ -1,5 +1,9 @@
 import { STORAGE_CONFIGURATION_ERROR_CODES, type TStorageApiErrorDetails } from "@formbricks/types/storage";
 
+/**
+ * Categorised error codes for file-upload operations. Used to surface
+ * specific, translatable error messages to users.
+ */
 export enum FileUploadError {
   NO_FILE = "no_file",
   INVALID_FILE_TYPE = "invalid_file_type",
@@ -40,8 +44,15 @@ const getFileUploadErrorFromResponse = async (response: Response): Promise<FileU
   return FileUploadError.UPLOAD_FAILED;
 };
 
+/**
+ * Convert a File to a base64 data URL string so it can be embedded in
+ * FormData for S3 presigned-post uploads.
+ *
+ * @param file — the file to convert
+ * @returns — a promise resolving to the base64 data URL
+ */
 export const toBase64 = (file: File) =>
-  new Promise((resolve, reject) => {
+  new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
@@ -50,6 +61,21 @@ export const toBase64 = (file: File) =>
     reader.onerror = reject;
   });
 
+/**
+ * Upload a file through the Formbricks management API. Validates size,
+ * requests a presigned URL, and pushes the file to S3 via the presigned POST.
+ *
+ * @param file — the file to upload
+ * @param workspaceId — used to scope the storage path
+ * @param allowedFileExtensions — optional filter; rejects unlisted extensions server-side
+ * @returns — the final file URL on success, or an error code
+ *
+ * @example
+ * ```typescript
+ * const { error, url } = await handleFileUpload(myFile, "ws_123");
+ * if (error) showFileUploadErrorToast(error, t);
+ * ```
+ */
 export const handleFileUpload = async (
   file: File,
   workspaceId: string,

@@ -1,3 +1,4 @@
+/** Workspace schemas — styling overrides, language config, channel/industry settings, and workspace CRUD. */
 import { z } from "zod";
 import { ZColor, ZOverlay, ZPlacement } from "./common";
 import { ZBaseStyling, ZLogo } from "./styling";

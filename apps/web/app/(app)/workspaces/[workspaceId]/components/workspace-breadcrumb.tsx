@@ -36,6 +36,10 @@ interface WorkspaceBreadcrumbProps {
   isMembershipPending: boolean;
 }
 
+/**
+ * Breadcrumb dropdown for switching between workspaces within the current organization.
+ * Lazy-loads the workspace list when the dropdown is first opened.
+ */
 export const WorkspaceBreadcrumb = ({
   currentWorkspaceId,
   currentWorkspaceName,

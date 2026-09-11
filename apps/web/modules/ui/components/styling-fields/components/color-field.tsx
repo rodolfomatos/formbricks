@@ -1,3 +1,6 @@
+/**
+ * Form field for selecting a color value via the ColorPicker component.
+ */
 "use client";
 
 import { ColorPicker } from "@/modules/ui/components/color-picker";

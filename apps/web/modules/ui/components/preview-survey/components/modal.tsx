@@ -1,3 +1,7 @@
+/**
+ * Preview modal overlay for displaying surveys in modal preview mode.
+ * Handles placement, scaling, overlay darkening, click-outside close, and slide animation.
+ */
 "use client";
 
 import { ReactNode, useEffect, useRef, useState } from "react";

@@ -9,6 +9,7 @@ export const ZApiKeyWorkspacePermission = z.object({
   permission: ZApiKeyPermission,
 });
 
+/** Zod schema for creating an API key — label, optional workspace permissions, and organization access level. */
 export const ZApiKeyCreateInput = z
   .object({
     label: z.string(),

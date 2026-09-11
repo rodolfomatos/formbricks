@@ -1,3 +1,7 @@
+/**
+ * Tooltip components built on Radix Tooltip primitive with a styled content wrapper.
+ * Also provides TooltipRenderer for conditional rendering with configurable delay.
+ */
 "use client";
 
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";

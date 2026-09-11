@@ -1,3 +1,7 @@
+/**
+ * Form for configuring a no-code action (click, page view, exit intent, scroll, dwell).
+ * Shows different sub-forms depending on the selected action type. Uses react-hook-form.
+ */
 "use client";
 
 import { InfoIcon } from "lucide-react";

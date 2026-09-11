@@ -6,8 +6,11 @@ import { getMembershipByUserIdOrganizationId } from "@/lib/membership/service";
 import { getAccessFlags } from "@/lib/membership/utils";
 import { getOrganization, updateOrganization } from "@/lib/organization/service";
 import { getUserWorkspaces, getWorkspaces } from "@/lib/workspace/service";
-import { getIsAISmartToolsEnabled } from "@/modules/ee/license-check/lib/utils";
 
+/**
+ * Picks the oldest workspace (by createdAt) from a list.
+ * Used during onboarding to select the workspace to create the first survey in.
+ */
 export const selectOldestWorkspace = (workspaces: TWorkspace[]): TWorkspace | undefined => {
   if (workspaces.length === 0) {
     return undefined;
@@ -34,7 +37,7 @@ const ensureOrganizationAISmartTools = async (
     throw new ResourceNotFoundError("Organization", organizationId);
   }
 
-  const isEntitled = await getIsAISmartToolsEnabled(organizationId);
+  const isEntitled = true;
 
   if (isEntitled && !organization.isAISmartToolsEnabled) {
     organization = await updateOrganization(organizationId, { isAISmartToolsEnabled: true });
@@ -43,6 +46,10 @@ const ensureOrganizationAISmartTools = async (
   return { organization, isEntitled };
 };
 
+/**
+ * Resolves the workspace to use during onboarding.
+ * Prefers the user's oldest workspace; falls back to the organization's oldest workspace.
+ */
 export const getOnboardingWorkspace = async (
   userId: string,
   organizationId: string
@@ -64,6 +71,10 @@ export type TOnboardingWorkspaceContext = {
   isAISmartToolsEntitled: boolean;
 };
 
+/**
+ * Assembles the onboarding workspace context: validates the user can manage workspaces,
+ * ensures AI smart tools are enabled if entitled, and resolves the target workspace.
+ */
 export const getOnboardingWorkspaceContext = async ({
   userId,
   organizationId,

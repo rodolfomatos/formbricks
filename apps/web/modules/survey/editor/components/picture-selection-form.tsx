@@ -1,3 +1,4 @@
+/** Form editor for the Picture Selection question element — headline, subheader, image uploads via FileInput, allow-multi toggle, and validation rules for multi-select. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

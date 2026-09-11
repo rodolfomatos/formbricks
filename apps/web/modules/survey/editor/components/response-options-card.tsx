@@ -1,3 +1,4 @@
+/** Response options card under settings — toggles for survey completion redirect (custom URL or end-internal), custom thank-you card (headline/subtitle/button/redirect), and response-undelivered fallback message. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

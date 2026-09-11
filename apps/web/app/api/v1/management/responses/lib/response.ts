@@ -18,6 +18,7 @@ import { validateInputs } from "@/lib/utils/validate";
 import { evaluateResponseQuotas } from "@/modules/ee/quotas/lib/evaluation-service";
 import { getContactByUserId } from "./contact";
 
+/** Prisma select object for fetching responses with contact and tags. */
 export const responseSelection = {
   id: true,
   createdAt: true,
@@ -56,6 +57,10 @@ export const responseSelection = {
   },
 } satisfies Prisma.ResponseSelect;
 
+/**
+ * Creates a response within a Prisma transaction and evaluates response
+ * quotas afterward.
+ */
 export const createResponseWithQuotaEvaluation = async (
   responseInput: TResponseInput
 ): Promise<TResponse> => {
@@ -86,6 +91,9 @@ export const createResponseWithQuotaEvaluation = async (
   return txResponse;
 };
 
+/**
+ * Creates a response record, resolving the contact via userId if provided.
+ */
 export const createResponse = async (
   responseInput: TResponseInput,
   tx?: Prisma.TransactionClient
@@ -141,6 +149,10 @@ export const createResponse = async (
   }
 };
 
+/**
+ * Fetches responses across workspaces with optional pagination. Cached
+ * per request via react cache.
+ */
 export const getResponsesByWorkspaceIds = reactCache(
   async (workspaceIds: string[], limit?: number, offset?: number): Promise<TResponse[]> => {
     validateInputs([workspaceIds, ZId.array()], [limit, ZOptionalNumber], [offset, ZOptionalNumber]);
@@ -178,6 +190,9 @@ export const getResponsesByWorkspaceIds = reactCache(
   }
 );
 
+/**
+ * Fetches responses for a specific survey with cursor-based pagination.
+ */
 export const getResponses = reactCache(
   async (surveyId: string, limit?: number, offset?: number): Promise<TResponse[]> => {
     validateInputs([surveyId, ZId], [limit, ZOptionalNumber], [offset, ZOptionalNumber]);

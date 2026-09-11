@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the Button component.
+ * Covers all variants, sizes, and states (loading, disabled, custom styling).
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
 import { Button } from "./index";

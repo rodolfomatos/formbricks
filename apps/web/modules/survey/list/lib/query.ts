@@ -8,16 +8,19 @@ type TSurveyListKeyInput = {
   filters: TSurveyOverviewFilters;
 };
 
+/** React Query key factory for survey list data with filters. */
 export const surveyKeys = {
   all: ["surveys"] as const,
   lists: () => [...surveyKeys.all, "list"] as const,
   list: (input: TSurveyListKeyInput) => [...surveyKeys.lists(), input] as const,
 };
 
+/** Flattens infinite query pages into a single array of survey items. */
 export function flattenSurveyPages(data?: InfiniteData<TSurveyListPage>): TSurveyListItem[] {
   return data?.pages.flatMap((page) => page.data) ?? [];
 }
 
+/** Removes a survey by ID from infinite query cache data and decrements the total count. Returns undefined if the survey wasn't found. */
 export function removeSurveyFromInfiniteData(
   data: InfiniteData<TSurveyListPage> | undefined,
   surveyId: string

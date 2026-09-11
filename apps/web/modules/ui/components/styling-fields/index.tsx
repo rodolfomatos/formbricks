@@ -1,3 +1,7 @@
+/**
+ * Collapsible styling section with auto-animate, and barrel exports for ColorField, DimensionInput, NumberField, TextField.
+ * StylingSection toggles open/closed revealing child form fields.
+ */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

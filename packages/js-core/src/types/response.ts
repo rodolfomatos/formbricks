@@ -1,3 +1,4 @@
+/** Response data types — lightweight SDK-side response shapes (data, variables, TTC, update payload). */
 export type TResponseData = Record<string, string | number | string[]>;
 
 export type TResponseVariables = Record<string, string | number>;

@@ -1,3 +1,7 @@
+/**
+ * A modal dialog with tab navigation in the header. Resets to the first tab
+ * when the modal closes. Used for multi-section configuration dialogs.
+ */
 import { useEffect, useState } from "react";
 import {
   Dialog,

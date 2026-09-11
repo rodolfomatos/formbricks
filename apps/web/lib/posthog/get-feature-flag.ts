@@ -1,3 +1,8 @@
+/**
+ * Server-side PostHog feature flag evaluation.
+ * Returns `false` if PostHog is not configured, avoiding the need for callers
+ * to guard against a missing API key.
+ */
 import "server-only";
 import { logger } from "@formbricks/logger";
 import { POSTHOG_KEY } from "@/lib/constants";
@@ -13,6 +18,15 @@ const buildPostHogGroups = (context?: TPostHogFeatureFlagContext): Record<string
   return Object.keys(groups).length > 0 ? groups : undefined;
 };
 
+/**
+ * Evaluates a PostHog feature flag on the server side, with optional group context.
+ * Falls back to `false` on any error (network, missing key, etc.).
+ *
+ * @param distinctId — the user identifier
+ * @param flagKey — the feature flag key
+ * @param context — optional group (org/workspace) context
+ * @returns — the flag value, or false
+ */
 export const getPostHogFeatureFlag = async (
   distinctId: string,
   flagKey: string,

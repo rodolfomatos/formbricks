@@ -25,6 +25,7 @@ interface ContactSurveyPageProps {
   searchParams: Promise<TLinkSurveySearchParams>;
 }
 
+/** Generates page metadata for the contact survey page (token-authenticated link survey). */
 export const generateMetadata = async (props: ContactSurveyPageProps): Promise<Metadata> => {
   const { jwt } = await props.params;
   try {
@@ -76,6 +77,7 @@ export const generateMetadata = async (props: ContactSurveyPageProps): Promise<M
   }
 };
 
+/** Token-authenticated contact survey page at /s/contact/[jwt]. Verifies the JWT, checks for existing responses, then renders the survey or inactive screen. */
 export const ContactSurveyPage = async (props: ContactSurveyPageProps) => {
   const searchParams = await props.searchParams;
   const params = await props.params;

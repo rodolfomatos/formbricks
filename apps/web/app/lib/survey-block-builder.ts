@@ -23,6 +23,10 @@ const getDefaultButtonLabel = (label: string | undefined, t: TFunction) =>
 const getDefaultBackButtonLabel = (label: string | undefined, t: TFunction) =>
   createI18nString(label || t("common.back"), []);
 
+/**
+ * Builds a multiple-choice element (single or multi select) with the given
+ * choices, shuffle option, and optional "other" catch-all choice.
+ */
 export const buildMultipleChoiceElement = ({
   id,
   headline,
@@ -66,6 +70,10 @@ export const buildMultipleChoiceElement = ({
   };
 };
 
+/**
+ * Builds an open-text input element with configurable input type (text,
+ * number, email, phone, url) and optional long answer mode.
+ */
 export const buildOpenTextElement = ({
   id,
   headline,
@@ -135,6 +143,9 @@ const buildScaleElement = <T extends TSurveyRatingElement | TSurveyCsatElement |
   } as T;
 };
 
+/**
+ * Builds a star/number rating element via the shared scale element factory.
+ */
 export const buildRatingElement = (params: {
   id?: string;
   headline: string;
@@ -148,6 +159,9 @@ export const buildRatingElement = (params: {
 }): TSurveyRatingElement =>
   buildScaleElement<TSurveyRatingElement>({ ...params, type: TSurveyElementTypeEnum.Rating });
 
+/**
+ * Builds a consent checkbox element with a required confirmation label.
+ */
 export const buildConsentElement = ({
   id,
   headline,
@@ -171,6 +185,9 @@ export const buildConsentElement = ({
   };
 };
 
+/**
+ * Builds a call-to-action button element with optional external link.
+ */
 export const buildCTAElement = ({
   id,
   headline,
@@ -200,6 +217,9 @@ export const buildCTAElement = ({
   };
 };
 
+/**
+ * Builds a Net Promoter Score (0-10) element.
+ */
 export const buildNPSElement = ({
   id,
   headline,
@@ -229,6 +249,9 @@ export const buildNPSElement = ({
   };
 };
 
+/**
+ * Builds a Customer Satisfaction Score (CSAT) element with smiley/number scale.
+ */
 export const buildCsatElement = ({
   scale = "smiley",
   ...params
@@ -244,6 +267,9 @@ export const buildCsatElement = ({
 }): TSurveyCsatElement =>
   buildScaleElement<TSurveyCsatElement>({ ...params, scale, range: 5, type: TSurveyElementTypeEnum.CSAT });
 
+/**
+ * Builds a Customer Effort Score (CES) element with configurable scale and range.
+ */
 export const buildCesElement = ({
   scale = "number",
   range = 5,
@@ -261,7 +287,9 @@ export const buildCesElement = ({
 }): TSurveyCesElement =>
   buildScaleElement<TSurveyCesElement>({ ...params, scale, range, type: TSurveyElementTypeEnum.CES });
 
-// Helper function to create block-level jump logic based on operator
+/**
+ * Creates a block-level jump logic rule (isSkipped / isSubmitted / isClicked).
+ */
 export const createBlockJumpLogic = (
   sourceElementId: string,
   targetBlockId: string,
@@ -291,7 +319,9 @@ export const createBlockJumpLogic = (
   ],
 });
 
-// Helper function to create block-level jump logic based on choice selection
+/**
+ * Creates a block-level jump logic rule triggered by a specific choice selection.
+ */
 export const createBlockChoiceJumpLogic = (
   sourceElementId: string,
   choiceId: string | number,
@@ -325,7 +355,10 @@ export const createBlockChoiceJumpLogic = (
   ],
 });
 
-// Block builder function
+/**
+ * Builds a survey block with elements, optional logic rules, and
+ * translated button labels.
+ */
 export const buildBlock = ({
   id,
   name,

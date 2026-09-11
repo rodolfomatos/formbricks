@@ -10,6 +10,11 @@ import { cn } from "@/lib/cn";
 import { TooltipRenderer } from "@/modules/ui/components/tooltip";
 import { getChannelMapping, getIndustryMapping, getRoleMapping } from "../lib/utils";
 
+/**
+ * Displays role, industry, and channel tags for a template card, plus a branching-logic
+ * indicator. Tags reflect the current filter selection (e.g., if an industry filter is
+ * active, the industry tag shows the selected value instead of "multiple industries").
+ */
 interface TemplateTagsProps {
   template: TTemplate;
   selectedFilter: TTemplateFilter[];

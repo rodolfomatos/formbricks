@@ -1,3 +1,4 @@
+/** Checks whether a URL points to a YouTube video. */
 export const checkForYoutubeUrl = (url: string): boolean => {
   try {
     const youtubeUrl = new URL(url);
@@ -20,6 +21,7 @@ export const checkForYoutubeUrl = (url: string): boolean => {
   }
 };
 
+/** Checks whether a URL points to a Vimeo video. */
 export const checkForVimeoUrl = (url: string): boolean => {
   try {
     const vimeoUrl = new URL(url);
@@ -35,6 +37,7 @@ export const checkForVimeoUrl = (url: string): boolean => {
   }
 };
 
+/** Checks whether a URL points to a Loom video. */
 export const checkForLoomUrl = (url: string): boolean => {
   try {
     const loomUrl = new URL(url);
@@ -50,6 +53,7 @@ export const checkForLoomUrl = (url: string): boolean => {
   }
 };
 
+/** Extracts the YouTube video ID from a URL. */
 export const extractYoutubeId = (url: string): string | null => {
   let id = "";
 
@@ -73,6 +77,7 @@ export const extractYoutubeId = (url: string): string | null => {
   return id || null;
 };
 
+/** Extracts the Vimeo video ID from a URL. */
 export const extractVimeoId = (url: string): string | null => {
   const regExp = /vimeo\.com\/(?:video\/)?(\d+)/;
   const match = regExp.exec(url);
@@ -84,6 +89,7 @@ export const extractVimeoId = (url: string): string | null => {
   return null;
 };
 
+/** Extracts the Loom video ID from a URL. */
 export const extractLoomId = (url: string): string | null => {
   const regExp = /loom\.com\/(?:share|embed)\/([a-zA-Z0-9]+)/;
   const match = regExp.exec(url);
@@ -96,6 +102,7 @@ export const extractLoomId = (url: string): string | null => {
 };
 
 // Always convert a given URL into its embed form if supported.
+/** Converts a video URL to its embed format (YouTube, Vimeo, or Loom). Returns undefined if unsupported. */
 export const convertToEmbedUrl = (url: string): string | undefined => {
   // YouTube
   if (checkForYoutubeUrl(url)) {
@@ -130,6 +137,7 @@ export const convertToEmbedUrl = (url: string): string | undefined => {
  * @param url - URL to validate
  * @returns true if URL is from a supported platform, false otherwise
  */
+/** Checks whether a URL is a valid embeddable video URL from a supported provider. */
 export const isValidVideoUrl = (url: string): boolean => {
   return checkForYoutubeUrl(url) || checkForVimeoUrl(url) || checkForLoomUrl(url);
 };

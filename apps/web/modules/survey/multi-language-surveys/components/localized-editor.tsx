@@ -28,6 +28,7 @@ interface LocalizedEditorProps {
   suppressUpdates?: () => boolean;
 }
 
+/** Rich text editor wrapper that is aware of the currently selected language. Handles markdown-to-HTML conversion, link stripping for non-external-urls-allowed contexts, and card vs element updates. */
 export function LocalizedEditor({
   id,
   value,

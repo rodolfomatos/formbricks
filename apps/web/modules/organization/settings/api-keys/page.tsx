@@ -8,6 +8,7 @@ import { PageHeader } from "@/modules/ui/components/page-header";
 import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
 import { ApiKeyList } from "./components/api-key-list";
 
+/** Serves the organization API Keys settings page — lists and manages API keys with workspace-level permissions. */
 export const APIKeysPage = async (props: { params: Promise<{ workspaceId: string }> }) => {
   const params = await props.params;
   const t = await getTranslate();

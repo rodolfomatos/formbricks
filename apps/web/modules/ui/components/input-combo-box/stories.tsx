@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the InputCombobox component.
+ * Covers default, with-input, multi-select, clearable, grouped, without-search, many-options, custom, and empty-state.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { FileIcon, FolderIcon, ImageIcon } from "lucide-react";
 import { logger } from "@formbricks/logger";

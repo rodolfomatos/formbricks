@@ -1,3 +1,4 @@
+/** CTA (Call to Action) — button-based survey element with optional external link, skippable via "next" button, and error validation. */
 import { SquareArrowOutUpRightIcon } from "lucide-react";
 import * as React from "react";
 import { Button } from "@/components/general/button";

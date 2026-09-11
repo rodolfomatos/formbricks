@@ -1,3 +1,6 @@
+/**
+ * A language from the ISO 639 standard with multi-locale display labels.
+ */
 export interface TIso639Language {
   code: string;
   label: {
@@ -19,6 +22,10 @@ export interface TIso639Language {
   };
 }
 
+/**
+ * Complete ISO 639-1 language list with display labels in 15 locales.
+ * Used to populate language pickers and dropdowns across the app.
+ */
 export const iso639Languages = [
   {
     code: "aa",

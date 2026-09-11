@@ -8,6 +8,11 @@ import { Input } from "@/modules/ui/components/input";
 import { Label } from "@/modules/ui/components/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/modules/ui/components/popover";
 
+/**
+ * Popover form that lets the user provide fallback placeholder values for recall items
+ * embedded in a headline or description. Each recall item that lacks a response gets
+ * its fallback text shown instead. Used inside RecallWrapper.
+ */
 interface FallbackInputProps {
   filteredRecallItems: (TSurveyRecallItem | undefined)[];
   fallbacks: { [type: string]: string };

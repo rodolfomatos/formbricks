@@ -20,6 +20,7 @@ interface ElementSkipProps {
   locale: TUserLocale;
 }
 
+/** Visual indicator for survey elements that were skipped, aborted, or are the welcome card in a response timeline. */
 export const ElementSkip = ({
   skippedElements,
   status,

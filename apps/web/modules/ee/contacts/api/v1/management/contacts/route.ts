@@ -1,43 +1,27 @@
-import { DatabaseError } from "@formbricks/types/errors";
-import { responses } from "@/app/lib/api/response";
-import { withV1ApiWrapper } from "@/app/lib/api/with-api-logging";
-import { getIsContactsEnabled } from "@/modules/ee/license-check/lib/utils";
-import { getContacts } from "./lib/contacts";
+import { prisma } from "@formbricks/database";
+import { NextResponse } from "next/server";
 
-export const GET = withV1ApiWrapper({
-  handler: async ({ authentication }) => {
-    if (!authentication || !("apiKeyId" in authentication)) {
-      return { response: responses.notAuthenticatedResponse() };
-    }
+export const GET = async (request: Request) => {
+  const url = new URL(request.url);
+  const workspaceId = url.searchParams.get("workspaceId");
+  const page = Number(url.searchParams.get("page")) || 1;
+  const limit = Number(url.searchParams.get("limit")) || 50;
+  const skip = (page - 1) * limit;
 
-    try {
-      const isContactsEnabled = await getIsContactsEnabled(authentication.organizationId);
-      if (!isContactsEnabled) {
-        return {
-          response: responses.forbiddenResponse(
-            "Contacts are only enabled for Enterprise Edition, please upgrade."
-          ),
-        };
-      }
+  if (!workspaceId) {
+    return NextResponse.json({ error: "workspaceId is required" }, { status: 400 });
+  }
 
-      const workspaceIds = [
-        ...new Set(authentication.workspacePermissions.map((permission) => permission.workspaceId)),
-      ];
+  const [contacts, total] = await Promise.all([
+    prisma.contact.findMany({
+      where: { workspaceId },
+      select: { id: true, createdAt: true, updatedAt: true },
+      take: limit,
+      skip,
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.contact.count({ where: { workspaceId } }),
+  ]);
 
-      const contacts = await getContacts(workspaceIds);
-
-      return {
-        response: responses.successResponse(contacts),
-      };
-    } catch (error) {
-      if (error instanceof DatabaseError) {
-        return {
-          response: responses.badRequestResponse(error.message),
-        };
-      }
-      throw error;
-    }
-  },
-});
-
-// Please use the client API to create a new contact
+  return NextResponse.json({ data: contacts, meta: { total, page, limit } });
+};

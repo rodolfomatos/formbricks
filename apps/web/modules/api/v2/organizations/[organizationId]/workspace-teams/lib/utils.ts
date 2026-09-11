@@ -7,6 +7,13 @@ import { buildCommonFilterQuery, pickCommonFilter } from "@/modules/api/v2/manag
 import { TGetWorkspaceTeamsFilter } from "@/modules/api/v2/organizations/[organizationId]/workspace-teams/types/workspace-teams";
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 
+/**
+ * Builds a Prisma query filter for listing workspace-team associations.
+ *
+ * @param organizationId — The organization to scope the query to
+ * @param params — Filter parameters
+ * @returns — Prisma find-many arguments
+ */
 export const getWorkspaceTeamsQuery = (organizationId: string, params: TGetWorkspaceTeamsFilter) => {
   const { teamId, workspaceId } = params || {};
 
@@ -50,6 +57,14 @@ export const getWorkspaceTeamsQuery = (organizationId: string, params: TGetWorks
   return query;
 };
 
+/**
+ * Cached validation that a team and workspace both belong to the same organization.
+ *
+ * @param organizationId — The organization
+ * @param teamId — The team to validate
+ * @param workspaceId — The workspace to validate
+ * @returns — True if both belong to the organization
+ */
 export const validateTeamIdAndWorkspaceId = reactCache(
   async (organizationId: string, teamId: string, workspaceId: string) => {
     try {
@@ -88,6 +103,14 @@ export const validateTeamIdAndWorkspaceId = reactCache(
   }
 );
 
+/**
+ * Verifies that a team and workspace are valid within the authenticated user's organization.
+ *
+ * @param teamId — The team to verify
+ * @param workspaceId — The workspace to verify
+ * @param authentication — The authenticated API key data
+ * @returns — True if access is granted
+ */
 export const checkAuthenticationAndAccess = async (
   teamId: string,
   workspaceId: string,

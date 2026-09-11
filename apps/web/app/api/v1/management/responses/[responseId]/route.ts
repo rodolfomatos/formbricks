@@ -44,6 +44,10 @@ async function fetchAndAuthorizeResponse(
   return { response, survey };
 }
 
+/**
+ * GET /api/v1/management/responses/[responseId]
+ * Returns a single response by ID. Resolves storage URLs for file upload data.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ props, authentication }: THandlerParams<{ params: Promise<{ responseId: string }> }>) => {
     const params = await props.params;
@@ -69,6 +73,10 @@ export const GET = withV1ApiWrapper({
   },
 });
 
+/**
+ * DELETE /api/v1/management/responses/[responseId]
+ * Deletes a response by ID. Logs an audit event on success.
+ */
 export const DELETE = withV1ApiWrapper({
   handler: async ({
     props,
@@ -104,6 +112,11 @@ export const DELETE = withV1ApiWrapper({
   targetType: "response",
 });
 
+/**
+ * PUT /api/v1/management/responses/[responseId]
+ * Updates a response. Validates file uploads and response data, triggers pipeline
+ * events (responseUpdated / responseFinished), and logs an audit event.
+ */
 export const PUT = withV1ApiWrapper({
   handler: async ({
     req,

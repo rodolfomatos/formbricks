@@ -1,3 +1,4 @@
+/** API client — generic request helper and typed endpoints for workspace state and user sync. */
 import { wrapThrowsAsync } from "@/lib/common/utils";
 import { type ApiResponse, type ApiSuccessResponse, type CreateOrUpdateUserResponse } from "@/types/api";
 import { type TWorkspaceState } from "@/types/config";

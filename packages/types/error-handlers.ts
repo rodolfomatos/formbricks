@@ -1,3 +1,4 @@
+/** Result type utilities — functional error handling with `ok`/`err` helpers and `match`/`wrap` combinators. */
 export type Result<T, E = Error> = { ok: true; data: T } | { ok: false; error: E };
 
 export const ok = <T, E>(data: T): Result<T, E> => ({ ok: true, data });

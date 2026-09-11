@@ -10,6 +10,10 @@ interface ElementHeaderProps {
   readonly subheaderStyle?: CSSProperties;
 }
 
+/**
+ * Renders a survey question header (headline + optional subheader) within an
+ * email template — supports HTML content inside the headline.
+ */
 export function ElementHeader({
   headline,
   subheader,

@@ -6,6 +6,7 @@ import type { TUserLocale } from "@formbricks/types/user";
 import type { TAIUnavailableReason } from "@/modules/ee/analysis/charts/lib/ai-availability";
 import { CreateWithAIDialog } from "./create-with-ai-dialog";
 
+/** Card that opens the AI survey creation dialog when clicked. Shown as an additional template card with a sparkle icon. */
 type CreateWithAITemplateProps = {
   workspaceId: string;
   language: TUserLocale;

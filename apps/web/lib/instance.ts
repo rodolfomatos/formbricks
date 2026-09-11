@@ -5,6 +5,7 @@ import { prisma } from "@formbricks/database";
 import { Prisma } from "@formbricks/database/prisma";
 import { DatabaseError } from "@formbricks/types/errors";
 
+/** Identifies a deployment instance: a stable, anonymised ID derived from the oldest organisation plus its creation date. */
 export type TInstanceInfo = {
   instanceId: string;
   createdAt: Date;

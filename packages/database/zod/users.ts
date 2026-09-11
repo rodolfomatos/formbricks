@@ -1,3 +1,8 @@
+/**
+ * Zod schemas for User entities — validates user profile, role, team
+ * memberships, and sensitive field stripping (password, 2FA, identity
+ * provider) via `satisfies`.
+ */
 import { z } from "zod";
 import { ZUserEmail, ZUserName } from "../../types/user";
 import { OrganizationRole, User } from "../src/prisma";

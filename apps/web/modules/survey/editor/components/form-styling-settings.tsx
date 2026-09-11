@@ -1,3 +1,4 @@
+/** Collapsible form-styling settings panel — sections for headlines/descriptions, inputs, buttons, and options color/size/weight/shadow controls driven by react-hook-form. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

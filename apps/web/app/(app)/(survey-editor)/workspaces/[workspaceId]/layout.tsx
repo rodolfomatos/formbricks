@@ -3,6 +3,10 @@ import { AuthenticationError, ResourceNotFoundError } from "@formbricks/types/er
 import { getWorkspace } from "@/lib/workspace/service";
 import { workspaceIdLayoutChecks } from "@/modules/workspaces/lib/utils";
 
+/**
+ * Layout for the survey editor route group `(survey-editor)`.
+ * Authenticates the user, validates workspace membership, and renders the editor in a full-height shell.
+ */
 const SurveyEditorWorkspaceLayout = async (props: {
   params: Promise<{ workspaceId: string }>;
   children: React.ReactNode;

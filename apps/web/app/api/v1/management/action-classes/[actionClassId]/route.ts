@@ -29,6 +29,10 @@ const fetchAndAuthorizeActionClass = async (
   return actionClass;
 };
 
+/**
+ * GET /api/v1/management/action-classes/[actionClassId]
+ * Returns a single action class by ID. Authorizes against the workspace.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({
     props,
@@ -58,6 +62,11 @@ export const GET = withV1ApiWrapper({
   },
 });
 
+/**
+ * PUT /api/v1/management/action-classes/[actionClassId]
+ * Updates an action class. Validates input, accepts workspaceId as alternative to
+ * environmentId, and logs an audit event on success.
+ */
 export const PUT = withV1ApiWrapper({
   handler: async ({
     req,
@@ -147,6 +156,10 @@ export const PUT = withV1ApiWrapper({
   targetType: "actionClass",
 });
 
+/**
+ * DELETE /api/v1/management/action-classes/[actionClassId]
+ * Deletes an action class. Logs an audit event on success.
+ */
 export const DELETE = withV1ApiWrapper({
   handler: async ({
     props,

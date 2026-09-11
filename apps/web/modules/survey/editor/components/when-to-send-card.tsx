@@ -1,3 +1,4 @@
+/** Collapsible card to configure app-survey trigger conditions — manage trigger events, delay, auto-close on inactivity, and display-percentage randomiser. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

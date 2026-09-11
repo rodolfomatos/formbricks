@@ -1,3 +1,7 @@
+/**
+ * A dropdown selector for picking an item from a list. Shows the selected item's name
+ * or a placeholder. Used for selecting entities like surveys or segments in forms.
+ */
 import { ChevronDownIcon } from "lucide-react";
 import {
   DropdownMenu,

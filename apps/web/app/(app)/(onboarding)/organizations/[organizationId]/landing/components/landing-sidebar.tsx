@@ -37,6 +37,11 @@ interface LandingSidebarProps {
   isMultiOrgEnabled: boolean;
 }
 
+/**
+ * Sidebar navigation for the onboarding landing page.
+ * Contains an organization switcher dropdown, user profile dropdown with logout,
+ * and a link to documentation. Handles lazy-loading of organizations on dropdown open.
+ */
 export const LandingSidebar = ({ user, organization, isMultiOrgEnabled }: LandingSidebarProps) => {
   const [openCreateOrganizationModal, setOpenCreateOrganizationModal] = useState(false);
   const [organizations, setOrganizations] = useState<{ id: string; name: string }[]>([]);

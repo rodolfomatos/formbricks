@@ -11,6 +11,9 @@ import { getWorkspace } from "@/lib/workspace/service";
 /**
  * Internal IDs derived from a V3 workspace identifier.
  */
+/**
+ * V3 workspace-level context resolved at the start of a request.
+ */
 export type V3WorkspaceContext = {
   /** Workspace ID — the container for surveys. */
   workspaceId: string;

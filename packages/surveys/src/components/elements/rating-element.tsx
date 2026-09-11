@@ -1,3 +1,4 @@
+/** Rating element — renders a rating (star/number/smile) survey question using the survey-ui Rating component, with TTC tracking and i18n localisation. */
 import { useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { Rating } from "@formbricks/survey-ui";

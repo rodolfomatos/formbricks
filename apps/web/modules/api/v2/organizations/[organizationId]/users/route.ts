@@ -20,6 +20,13 @@ import {
 } from "@/modules/api/v2/organizations/[organizationId]/users/types/users";
 import { UNKNOWN_DATA } from "@/modules/ee/audit-logs/types/audit-log";
 
+/**
+ * Handles GET requests for `/api/v2/organizations/[organizationId]/users`. Requires API key authentication. Returns the requested resource(s).
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export const GET = async (request: NextRequest, props: { params: Promise<{ organizationId: string }> }) =>
   authenticatedApiClient({
     request,
@@ -53,6 +60,13 @@ export const GET = async (request: NextRequest, props: { params: Promise<{ organ
     },
   });
 
+/**
+ * Handles POST requests for `/api/v2/organizations/[organizationId]/users`. Requires API key authentication. Creates a new resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param request — The incoming Next.js Request object with parsed body
+ * @returns — A Next.js Response with the operation result
+ */
 export const POST = async (request: Request, props: { params: Promise<{ organizationId: string }> }) =>
   authenticatedApiClient({
     request,
@@ -102,6 +116,13 @@ export const POST = async (request: Request, props: { params: Promise<{ organiza
     targetType: "user",
   });
 
+/**
+ * Handles PATCH requests for `/api/v2/organizations/[organizationId]/users`. Requires API key authentication. Partially updates an existing resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export const PATCH = async (request: Request, props: { params: Promise<{ organizationId: string }> }) =>
   authenticatedApiClient({
     request,

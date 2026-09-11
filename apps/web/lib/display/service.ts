@@ -1,3 +1,11 @@
+/**
+ * Service layer for Displays — records of a survey being shown to a contact.
+ *
+ * Each display represents a single "impression" event. The service exposes read
+ * operations (count, list by survey/contact) plus ownership validation used by
+ * the response pipeline to ensure a display hasn't already been responded to
+ * or doesn't belong to a different workspace.
+ */
 import "server-only";
 import { cache as reactCache } from "react";
 import { z } from "zod";
@@ -16,6 +24,14 @@ export const selectDisplay = {
   contactId: true,
 } satisfies Prisma.DisplaySelect;
 
+/**
+ * Counts displays for a survey, optionally filtered by creation date and response IDs.
+ * Used in the survey summary UI to show impression counts.
+ *
+ * @param surveyId — the survey to count displays for
+ * @param filters — optional date range and response-ID inclusion filter
+ * @returns — the display count
+ */
 export const getDisplayCountBySurveyId = reactCache(
   async (surveyId: string, filters?: TDisplayFilters): Promise<number> => {
     validateInputs([surveyId, ZId], [filters, ZDisplayFilters.optional()]);
@@ -55,6 +71,13 @@ export const getDisplayCountBySurveyId = reactCache(
   }
 );
 
+/**
+ * Lists displays for a single contact across all surveys they've interacted with.
+ * Used on the contact detail page to show survey interaction history.
+ *
+ * @param contactId — the contact to fetch displays for
+ * @returns — displays sorted newest-first
+ */
 export const getDisplaysByContactId = reactCache(
   async (contactId: string): Promise<Pick<TDisplay, "id" | "createdAt" | "surveyId">[]> => {
     validateInputs([contactId, ZId]);
@@ -80,6 +103,15 @@ export const getDisplaysByContactId = reactCache(
   }
 );
 
+/**
+ * Lists displays for a survey, enriched with contact identity attributes (email, userId).
+ * Used in the survey responses view to show who saw the survey.
+ *
+ * @param surveyId — the survey to fetch displays for
+ * @param limit — max records to return (pagination)
+ * @param offset — record offset (pagination)
+ * @returns — displays with contact attributes
+ */
 export const getDisplaysBySurveyIdWithContact = reactCache(
   async (surveyId: string, limit?: number, offset?: number): Promise<TDisplayWithContact[]> => {
     validateInputs(
@@ -146,6 +178,15 @@ export const getDisplaysBySurveyIdWithContact = reactCache(
   }
 );
 
+/**
+ * Fetches display + survey data needed to validate whether a new response can be linked.
+ * Checks performed by the caller: workspace ownership, survey match, response already exists,
+ * and contact match.
+ *
+ * @param displayId — the display to validate
+ * @param tx — optional transaction for atomicity
+ * @returns — relevant display fields, or null if not found
+ */
 export const getDisplayForResponseValidation = async (
   displayId: string,
   tx?: Prisma.TransactionClient
@@ -180,6 +221,17 @@ export const getDisplayForResponseValidation = async (
   }
 };
 
+/**
+ * Comprehensive guard that validates a display belongs to the expected workspace,
+ * survey, contact, and hasn't already been linked to a response. Throws
+ * `InvalidInputError` with a specific message on every mismatch.
+ *
+ * @param displayId — the display to validate
+ * @param workspaceId — expected workspace
+ * @param surveyId — expected survey
+ * @param contactId — expected contact (null for anonymous)
+ * @param tx — optional transaction
+ */
 export const assertDisplayOwnership = async (
   displayId: string,
   workspaceId: string,
@@ -198,6 +250,14 @@ export const assertDisplayOwnership = async (
     throw new InvalidInputError(`Display ${displayId} belongs to a different contact`);
 };
 
+/**
+ * Deletes a display record. Exposed for internal cleanup (e.g. deleting responses
+ * also removes the linked display) but not through user-facing APIs.
+ *
+ * @param displayId — the display to delete
+ * @param tx — optional transaction
+ * @returns — the deleted display
+ */
 export const deleteDisplay = async (displayId: string, tx?: Prisma.TransactionClient): Promise<TDisplay> => {
   validateInputs([displayId, ZId]);
   try {

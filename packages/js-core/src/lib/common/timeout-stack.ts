@@ -1,3 +1,4 @@
+/** Timeout manager — singleton that tracks and clears all active setTimeout handles for safe cleanup on re-init. */
 export class TimeoutStack {
   private static instance: TimeoutStack | null = null;
   private timeouts: { event: string; timeoutId: number }[] = [];

@@ -1,3 +1,7 @@
+/**
+ * Toggle button for selecting mobile/desktop preview mode in the preview panel.
+ * Highlights the active tab with a rounded background.
+ */
 import { ReactNode } from "react";
 
 interface TabOptionProps {

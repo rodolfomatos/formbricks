@@ -12,6 +12,7 @@ const SSO_PROVIDER_MAP = {
   "azure-ad": "azuread",
   azuread: "azuread",
   openid: "openid",
+  saml: "saml",
 } as const satisfies Record<string, IdentityProvider>;
 
 /**

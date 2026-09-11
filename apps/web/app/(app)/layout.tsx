@@ -15,6 +15,12 @@ import { ClientLogout } from "@/modules/ui/components/client-logout";
 import { NoMobileOverlay } from "@/modules/ui/components/no-mobile-overlay";
 import { ToasterClient } from "@/modules/ui/components/toaster-client";
 
+/**
+ * Root layout for the authenticated app route group `(app)`.
+ * Wraps all authenticated pages with NextAuth session provider, PostHog user identification,
+ * Chatwoot widget, toast notifications, and a mobile unsupported-device overlay.
+ * If the signed-in user account is deactivated, renders a client-side logout instead of the app shell.
+ */
 const AppLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(authOptions);
   const user = session?.user?.id ? await getUser(session.user.id) : null;

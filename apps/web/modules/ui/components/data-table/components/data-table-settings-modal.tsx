@@ -1,3 +1,7 @@
+/**
+ * Modal dialog for reordering and toggling column visibility in a data table.
+ * Uses @dnd-kit for sortable drag-and-drop column list.
+ */
 "use client";
 
 import {

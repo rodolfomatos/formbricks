@@ -1,3 +1,6 @@
+/**
+ * Zod schema for the Team entity — a named group within an organization.
+ */
 import { z } from "zod";
 import type { Team } from "../src/prisma";
 

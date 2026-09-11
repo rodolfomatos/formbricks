@@ -1,3 +1,7 @@
+/**
+ * Zod schemas for Organization and OrganizationBilling entities — validates
+ * org metadata, billing limits, and Stripe subscription state.
+ */
 import { z } from "zod";
 import type { Organization, OrganizationBilling } from "../src/prisma";
 

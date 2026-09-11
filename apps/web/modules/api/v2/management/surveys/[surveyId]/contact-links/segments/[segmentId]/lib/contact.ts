@@ -8,6 +8,17 @@ import { getContactAttributeKeys } from "./contact-attribute-key";
 import { getSegment } from "./segment";
 import { getSurvey } from "./surveys";
 
+/**
+ * Cached retrieval of contacts matching a segment's filter criteria.
+ * Generates attribute projections for requested keys (max 20).
+ *
+ * @param surveyId — The survey for validation
+ * @param segmentId — The segment defining contact filters
+ * @param limit — Max contacts to return
+ * @param skip — Pagination offset
+ * @param attributeKeys — Comma-separated attribute keys to include
+ * @returns — Paginated contacts with requested attributes
+ */
 export const getContactsInSegment = reactCache(
   async (surveyId: string, segmentId: string, limit: number, skip: number, attributeKeys?: string) => {
     try {

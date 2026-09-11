@@ -12,9 +12,15 @@ import {
 } from "@/modules/api/v2/management/surveys/[surveyId]/contact-links/segments/[segmentId]/types/contact";
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { getContactSurveyLink } from "@/modules/ee/contacts/lib/contact-survey-link";
-import { getIsContactsEnabled } from "@/modules/ee/license-check/lib/utils";
 import { hasPermission } from "@/modules/organization/settings/api-keys/lib/utils";
 
+/**
+ * Handles GET requests for `/api/v2/management/surveys/[surveyId]/contact-links/segments/[segmentId]`. Requires API key authentication. Returns the requested resource(s).
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export const GET = async (
   request: Request,
   props: { params: Promise<{ surveyId: string; segmentId: string }> }
@@ -33,17 +39,6 @@ export const GET = async (
         return handleApiError(request, {
           type: "bad_request",
           details: [{ field: "params", issue: "missing" }],
-        });
-      }
-
-      const organizationId = await getOrganizationIdFromSurveyId(params.surveyId);
-      const isContactsEnabled = await getIsContactsEnabled(organizationId);
-      if (!isContactsEnabled) {
-        return handleApiError(request, {
-          type: "forbidden",
-          details: [
-            { field: "contacts", issue: "Contacts are only enabled for Enterprise Edition, please upgrade." },
-          ],
         });
       }
 

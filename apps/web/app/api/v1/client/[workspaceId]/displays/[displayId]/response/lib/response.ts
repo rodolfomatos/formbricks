@@ -4,6 +4,10 @@ import { ZId } from "@formbricks/types/common";
 import { DatabaseError, ResourceNotFoundError } from "@formbricks/types/errors";
 import { validateInputs } from "@/lib/utils/validate";
 
+/**
+ * Retrieves the response ID associated with a display, or null if no
+ * response exists yet.
+ */
 export const getResponseIdByDisplayId = async (
   workspaceId: string,
   displayId: string

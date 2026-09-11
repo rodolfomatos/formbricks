@@ -1,3 +1,4 @@
+/** Compositor for element-level advanced settings — renders the element ID updater and, for choice-based elements, the option IDs display. */
 import { TSurveyBlockLogic } from "@formbricks/types/surveys/blocks";
 import { TSurveyElement, TSurveyElementTypeEnum } from "@formbricks/types/surveys/elements";
 import { TSurvey } from "@formbricks/types/surveys/types";

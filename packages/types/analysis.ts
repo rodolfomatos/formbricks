@@ -1,3 +1,4 @@
+/** Analysis chart schemas — Cube.js query shapes, chart visualization config, and widget grid layouts. */
 import { z } from "zod";
 
 // ── Cube.js Query shape (stored as JSON in Chart.query) ─────────────────────

@@ -1,3 +1,7 @@
+/**
+ * Form for configuring a code action — a key input and an informational alert showing
+ * the developer how to use formbricks.track() in their codebase.
+ */
 "use client";
 
 import { Terminal } from "lucide-react";

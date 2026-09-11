@@ -1,3 +1,4 @@
+/** Notion integration schemas — OAuth credentials, database/column mappings, and configuration types. */
 import { z } from "zod";
 import { ZIntegrationBase, ZIntegrationBaseSurveyData } from "./shared-types";
 

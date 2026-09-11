@@ -1,5 +1,6 @@
 import { getTranslate } from "@/lingodotdev/server";
 
+/** Column headers for the webhooks table — webhook name, source, surveys, triggers, and last updated. */
 export const WebhookTableHeading = async () => {
   const t = await getTranslate();
   return (

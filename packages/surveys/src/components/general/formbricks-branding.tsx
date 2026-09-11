@@ -1,3 +1,4 @@
+/** Formbricks branding — renders the "Powered by Formbricks" link in the survey footer with i18n translation. */
 import { useTranslation } from "react-i18next";
 
 export function FormbricksBranding() {

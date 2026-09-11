@@ -1,3 +1,8 @@
+/**
+ * Displays metadata about an action class — its type (code/noCode), key, CSS selector,
+ * inner text, time-on-page config, and URL filters. Used inline in action forms to give
+ * the user a quick summary of what the action tracks.
+ */
 "use client";
 
 import { useTranslation } from "react-i18next";

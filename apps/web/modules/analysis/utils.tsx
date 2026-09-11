@@ -1,7 +1,7 @@
 import { JSX } from "react";
 import { TSurvey } from "@formbricks/types/surveys/types";
 
-// Utility function to render hyperlinked content
+/** Renders text content with auto-detected URLs converted into clickable anchor elements. */
 export const renderHyperlinkedContent = (data: string): JSX.Element[] => {
   // More specific URL pattern
   const urlPattern =
@@ -28,6 +28,7 @@ export const renderHyperlinkedContent = (data: string): JSX.Element[] => {
   );
 };
 
+/** Builds the shareable survey URL for a given survey, domain, and optional language parameter. */
 export const getSurveyUrl = (survey: TSurvey, publicDomain: string, language: string): string => {
   let url = `${publicDomain}/s/${survey.id}`;
   const queryParams: string[] = [];

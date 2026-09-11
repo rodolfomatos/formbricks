@@ -5,6 +5,12 @@ import { TGatewayOriginalRequest, buildGatewayStatusResponse } from "@/modules/g
 const ENVOY_AUTH_PREFIX = "/api/envoy-auth";
 const HEADERS_TO_REMOVE_ON_ALLOW = "x-api-key,authorization,cookie";
 
+/**
+ * Build a 200 response that tells Envoy which upstream headers to strip
+ * before forwarding the request (API key, auth cookie, etc.).
+ *
+ * @returns — an empty 200 with the x-envoy-auth-headers-to-remove header
+ */
 export const buildEnvoyAllowResponse = (): Response =>
   new Response(null, {
     status: 200,
@@ -13,6 +19,13 @@ export const buildEnvoyAllowResponse = (): Response =>
     },
   });
 
+/**
+ * Extract the original upstream request path/method from the Envoy ext-authz
+ * URL. Envoy prefixes the real path under /api/envoy-auth/ so we strip it.
+ *
+ * @param request — the raw ext-authz check request
+ * @returns — the reconstructed original request or an error response
+ */
 export const parseEnvoyRequestMetadata = (
   request: NextRequest
 ): { originalRequest: TGatewayOriginalRequest } | { errorResponse: Response } => {

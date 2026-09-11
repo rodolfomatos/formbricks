@@ -1,3 +1,7 @@
+/**
+ * Red error banner with an X icon, title, and description.
+ * Falls back to default i18n strings when title/description are not provided.
+ */
 "use client";
 
 import { XCircleIcon } from "lucide-react";

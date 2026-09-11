@@ -18,7 +18,10 @@ const parseSchedulingTimePart = (
   return parsedValue;
 };
 
-// Use static NEXT_PUBLIC_* lookups so these values can be safely inlined into client bundles.
+/**
+ * Configuration constants for survey scheduling (auto-publish and auto-close).
+ * Uses env vars with safe fallbacks so values can be inlined in client bundles.
+ */
 export const SURVEY_SCHEDULING_TIME_ZONE =
   process.env.NEXT_PUBLIC_SURVEY_SCHEDULING_TIME_ZONE ?? "Europe/Berlin";
 export const SURVEY_SCHEDULING_LOCAL_HOUR = parseSchedulingTimePart(

@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the Alert component.
+ * Covers default, small, destructive, warning, info, success, icon, and long-content variants.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { LightbulbIcon } from "lucide-react";
 import type * as React from "react";

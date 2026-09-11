@@ -1,3 +1,4 @@
+/** Email schemas — link survey email data for sending survey invitations via email. */
 import { z } from "zod";
 import { ZStorageUrl } from "./common";
 import { ZUserLocale } from "./user";

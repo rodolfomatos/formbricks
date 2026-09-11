@@ -21,6 +21,7 @@ const ZCopySurveyToOtherWorkspaceAction = z.object({
   targetWorkspaceId: z.cuid2(),
 });
 
+/** Server action that copies a survey to another workspace within the same organization, with audit logging. */
 export const copySurveyToOtherWorkspaceAction = authenticatedActionClient
   .inputSchema(ZCopySurveyToOtherWorkspaceAction)
   .action(
@@ -92,6 +93,7 @@ const ZGenerateSingleUseIdAction = z
     message: "Custom single-use IDs can only be generated one at a time without encryption",
   });
 
+/** Server action that generates one or more single-use survey link parameters, optionally with a custom ID. */
 export const generateSingleUseIdsAction = authenticatedActionClient
   .inputSchema(ZGenerateSingleUseIdAction)
   .action(async ({ ctx, parsedInput }) => {

@@ -2,6 +2,7 @@ import { TFunction } from "i18next";
 import { TSurvey } from "@formbricks/types/surveys/types";
 import { getDefaultEndingCard, getDefaultWelcomeCard } from "@/app/lib/survey-builder";
 
+/** Returns a bare-bones survey object used as the base for template previews. */
 export const getMinimalSurvey = (t: TFunction): TSurvey => ({
   id: "someUniqueId1",
   createdAt: new Date(),

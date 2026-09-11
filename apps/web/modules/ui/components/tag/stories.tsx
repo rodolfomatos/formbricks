@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the Tag component.
+ * Covers default, no-delete, interactive, and long-text variants.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { Tag } from "./index";

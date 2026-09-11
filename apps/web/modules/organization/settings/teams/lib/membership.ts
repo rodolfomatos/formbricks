@@ -10,6 +10,7 @@ import { ITEMS_PER_PAGE } from "@/lib/constants";
 import { validateInputs } from "@/lib/utils/validate";
 import { TOrganizationMember } from "@/modules/ee/teams/team-list/types/team";
 
+/** Fetches all accepted members of an organization with their names, emails, roles, and active status. */
 export const getMembershipByOrganizationId = reactCache(
   async (organizationId: string, page?: number): Promise<TMember[]> => {
     validateInputs([organizationId, ZString], [page, ZOptionalNumber]);
@@ -56,6 +57,7 @@ export const getMembershipByOrganizationId = reactCache(
   }
 );
 
+/** Returns the number of owners in an organization. */
 export const getOrganizationOwnerCount = reactCache(async (organizationId: string): Promise<number> => {
   validateInputs([organizationId, ZString]);
 
@@ -77,6 +79,7 @@ export const getOrganizationOwnerCount = reactCache(async (organizationId: strin
   }
 });
 
+/** Deletes a user's membership and associated team memberships from an organization in a transaction. */
 export const deleteMembership = async (
   userId: string,
   organizationId: string
@@ -128,6 +131,7 @@ export const deleteMembership = async (
   }
 };
 
+/** Fetches all organization memberships for a user (used to determine if leaving is allowed). */
 export const getMembershipsByUserId = reactCache(
   async (userId: string, page?: number): Promise<TMembership[]> => {
     validateInputs([userId, ZString], [page, ZOptionalNumber]);
@@ -152,6 +156,7 @@ export const getMembershipsByUserId = reactCache(
   }
 );
 
+/** Fetches organization members with their roles for team-level operations. */
 export const getMembersByOrganizationId = reactCache(
   async (organizationId: string): Promise<TOrganizationMember[]> => {
     validateInputs([organizationId, ZString]);

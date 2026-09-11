@@ -1,3 +1,10 @@
+/**
+ * Safe action client configuration with audit-logging and authentication middleware.
+ *
+ * Provides two action clients:
+ * - `actionClient` — base client with Sentry error reporting + optional audit-log IP capture.
+ * - `authenticatedActionClient` — adds session + user lookup, accessible in action context.
+ */
 import * as Sentry from "@sentry/nextjs";
 import { getServerSession } from "next-auth";
 import { DEFAULT_SERVER_ERROR_MESSAGE, createSafeActionClient } from "next-safe-action";

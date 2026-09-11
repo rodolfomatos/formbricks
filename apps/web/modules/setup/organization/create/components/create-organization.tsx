@@ -17,6 +17,7 @@ import { Input } from "@/modules/ui/components/input";
 const ZCreateOrganizationFormSchema = ZOrganization.pick({ name: true });
 type TCreateOrganizationForm = z.infer<typeof ZCreateOrganizationFormSchema>;
 
+/** Client-side form for creating the first organization during the initial setup flow. */
 export const CreateOrganization = () => {
   const { t } = useTranslation();
   const router = useRouter();

@@ -1,3 +1,7 @@
+/**
+ * A confirmation dialog with title, description, body, and up to three action buttons
+ * (cancel, optional secondary, and confirm). Handles loading/disabled states for each button.
+ */
 "use client";
 
 import { CircleAlert } from "lucide-react";

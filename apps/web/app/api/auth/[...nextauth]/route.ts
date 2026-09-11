@@ -32,6 +32,12 @@ const isSsoRecoveryVerificationFlow = (account: Account | null, user: User | Ada
   typeof user.authFlowPurpose === "string" &&
   user.authFlowPurpose === "sso_recovery";
 
+/**
+ * GET / POST /api/auth/[...nextauth]
+ * NextAuth catch-all handler. Extends the base auth options with audit-logged
+ * signIn/session callbacks and event hooks. Wraps callbacks in error-tolerant
+ * wrappers that log failures via Sentry in production.
+ */
 const handler = async (req: Request, ctx: any) => {
   const eventId = req.headers.get("x-request-id") ?? undefined;
 

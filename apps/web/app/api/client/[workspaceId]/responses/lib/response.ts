@@ -13,6 +13,10 @@ type TQuotaEvaluationResponseInput = {
   language?: string;
 };
 
+/**
+ * Transforms a raw Prisma response into the client-facing TResponse shape,
+ * extracting the contact userId and flattening tags.
+ */
 export const buildClientResponse = (
   responsePrisma: Omit<TResponse, "contact" | "tags"> & { tags: { tag: TTag }[] },
   contact: { id: string; attributes: TContactAttributes } | null
@@ -27,6 +31,11 @@ export const buildClientResponse = (
   tags: responsePrisma.tags.map((tagPrisma: { tag: TTag }) => tagPrisma.tag),
 });
 
+/**
+ * Creates a response within a Prisma transaction and evaluates response
+ * quotas. Allows the caller to supply the inner createResponse function
+ * (v1 or v2 specific).
+ */
 export const createResponseWithQuotaEvaluation = async <TInput extends TQuotaEvaluationResponseInput>(
   responseInput: TInput,
   createResponse: (responseInput: TInput, tx: Prisma.TransactionClient) => Promise<TResponse>

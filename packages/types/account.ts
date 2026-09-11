@@ -1,3 +1,4 @@
+/** OAuth account linking schemas for connecting user identities to external providers. */
 import { z } from "zod";
 
 export const ZAccountInput = z.object({

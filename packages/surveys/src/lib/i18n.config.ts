@@ -1,3 +1,4 @@
+/** I18n config — initialises i18next with ICU message format and all survey locale translations (Arabic, Danish, German, English, Spanish, etc.). */
 import i18n from "i18next";
 import ICU from "i18next-icu";
 import { initReactI18next } from "react-i18next";

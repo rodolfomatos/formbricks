@@ -5,6 +5,14 @@ import { getAccessFlags } from "../membership/utils";
 import { validateInputs } from "../utils/validate";
 import { getOrganizationsByUserId } from "./service";
 
+/**
+ * Checks whether a user belongs to the given organisation through any membership.
+ * Used as the first gate in route-level authorisation.
+ *
+ * @param userId — the user to check
+ * @param organizationId — the target organisation
+ * @returns — true if the user is a member
+ */
 export const canUserAccessOrganization = async (userId: string, organizationId: string): Promise<boolean> => {
   validateInputs([userId, ZId], [organizationId, ZId]);
 
@@ -16,6 +24,15 @@ export const canUserAccessOrganization = async (userId: string, organizationId: 
   }
 };
 
+/**
+ * Returns a fine-grained access bitmap for a user within an organisation.
+ * Owners get full access; managers get member-management + billing but not
+ * create/delete; members get read-only.
+ *
+ * @param organizationId — the organisation
+ * @param userId — the user to evaluate
+ * @returns — access flags for each capability
+ */
 export const verifyUserRoleAccess = async (
   organizationId: string,
   userId: string

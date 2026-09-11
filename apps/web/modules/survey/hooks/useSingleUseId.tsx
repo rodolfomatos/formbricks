@@ -6,6 +6,11 @@ import type { TSurveySingleUseLinkParams } from "@/lib/utils/single-use-surveys"
 import { generateSingleUseIdsAction } from "@/modules/survey/list/actions";
 import type { TSurvey as TSurveyList } from "@/modules/survey/list/types/surveys";
 
+/**
+ * Manages single-use survey link generation. Returns the current single-use ID,
+ * token, and a refresh function. Returns undefined values when read-only or
+ * when single-use is disabled on the survey.
+ */
 export const useSingleUseId = (survey: TSurvey | TSurveyList, isReadOnly: boolean) => {
   const [singleUseLinkParams, setSingleUseLinkParams] = useState<TSurveySingleUseLinkParams>();
 

@@ -11,6 +11,7 @@ interface TriggerCheckboxGroupProps {
   allowChanges: boolean;
 }
 
+/** Checkbox group for selecting webhook trigger events (response created/updated/finished). */
 export const TriggerCheckboxGroup: React.FC<TriggerCheckboxGroupProps> = ({
   selectedTriggers,
   onCheckboxChange,

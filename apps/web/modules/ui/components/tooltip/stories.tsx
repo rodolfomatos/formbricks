@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the Tooltip component.
+ * Covers default, with-button, bottom-position, no-delay, long-content, and custom-styling variants.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "../button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./index";

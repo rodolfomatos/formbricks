@@ -44,6 +44,11 @@ const elementIconMapping = {
   ces: GaugeIcon,
 };
 
+/**
+ * Dropdown that lists all recallable items (previous question responses, hidden fields,
+ * and survey variables) the user can inject into a text field via @-mention.
+ * Filters by search input and provides type icons for each category.
+ */
 interface RecallItemSelectProps {
   localSurvey: TSurvey;
   elementId: TSurveyElementId;

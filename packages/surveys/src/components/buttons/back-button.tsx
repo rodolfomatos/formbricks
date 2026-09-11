@@ -1,3 +1,4 @@
+/** Back button — renders a ghost-style back button with i18n label for multi-block survey navigation. */
 import { useTranslation } from "react-i18next";
 import { Button } from "./button";
 

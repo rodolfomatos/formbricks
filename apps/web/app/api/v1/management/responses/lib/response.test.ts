@@ -86,7 +86,6 @@ const mockTransformedResponses = [mockResponse, { ...mockResponse, id: "response
 vi.mock("@/lib/constants", () => ({
   IS_FORMBRICKS_CLOUD: true,
   ENCRYPTION_KEY: "mock-encryption-key",
-  ENTERPRISE_LICENSE_KEY: "mock-enterprise-license-key",
   GITHUB_ID: "mock-github-id",
   GITHUB_SECRET: "test-githubID",
   GOOGLE_CLIENT_ID: "test-google-client-id",

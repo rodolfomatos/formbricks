@@ -1,3 +1,8 @@
+/**
+ * Identifies the auth mechanism present on a request so the coverage
+ * matcher can distinguish unauthenticated endpoints from API-key or
+ * session-authenticated ones (Envoy rate-limit policies differ per tier).
+ */
 export type TEnvoyRateLimitAuthType = "none" | "apiKey" | "session";
 
 type TEnvoyRateLimitRequest = {
@@ -29,6 +34,22 @@ const matchesPrefixedPath = (pathname: string, prefix: string): boolean => pathn
 /**
  * Mirrors the live Envoy rate-limit policy set.
  * Keep this matcher aligned with the Gateway policies when coverage changes.
+ */
+/**
+ * Check whether a given request should be rate-limited based on Envoy
+ * policy. Mirrors the live Envoy configuration so the app can pre-empt
+ * or log expected rate-limit behaviour.
+ *
+ * @param pathname — the URL path being requested
+ * @param method — the HTTP method
+ * @param authType — how the request is authenticated
+ * @returns — true if Envoy would rate-limit this request
+ *
+ * @example
+ * ```typescript
+ * isRouteRateLimitedByEnvoy({ pathname: "/api/v1/management/surveys", method: "GET", authType: "apiKey" })
+ * // => true
+ * ```
  */
 export const isRouteRateLimitedByEnvoy = ({
   pathname,

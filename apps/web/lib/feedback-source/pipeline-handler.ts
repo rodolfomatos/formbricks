@@ -1,3 +1,11 @@
+/**
+ * Pipeline handler that transforms survey responses into hub feedback records
+ * when a survey has feedback sources configured.
+ *
+ * On response creation, loads all feedback sources for the survey, transforms
+ * the response data into hub records, creates them in a batch, and tracks
+ * sync status / error state on each source.
+ */
 import "server-only";
 import { logger } from "@formbricks/logger";
 import { TFeedbackSourceWithMappings } from "@formbricks/types/feedback-source";

@@ -1,3 +1,4 @@
+/** SDK utilities — survey filtering, styling resolution, URL matching, no-code action evaluation, debug detection, and error-handling helpers. */
 import { Logger } from "@/lib/common/logger";
 import type {
   TSurveyStyling,

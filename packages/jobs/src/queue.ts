@@ -1,3 +1,7 @@
+/**
+ * Queue module — manages the BullMQ queue singleton, provides typed
+ * helpers for enqueuing, scheduling, and managing recurring jobs.
+ */
 import { type Job, type JobsOptions, Queue } from "bullmq";
 import type IORedis from "ioredis";
 import { logger } from "@formbricks/logger";
@@ -25,11 +29,19 @@ import {
   type TTestLogJobData,
 } from "@/src/types";
 
+/**
+ * Handle returned by getJobsQueue — provides access to the underlying BullMQ
+ * Queue and its Redis connection.
+ */
 export interface JobsQueueHandle {
   connection: IORedis;
   queue: Queue;
 }
 
+/**
+ * Global state for the queue singleton — stored on globalThis for cross-module
+ * sharing and hot-reload resilience.
+ */
 interface TGlobalJobsQueueState {
   formbricksJobsQueue: Queue | undefined;
   formbricksJobsProducerConnection: IORedis | undefined;
@@ -44,6 +56,9 @@ let connectionSingleton = globalForJobsQueue.formbricksJobsProducerConnection;
 const hasActiveConnection = (connection?: IORedis): connection is IORedis =>
   connection !== undefined && connection.status !== "end";
 
+/**
+ * Factory for a BullMQ Queue instance with default job options and prefix.
+ */
 export const createJobsQueue = ({
   connection,
   prefix = JOBS_PREFIX,
@@ -57,6 +72,11 @@ export const createJobsQueue = ({
     prefix,
   });
 
+/**
+ * Returns the singleton BullMQ Queue. Creates a new producer connection and
+ * queue on first call; concurrent calls are serialised via a module-level
+ * initialisation promise.
+ */
 export const getJobsQueue = async (): Promise<JobsQueueHandle> => {
   if (queueSingleton && hasActiveConnection(connectionSingleton)) {
     return {
@@ -116,6 +136,11 @@ export const getJobsQueue = async (): Promise<JobsQueueHandle> => {
   }
 };
 
+/**
+ * Converts a BullMQ Job into the lightweight EnqueuedJob result.
+ *
+ * @throws — When job.id is undefined (should never happen for a successfully enqueued job)
+ */
 const toEnqueuedJob = (
   job: Pick<Job, "name" | "queueName"> & {
     id?: Job["id"];
@@ -132,6 +157,9 @@ const toEnqueuedJob = (
   };
 };
 
+/**
+ * Converts a BullMQ Job + identity into an UpsertedRecurringJobSchedule result.
+ */
 const toUpsertedRecurringJobSchedule = (
   job: Pick<Job, "id" | "name" | "queueName">,
   identity: TBackgroundJobScheduleIdentity
@@ -141,6 +169,12 @@ const toUpsertedRecurringJobSchedule = (
   scope: identity.scope,
 });
 
+/**
+ * Internal helper — validates job data against the definition's Zod schema
+ * and adds the job to the BullMQ queue.
+ *
+ * @throws — When the job name is not registered or Zod validation fails
+ */
 const enqueueBackgroundJob = async <TData>(
   jobName: string,
   data: TData,
@@ -157,6 +191,10 @@ const enqueueBackgroundJob = async <TData>(
   return await queue.add(definition.name, parsedData, options);
 };
 
+/**
+ * Internal helper — schedules a job to run at a specific time by computing
+ * the delay and enqueuing with a `delay` option.
+ */
 const scheduleBackgroundJobAt = async <TData>(
   jobName: string,
   schedule: TRunAtBackgroundJobSchedule,
@@ -167,6 +205,10 @@ const scheduleBackgroundJobAt = async <TData>(
   return await enqueueBackgroundJob(jobName, data, { delay });
 };
 
+/**
+ * Internal helper — creates or updates a recurring job schedule (cron or
+ * every-N-ms) via BullMQ's upsertJobScheduler API.
+ */
 const upsertRecurringBackgroundJobSchedule = async <TData>(
   jobName: string,
   identity: TBackgroundJobScheduleIdentity,
@@ -193,6 +235,11 @@ const upsertRecurringBackgroundJobSchedule = async <TData>(
   );
 };
 
+/**
+ * Internal helper — removes a recurring job schedule by identity.
+ *
+ * @returns — true if the schedule was removed, false if it didn't exist
+ */
 const removeRecurringBackgroundJobSchedule = async (
   jobName: string,
   identity: TBackgroundJobScheduleIdentity
@@ -208,6 +255,9 @@ const removeRecurringBackgroundJobSchedule = async (
   return await queue.removeJobScheduler(getRecurringJobSchedulerId(definition.name, identity));
 };
 
+/**
+ * Enqueues a one-shot test-log job. Errors are logged and re-thrown.
+ */
 export const enqueueTestLogJob = async (data: TTestLogJobData): Promise<Job> => {
   try {
     return await enqueueBackgroundJob(JOB_NAMES.testLog, data);
@@ -217,6 +267,9 @@ export const enqueueTestLogJob = async (data: TTestLogJobData): Promise<Job> => 
   }
 };
 
+/**
+ * Enqueues a one-shot response-pipeline job. Errors are logged and re-thrown.
+ */
 export const enqueueResponsePipelineJob = async (data: TResponsePipelineJobData): Promise<Job> => {
   try {
     return await enqueueBackgroundJob(JOB_NAMES.responsePipeline, data);
@@ -229,6 +282,9 @@ export const enqueueResponsePipelineJob = async (data: TResponsePipelineJobData)
   }
 };
 
+/**
+ * Enqueues a one-shot survey-scheduling job. Errors are logged and re-thrown.
+ */
 export const enqueueSurveySchedulingJob = async (data: TSurveySchedulingJobData): Promise<Job> => {
   try {
     return await enqueueBackgroundJob(JOB_NAMES.surveyScheduling, data);
@@ -241,6 +297,9 @@ export const enqueueSurveySchedulingJob = async (data: TSurveySchedulingJobData)
   }
 };
 
+/**
+ * Schedules a test-log job to run at a specific time. Errors are logged and re-thrown.
+ */
 export const scheduleTestLogJobAt = async (
   schedule: TRunAtBackgroundJobSchedule,
   data: TTestLogJobData
@@ -256,6 +315,9 @@ export const scheduleTestLogJobAt = async (
   }
 };
 
+/**
+ * Schedules a response-pipeline job to run at a specific time. Errors are logged and re-thrown.
+ */
 export const scheduleResponsePipelineJobAt = async (
   schedule: TRunAtBackgroundJobSchedule,
   data: TResponsePipelineJobData
@@ -271,6 +333,9 @@ export const scheduleResponsePipelineJobAt = async (
   }
 };
 
+/**
+ * Schedules a survey-scheduling job to run at a specific time. Errors are logged and re-thrown.
+ */
 export const scheduleSurveySchedulingJobAt = async (
   schedule: TRunAtBackgroundJobSchedule,
   data: TSurveySchedulingJobData
@@ -286,6 +351,9 @@ export const scheduleSurveySchedulingJobAt = async (
   }
 };
 
+/**
+ * Creates or updates a recurring test-log job schedule. Errors are logged and re-thrown.
+ */
 export const upsertRecurringTestLogJobSchedule = async (
   identity: TBackgroundJobScheduleIdentity,
   schedule: TRecurringBackgroundJobSchedule,
@@ -308,6 +376,9 @@ export const upsertRecurringTestLogJobSchedule = async (
   }
 };
 
+/**
+ * Creates or updates a recurring response-pipeline job schedule. Errors are logged and re-thrown.
+ */
 export const upsertRecurringResponsePipelineJobSchedule = async (
   identity: TBackgroundJobScheduleIdentity,
   schedule: TRecurringBackgroundJobSchedule,
@@ -330,6 +401,9 @@ export const upsertRecurringResponsePipelineJobSchedule = async (
   }
 };
 
+/**
+ * Creates or updates a recurring survey-scheduling job schedule. Errors are logged and re-thrown.
+ */
 export const upsertRecurringSurveySchedulingJobSchedule = async (
   identity: TBackgroundJobScheduleIdentity,
   schedule: TRecurringBackgroundJobSchedule,
@@ -352,6 +426,11 @@ export const upsertRecurringSurveySchedulingJobSchedule = async (
   }
 };
 
+/**
+ * Removes a recurring survey-scheduling job schedule by identity. Errors are logged and re-thrown.
+ *
+ * @returns — true if the schedule was removed
+ */
 export const removeRecurringSurveySchedulingJobSchedule = async (
   identity: TBackgroundJobScheduleIdentity
 ): Promise<boolean> => {
@@ -371,6 +450,10 @@ export const removeRecurringSurveySchedulingJobSchedule = async (
   }
 };
 
+/**
+ * Returns a BackgroundJobProducer interface wrapping all enqueue/schedule
+ * helpers. This is the primary API consumers should use.
+ */
 export const getBackgroundJobProducer = (): BackgroundJobProducer => ({
   enqueueResponsePipeline: async (data) => toEnqueuedJob(await enqueueResponsePipelineJob(data)),
   enqueueSurveyScheduling: async (data) => toEnqueuedJob(await enqueueSurveySchedulingJob(data)),
@@ -397,6 +480,10 @@ export const getBackgroundJobProducer = (): BackgroundJobProducer => ({
     ),
 });
 
+/**
+ * Resets the queue singleton — closes the queue and connection, clears global
+ * state. Used during integration tests.
+ */
 export const resetJobsQueueFactory = async (): Promise<void> => {
   try {
     if (queueSingleton) {

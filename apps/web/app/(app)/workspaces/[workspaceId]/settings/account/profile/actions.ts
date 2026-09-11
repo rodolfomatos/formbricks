@@ -62,6 +62,10 @@ async function handleEmailUpdate({
   return payload;
 }
 
+/**
+ * Updates the current user's personal info (name, email, locale).
+ * Handles email verification flow and password confirmation for email changes. Logs audit events.
+ */
 export const updateUserAction = authenticatedActionClient.inputSchema(ZUserPersonalInfoUpdateInput).action(
   withAuditLogging("updated", "user", async ({ ctx, parsedInput }) => {
     const oldObject = await getUser(ctx.user.id);
@@ -82,6 +86,9 @@ export const updateUserAction = authenticatedActionClient.inputSchema(ZUserPerso
   })
 );
 
+/**
+ * Sends a password reset email to the authenticated user. Only available for email-based identity providers.
+ */
 export const resetPasswordAction = authenticatedActionClient.action(
   withAuditLogging("passwordReset", "user", async ({ ctx }) => {
     if (PASSWORD_RESET_DISABLED) {

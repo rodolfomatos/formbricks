@@ -1,3 +1,7 @@
+/**
+ * Lexical editor theme mapping CSS class names to editor node types.
+ * All classes use the fb-editor-* prefix for scoped styling.
+ */
 export const exampleTheme = {
   rtl: "fb-editor-rtl",
   ltr: "fb-editor-ltr",

@@ -76,8 +76,19 @@ const RICH_TEXT_PARAGRAPH_TAG_REGEX = /<p\b([^>]*)>/gi;
 const RICH_TEXT_STYLE_ATTRIBUTE_REGEX = /\sstyle=(["'])(.*?)\1/i;
 const RICH_TEXT_STYLE_ATTRIBUTE_REPLACE_REGEX = /\sstyle=(["'])(.*?)\1/gi;
 
+/**
+ * Append `!important` to a CSS value so email clients (Outlook, Gmail)
+ * respect the override regardless of their default stylesheets.
+ */
 export const importantStyle = (value: string): string => `${value} !important`;
 
+/**
+ * Inject `margin:0` on every `<p>` tag in rich text HTML so email clients
+ * don't add unpredictable paragraph spacing.
+ *
+ * @param html — the rich-text HTML to normalise
+ * @returns — the HTML with paragraph margins zeroed
+ */
 export const normalizeRichTextSpacing = (html: string): string =>
   html.replaceAll(RICH_TEXT_PARAGRAPH_TAG_REGEX, (_tag, attributes: string = "") => {
     if (RICH_TEXT_STYLE_ATTRIBUTE_REGEX.test(attributes)) {
@@ -134,12 +145,20 @@ const getPreviewOpacity = (value: PreviewStyleValue, fallback: PreviewStyleValue
   return Math.min(Math.max(parsedValue, 0), 1);
 };
 
+/**
+ * Build a CSSProperties object that forces a specific background colour
+ * and locks the colour scheme to light mode (required for email clients).
+ */
 export const getForcedBackgroundStyle = (color: string): CSSProperties => ({
   background: importantStyle(color),
   backgroundColor: importantStyle(color),
   colorScheme: FORCE_LIGHT_COLOR_SCHEME,
 });
 
+/**
+ * Build a CSSProperties object that forces a specific text colour and
+ * locks the colour scheme to light mode.
+ */
 export const getForcedColorStyle = (color: string): CSSProperties => ({
   color: importantStyle(color),
   colorScheme: FORCE_LIGHT_COLOR_SCHEME,
@@ -158,6 +177,13 @@ const getPreviewRoundness = (roundness: TSurveyStyling["roundness"]): number => 
   return 8;
 };
 
+/**
+ * Resolve the survey styling configuration into a flat set of tokens that
+ * the email template components can consume without deep nesting checks.
+ *
+ * @param styling — the survey's styling configuration
+ * @returns — a flat PreviewEmailStyleTokens object with all colours, dimensions, and fonts resolved
+ */
 export const getPreviewEmailStyleTokens = (styling: TSurveyStyling): PreviewEmailStyleTokens => {
   const questionColor =
     styling.elementHeadlineColor?.light ??
@@ -285,9 +311,23 @@ const buildSurveyEmailUrl = (surveyUrl: string, entries: Array<[string, string]>
   return url.toString();
 };
 
+/**
+ * Append `preview=true` to the survey URL so the survey renderer shows a
+ * preview banner instead of a live survey.
+ */
 export const getPreviewSurveyUrl = (surveyUrl: string): string =>
   buildSurveyEmailUrl(surveyUrl, [["preview", "true"]]);
 
+/**
+ * Build a survey URL that opens in preview mode with one question
+ * pre-filled. Used so email recipients can click a choice and see the
+ * response recorded.
+ *
+ * @param surveyUrl — the base survey URL
+ * @param questionId — the question whose value to pre-fill
+ * @param value — the pre-filled answer value
+ * @returns — the augmented URL
+ */
 export const getPrefilledSurveyUrl = (surveyUrl: string, questionId: string, value: string): string =>
   buildSurveyEmailUrl(surveyUrl, [
     ["preview", "true"],
@@ -304,6 +344,10 @@ const getChoiceTextStyle = (styleTokens: PreviewEmailStyleTokens): CSSProperties
   ...getForcedColorStyle(styleTokens.optionLabelColor),
 });
 
+/**
+ * Build the CSS for a single choice card in the email preview (background,
+ * border, text colour, no underline).
+ */
 export const getChoiceCardStyle = (styleTokens: PreviewEmailStyleTokens): CSSProperties => ({
   ...getChoiceBlockStyle(styleTokens),
   ...getChoiceTextStyle(styleTokens),
@@ -316,20 +360,24 @@ const getFieldPlaceholderStyle = (styleTokens: PreviewEmailStyleTokens): CSSProp
   border: importantStyle(`1px solid ${styleTokens.inputBorderColor}`),
 });
 
+/** Force the input text colour in email previews. */
 export const getInputTextStyle = (styleTokens: PreviewEmailStyleTokens): CSSProperties => ({
   ...getForcedColorStyle(styleTokens.inputTextColor),
 });
 
+/** Style for field labels (e.g. "Street address", "City") in the email preview. */
 export const getFieldLabelStyle = (styleTokens: PreviewEmailStyleTokens): CSSProperties => ({
   ...getForcedColorStyle(styleTokens.questionColor),
   fontFamily: styleTokens.fontFamily,
 });
 
+/** Style for secondary/ghost buttons in email previews (border + question colour text). */
 export const getSecondaryButtonStyle = (styleTokens: PreviewEmailStyleTokens): CSSProperties => ({
   border: importantStyle(`1px solid ${styleTokens.inputBorderColor}`),
   ...getForcedColorStyle(styleTokens.questionColor),
 });
 
+/** Style for primary CTA buttons in email previews (filled background, brand colours). */
 export const getPrimaryButtonStyle = (styleTokens: PreviewEmailStyleTokens): CSSProperties => ({
   ...getSecondaryButtonStyle(styleTokens),
   ...getForcedBackgroundStyle(styleTokens.buttonBackgroundColor),
@@ -337,6 +385,13 @@ export const getPrimaryButtonStyle = (styleTokens: PreviewEmailStyleTokens): CSS
   ...getForcedColorStyle(styleTokens.buttonTextColor),
 });
 
+/**
+ * Map a Tailwind accent token (e.g. "bg-emerald-100") to its hex colour
+ * for use in email-safe CSS.
+ *
+ * @param token — the Tailwind colour token
+ * @returns — the hex colour or undefined
+ */
 export const getPreviewAccentColor = (token?: string): string | undefined =>
   token ? EMAIL_PREVIEW_ACCENT_COLORS[token as keyof typeof EMAIL_PREVIEW_ACCENT_COLORS] : undefined;
 
@@ -364,6 +419,11 @@ const getScaleLineHeight = (height: string, hasColorStrip: boolean): string => {
   return `${Math.max(numericHeight - 6, 0).toString()}px`;
 };
 
+/**
+ * Build CSS for a single scale option button (NPS, rating, etc.) in the
+ * email preview. Handles connected borders, colour coding strips, and
+ * transparent/smiley/star variants.
+ */
 export const getScaleOptionStyle = ({
   styleTokens,
   borderTopColor,
@@ -403,6 +463,7 @@ export const getScaleOptionStyle = ({
   };
 };
 
+/** Force light-mode text style for question headlines in email previews. */
 export const getLightModeTextStyle = (styleTokens: PreviewEmailStyleTokens): CSSProperties => ({
   ...getForcedColorStyle(styleTokens.elementHeadlineColor),
   fontFamily: styleTokens.fontFamily,
@@ -410,6 +471,7 @@ export const getLightModeTextStyle = (styleTokens: PreviewEmailStyleTokens): CSS
   fontWeight: styleTokens.elementHeadlineFontWeight,
 });
 
+/** Style for helper/lower-upper labels under scale questions in email previews. */
 export const getHelperLabelTextStyle = (styleTokens: PreviewEmailStyleTokens): CSSProperties => ({
   ...getForcedColorStyle(styleTokens.elementUpperLabelColor),
   fontFamily: styleTokens.fontFamily,
@@ -417,6 +479,10 @@ export const getHelperLabelTextStyle = (styleTokens: PreviewEmailStyleTokens): C
   fontWeight: styleTokens.elementUpperLabelFontWeight,
 });
 
+/**
+ * Build a placeholder-style CSS block with optional overrides.
+ * Applies forced background and placeholder colour.
+ */
 export const getCenteredPlaceholderStyle = (
   styleTokens: PreviewEmailStyleTokens,
   overrides?: CSSProperties
@@ -428,6 +494,10 @@ export const getCenteredPlaceholderStyle = (
   return overrides ? { ...baseStyle, ...overrides } : baseStyle;
 };
 
+/**
+ * Build a placeholder-text colour CSS block with optional overrides.
+ * Forces the placeholder colour to ensure email clients render it.
+ */
 export const getCenteredPlaceholderTextStyle = (
   styleTokens: PreviewEmailStyleTokens,
   overrides?: CSSProperties
@@ -439,6 +509,10 @@ export const getCenteredPlaceholderTextStyle = (
   return overrides ? { ...baseStyle, ...overrides } : baseStyle;
 };
 
+/**
+ * Build the outer shell style for an input field in the email preview
+ * (background, border, padding, border-radius, box-sizing).
+ */
 export const getInputShellStyle = (
   styleTokens: PreviewEmailStyleTokens,
   overrides?: CSSProperties
@@ -456,6 +530,10 @@ export const getInputShellStyle = (
   ...overrides,
 });
 
+/**
+ * Build the inner link/text style for an input shell in the email preview
+ * (text colour, family, size, no underline).
+ */
 export const getInputShellLinkStyle = (
   styleTokens: PreviewEmailStyleTokens,
   overrides?: CSSProperties
@@ -471,10 +549,18 @@ export const getInputShellLinkStyle = (
   ...overrides,
 });
 
+/**
+ * Calculate the percentage width for each column in a scale question so
+ * the options distribute evenly across the row.
+ */
 export const getScaleColumnStyle = (optionCount: number): CSSProperties => ({
   width: `${(100 / optionCount).toFixed(4)}%`,
 });
 
+/**
+ * Build the CSS for a choice marker (checkbox, radio, or ranking handle)
+ * in the email preview.
+ */
 export const getChoiceMarkerStyle = (
   marker: PreviewMarkerVariant,
   styleTokens: PreviewEmailStyleTokens
@@ -493,6 +579,10 @@ export const getChoiceMarkerStyle = (
   ),
 });
 
+/**
+ * Build the class name string for a choice marker, including the gap
+ * class and rounding (rounded for checkbox, rounded-full for radio/ranking).
+ */
 export const getChoiceMarkerClassName = (marker: PreviewMarkerVariant, withLabelGap = true): string =>
   `${withLabelGap ? "mr-3 " : ""}${CHOICE_MARKER_CLASSNAME} ${
     marker === "checkbox" ? "rounded" : "rounded-full"

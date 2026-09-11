@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ZSurveyStatus } from "@formbricks/types/surveys/types";
 
+/** Survey overview page filter types, sort options, and list item shape. */
 export const ZSurveyOverviewType = z.enum(["link", "app"]);
 export const ZSurveyOverviewSort = z.enum(["createdAt", "updatedAt", "name", "relevance"]);
 export const ZSurveyOverviewFilters = z.object({

@@ -1,3 +1,10 @@
+/**
+ * PII redaction helpers for structured logging.
+ *
+ * Strips sensitive fields (email, passwords, tokens, API keys, etc.) from
+ * log payloads and sanitises URLs by replacing query-string secrets with
+ * "********". Also provides `deepDiff` for audit-log change tracking.
+ */
 import { isStringUrl } from "@/lib/utils/url";
 
 const SENSITIVE_KEYS = [

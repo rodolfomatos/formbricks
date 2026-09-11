@@ -34,6 +34,11 @@ function validateMcpBodySize(request: NextRequest): Response | null {
   );
 }
 
+/**
+ * POST /api/mcp
+ * Handles Model Context Protocol (MCP) requests. Authenticates the request,
+ * validates body size, and delegates to the MCP handler for JSON-RPC processing.
+ */
 export async function POST(request: NextRequest): Promise<Response> {
   const bodySizeResponse = validateMcpBodySize(request);
   if (bodySizeResponse) {

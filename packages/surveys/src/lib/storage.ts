@@ -1,3 +1,4 @@
+/** Storage utilities — extracts original filenames from Formbricks storage URLs (supports `/storage/...` paths and full URLs with `--fid--` markers). */
 export const getOriginalFileNameFromUrl = (fileURL: string): string => {
   try {
     const fileNameFromURL = fileURL.startsWith("/storage/")

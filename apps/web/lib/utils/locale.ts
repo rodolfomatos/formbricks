@@ -1,7 +1,12 @@
+/**
+ * Locale resolution — matches the browser's Accept-Language header against
+ * available app locales, with fallback to DEFAULT_LOCALE.
+ */
 import { headers } from "next/headers";
 import { TUserLocale } from "@formbricks/types/user";
 import { AVAILABLE_LOCALES, DEFAULT_LOCALE } from "@/lib/constants";
 
+/** Finds the best matching locale from the request's Accept-Language header against available locales. */
 export const findMatchingLocale = async (): Promise<TUserLocale> => {
   const headersList = await headers();
   const acceptLanguage = headersList.get("accept-language");

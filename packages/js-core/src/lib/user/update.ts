@@ -1,3 +1,4 @@
+/** Backend update sender — syncs user attributes and userId to the API, updates config, and returns the refreshed user state. */
 /* eslint-disable no-console -- required for logging errors */
 import { ApiClient } from "@/lib/common/api";
 import { Config } from "@/lib/common/config";

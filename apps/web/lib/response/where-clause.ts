@@ -1,3 +1,14 @@
+/**
+ * Builds a Prisma `where` clause from the front-end `TResponseFilterCriteria` object.
+ *
+ * Supports filtering by: finished state, creation date range, tags (applied/not-applied),
+ * contact attributes, meta fields (browser, OS, etc.), question-level data values
+ * (equals, contains, includesAll, matrix, etc.), response IDs, and quota-links
+ * (screened-in / screened-out).
+ *
+ * Complex operations like "includesOne" for multi-choice with "other" option generate
+ * all subset permutations to correctly model the exclusion logic.
+ */
 import "server-only";
 import { Prisma } from "@formbricks/database/prisma";
 import { TResponseFilterCriteria } from "@formbricks/types/responses";
@@ -42,6 +53,14 @@ const createFilterTags = (tags: TResponseFilterCriteria["tags"]) => {
   return filterTags.flat();
 };
 
+/**
+ * Converts the UI's filter criteria into a Prisma `AND` where clause.
+ * Every filter dimension is optional — when not provided it is simply omitted.
+ *
+ * @param survey — the survey (needed for element type resolution in data filters)
+ * @param filterCriteria — the filter specification from the UI
+ * @returns — a Prisma where clause object
+ */
 export const buildWhereClause = (survey: TSurvey, filterCriteria?: TResponseFilterCriteria) => {
   const whereClause: Prisma.ResponseWhereInput["AND"] = [];
 

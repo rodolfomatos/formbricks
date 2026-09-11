@@ -1,3 +1,6 @@
+/**
+ * Type declarations for the prismjs library and its CSS theme.
+ */
 declare module "prismjs" {
   const Prism: {
     highlightAll: () => void;

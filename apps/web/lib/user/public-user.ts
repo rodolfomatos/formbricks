@@ -1,3 +1,9 @@
+/**
+ * Shared Prisma select definition for public user data.
+ *
+ * Used by the user service and anywhere else that needs to fetch a non-sensitive
+ * subset of user fields (no password hash, no TOTP secrets, etc.).
+ */
 import { Prisma } from "@formbricks/database/prisma";
 
 export const publicUserSelect = {

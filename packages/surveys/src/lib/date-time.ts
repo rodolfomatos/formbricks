@@ -1,3 +1,4 @@
+/** Date-time utilities — validates date string formats (YYYY-MM-DD or DD-MM-YYYY) and formats dates with ordinal suffixes for display in surveys. */
 export const isValidDateString = (value: string) => {
   const regex = /^(?:\d{4}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/;
 

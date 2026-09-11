@@ -10,6 +10,10 @@ import { selectSurvey } from "@/lib/survey/service";
 import { transformPrismaSurvey } from "@/lib/survey/utils";
 import { validateInputs } from "@/lib/utils/validate";
 
+/**
+ * Fetches surveys scoped to the given workspace IDs, with optional
+ * pagination. Cached per request via react cache.
+ */
 export const getSurveys = reactCache(
   async (workspaceIds: string[], limit?: number, offset?: number): Promise<TSurvey[]> => {
     validateInputs([workspaceIds, ZId.array()], [limit, ZOptionalNumber], [offset, ZOptionalNumber]);

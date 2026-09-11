@@ -1,3 +1,8 @@
+/**
+ * Deterministic avatar components for people and profiles using the boring-avatars library.
+ * PersonAvatar uses "beam" variant; ProfileAvatar uses "bauhaus" variant.
+ * Avatars are consistent per ID (no image upload needed).
+ */
 import Avatar from "boring-avatars";
 
 const colors = ["#00C4B8", "#ccfbf1", "#334155"];

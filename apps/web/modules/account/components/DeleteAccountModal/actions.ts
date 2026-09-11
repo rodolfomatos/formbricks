@@ -29,6 +29,16 @@ const logAccountDeletionError = (userId: string, error: unknown) => {
 const isSsoConfirmationRequiredError = (error: unknown) =>
   error instanceof AuthorizationError && error.message === ACCOUNT_DELETION_SSO_REAUTH_REQUIRED_ERROR_CODE;
 
+/**
+ * Server action that deletes the current user's account after confirming
+ * email identity and (if applicable) password. For SSO users, triggers a
+ * re-authentication flow when the identity confirmation marker is absent.
+ *
+ * @param confirmationEmail — the user's email typed for confirmation
+ * @param password — required for email/password accounts
+ * @param returnToUrl — where to redirect after SSO re-auth completes
+ * @returns — { success: true } or { ssoConfirmation: ... } if SSO re-auth is needed
+ */
 export const deleteUserAction = authenticatedActionClient
   .inputSchema(ZDeleteUserConfirmation)
   .action(async ({ ctx, parsedInput }) => {

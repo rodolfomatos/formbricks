@@ -5,6 +5,7 @@ import { SurveyLoading } from "@/modules/survey/list/components/survey-loading";
 import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper";
 import { PageHeader } from "@/modules/ui/components/page-header";
 
+/** Loading skeleton for the survey list page. */
 export const SurveyListLoading = () => {
   const { t } = useTranslation();
 

@@ -18,12 +18,14 @@ import { S3_BUCKET_NAME } from "./constants";
 import { type Result, type StorageError, StorageErrorCode, err, ok } from "./types/error";
 
 /**
- * Get a signed URL for uploading a file to S3
- * @param fileName - The name of the file to upload
- * @param contentType - The content type of the file
- * @param filePath - The path to the file in S3
- * @param maxSize - The maximum size of the file to upload or undefined if no limit is desired
- * @returns A Result containing the signed URL and presigned fields or an error: StorageError
+ * Generates a presigned POST URL so clients can upload files directly to S3
+ * without exposing credentials. The URL expires after 2 minutes.
+ *
+ * @param fileName — Original file name (used as the S3 key suffix)
+ * @param contentType — MIME type of the upload (enforced in presigned fields)
+ * @param filePath — S3 key prefix / virtual directory to place the file in
+ * @param maxSize — Maximum file size in bytes (defaults to 10 MB; 0 or undefined disables the limit)
+ * @returns — Presigned URL + form fields the client can POST to, or a StorageError
  */
 export const getSignedUploadUrl = async (
   fileName: string,
@@ -85,9 +87,13 @@ export const getSignedUploadUrl = async (
 };
 
 /**
- * Get a signed URL for a file in S3
- * @param fileKey - The key of the file in S3
- * @returns A Result containing the signed URL or an error: StorageError
+ * Generates a signed GET URL (valid for 30 minutes) so clients can download
+ * a private S3 object without making the bucket public. Checks that the file
+ * exists first (HeadObject) so callers get a clear FileNotFoundError instead
+ * of a generic S3 error.
+ *
+ * @param fileKey — Full S3 key of the file to download
+ * @returns — Signed download URL string, or a StorageError
  */
 export const getSignedDownloadUrl = async (fileKey: string): Promise<Result<string, StorageError>> => {
   try {
@@ -141,6 +147,11 @@ export const getSignedDownloadUrl = async (fileKey: string): Promise<Result<stri
   }
 };
 
+/**
+ * Result of a file-stream operation — contains the web ReadableStream body
+ * plus content-type and content-length so HTTP responses can be constructed
+ * without additional S3 lookups.
+ */
 export interface FileStreamResult {
   body: ReadableStream<Uint8Array>;
   contentType: string;
@@ -148,10 +159,12 @@ export interface FileStreamResult {
 }
 
 /**
- * Get a file stream from S3
- * Use this for streaming files directly to clients instead of redirecting to signed URLs
- * @param fileKey - The key of the file in S3
- * @returns A Result containing the file stream and metadata or an error: StorageError
+ * Streams a file directly from S3 as a web ReadableStream. Use instead of
+ * signed-download redirect when you need to proxy the response (e.g. for
+ * access control or custom headers).
+ *
+ * @param fileKey — Full S3 key of the file to stream
+ * @returns — File stream body, content type, and content length, or a StorageError
  */
 export const getFileStream = async (fileKey: string): Promise<Result<FileStreamResult, StorageError>> => {
   try {
@@ -206,9 +219,11 @@ export const getFileStream = async (fileKey: string): Promise<Result<FileStreamR
 };
 
 /**
- * Delete a file from S3
- * @param fileKey - The key of the file in S3 (e.g. "surveys/123/responses/456/file.pdf")
- * @returns A Result containing the void or an error: StorageError
+ * Deletes a single object from S3 by key. Idempotent — succeeds even if the
+ * object does not exist.
+ *
+ * @param fileKey — S3 key of the file to delete (e.g. "surveys/123/responses/456/file.pdf")
+ * @returns — Void on success, or a StorageError
  */
 export const deleteFile = async (fileKey: string): Promise<Result<void, StorageError>> => {
   try {
@@ -244,9 +259,12 @@ export const deleteFile = async (fileKey: string): Promise<Result<void, StorageE
 };
 
 /**
- * Delete all files by prefix
- * @param prefix - The prefix of the files to delete
- * @returns A Result containing the void or an error: StorageError
+ * Bulk-deletes all S3 objects whose key starts with the given prefix.
+ * Safeguards against accidental root deletion (empty or "/" prefix).
+ * Deletions are performed in batches of 1000 (the S3 API limit).
+ *
+ * @param prefix — Key prefix to match (e.g. "surveys/123/")
+ * @returns — Void on success, or a StorageError
  */
 export const deleteFilesByPrefix = async (prefix: string): Promise<Result<void, StorageError>> => {
   try {

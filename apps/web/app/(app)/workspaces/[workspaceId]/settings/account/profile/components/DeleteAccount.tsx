@@ -25,6 +25,10 @@ interface DeleteAccountProps {
   isSsoIdentityConfirmationDisabled: boolean;
 }
 
+/**
+ * Delete account UI with a modal trigger. Shows error toast for SSO reauth failures.
+ * Disabled when the user is the single owner of an organization and multi-org is not enabled.
+ */
 export const DeleteAccount = ({
   session,
   IS_FORMBRICKS_CLOUD,

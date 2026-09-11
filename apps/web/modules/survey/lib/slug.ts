@@ -24,7 +24,7 @@ export interface TSurveyWithSlug {
   };
 }
 
-// Find a survey by its slug
+/** Finds a survey by its human-readable slug (pretty URL). Returns null if no match exists. */
 export const getSurveyBySlug = reactCache(async (slug: string): Promise<TSurveyBySlug | null> => {
   try {
     const survey = await prisma.survey.findUnique({
@@ -40,7 +40,7 @@ export const getSurveyBySlug = reactCache(async (slug: string): Promise<TSurveyB
   }
 });
 
-// Update a survey's slug
+/** Sets or removes the custom slug on a survey. Throws InvalidInputError on duplicate slugs. */
 export const updateSurveySlug = async (
   surveyId: string,
   slug: string | null
@@ -69,7 +69,7 @@ export const updateSurveySlug = async (
   }
 };
 
-// Get all surveys with slugs for an organization (for Domain settings page)
+/** Lists all surveys that have slugs set within an organization, used for the Domain settings page. */
 export const getSurveysWithSlugsByOrganizationId = reactCache(
   async (organizationId: string): Promise<TSurveyWithSlug[]> => {
     try {

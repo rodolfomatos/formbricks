@@ -1,3 +1,4 @@
+/** Form editor for a redirect-to-URL ending card — recall-aware URL input and an optional display label. */
 "use client";
 
 import { useRef } from "react";

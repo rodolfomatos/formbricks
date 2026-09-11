@@ -1,3 +1,4 @@
+/** Form editor for the CSAT (Customer Satisfaction) question element — headline, subheader, scale selector, labels, and optional color coding. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

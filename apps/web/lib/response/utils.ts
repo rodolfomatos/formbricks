@@ -1,3 +1,10 @@
+/**
+ * Response utility functions used by the response service and export pipeline.
+ *
+ * Handles choice ID resolution from response values, survey detail extraction for
+ * CSV/XLSX headers, response-to-JSON conversion, and response-filtering helpers
+ * (contact attributes, meta fields, hidden fields).
+ */
 import {
   TResponse,
   TResponseDataValue,
@@ -93,6 +100,14 @@ export const extractChoiceIdsFromResponse = (
   return [];
 };
 
+/**
+ * Resolves a choice ID from a display value.
+ * For picture selection, matches by imageUrl; for text choices, matches by default label.
+ *
+ * @param value — the display value to resolve
+ * @param element — the element with choices
+ * @returns — the matched choice ID, or "other" if no match
+ */
 export const getChoiceIdByValue = (
   value: string,
   element: TSurveyMultipleChoiceElement | TSurveyRankingElement | TSurveyPictureSelectionElement
@@ -104,6 +119,12 @@ export const getChoiceIdByValue = (
   return element.choices.find((choice) => choice.label.default === value)?.id ?? "other";
 };
 
+/**
+ * Sums all time-to-complete (TTC) values and appends `_total`.
+ *
+ * @param ttc — per-question TTC values
+ * @returns — the same object with an added _total field
+ */
 export const calculateTtcTotal = (ttc: TResponseTtc) => {
   const result = { ...ttc };
   result._total = Object.values(result).reduce((acc: number, val: number) => acc + val, 0);
@@ -111,6 +132,13 @@ export const calculateTtcTotal = (ttc: TResponseTtc) => {
   return result;
 };
 
+/**
+ * Builds a deterministic export filename from survey name and today's date.
+ *
+ * @param surveyName — the survey name (sanitised for filesystem safety)
+ * @param extension — file extension (csv, xlsx)
+ * @returns — e.g. "export-my-survey-2025-01-15.csv"
+ */
 export const getResponsesFileName = (surveyName: string, extension: string) => {
   const sanitizedSurveyName = sanitizeString(surveyName);
 
@@ -118,6 +146,13 @@ export const getResponsesFileName = (surveyName: string, extension: string) => {
   return `export-${sanitizedSurveyName.split(" ").join("-")}-${formattedDateString}.${extension}`.toLocaleLowerCase();
 };
 
+/**
+ * Flattens the response meta object into a list of header labels.
+ * Nested objects (e.g. userAgent) are joined with " - " separator.
+ *
+ * @param obj — the response meta
+ * @returns — flat string array of meta keys
+ */
 export const extracMetadataKeys = (obj: TResponse["meta"]) => {
   let keys: string[] = [];
 
@@ -134,6 +169,17 @@ export const extracMetadataKeys = (obj: TResponse["meta"]) => {
   return keys;
 };
 
+/**
+ * Derives CSV/XLSX header groups from a survey and its responses.
+ *
+ * Returns: meta fields (from response.meta), element headlines (numbered),
+ * hidden field IDs, variable names, and user attribute keys aggregated across
+ * all responses.
+ *
+ * @param survey — the survey
+ * @param responses — at least one response (used for meta key discovery)
+ * @returns — header groups
+ */
 export const extractSurveyDetails = (survey: TSurvey, responses: TResponse[]) => {
   const metaDataFields = responses.length > 0 ? extracMetadataKeys(responses[0].meta) : [];
   const modifiedSurvey = replaceHeadlineRecall(survey, "default");
@@ -166,6 +212,18 @@ export const extractSurveyDetails = (survey: TSurvey, responses: TResponse[]) =>
   return { metaDataFields, elements, hiddenFields, variables, userAttributes };
 };
 
+/**
+ * Converts responses into an array of flat JSON objects suitable for CSV/XLSX export.
+ * Handles matrix rows, multi-choice option IDs, tags, variables, attributes,
+ * hidden fields, verified emails, and quota names.
+ *
+ * @param survey — the survey
+ * @param responses — the response list
+ * @param elementsHeadlines — pre-computed header groups from extractSurveyDetails
+ * @param userAttributes — pre-computed user attribute keys
+ * @param hiddenFields — pre-computed hidden field IDs
+ * @param isQuotasAllowed — whether to include quota columns
+ */
 export const getResponsesJson = (
   survey: TSurvey,
   responses: TResponseWithQuotas[],
@@ -273,6 +331,13 @@ export const getResponsesJson = (
   return jsonData;
 };
 
+/**
+ * Aggregates all unique contact attribute values across a set of responses.
+ * Used to populate filter dropdowns in the response viewer.
+ *
+ * @param responses — the response batch
+ * @returns — map of attribute key → unique values array
+ */
 export const getResponseContactAttributes = (
   responses: Pick<TResponse, "contactAttributes" | "data" | "meta">[]
 ): TSurveyContactAttributes => {
@@ -299,6 +364,13 @@ export const getResponseContactAttributes = (
   }
 };
 
+/**
+ * Aggregates all unique meta field values across a set of responses.
+ * Nested meta objects (e.g. userAgent) are unwrapped into flat keys.
+ *
+ * @param responses — the response batch
+ * @returns — map of meta key → unique values array
+ */
 export const getResponseMeta = (
   responses: Pick<TResponse, "contactAttributes" | "data" | "meta">[]
 ): TSurveyMetaFieldFilter => {
@@ -343,6 +415,13 @@ export const getResponseMeta = (
   }
 };
 
+/**
+ * Collects all unique values for each hidden field defined in the survey.
+ *
+ * @param survey — the survey (needed for hiddenFields config)
+ * @param responses — the response batch
+ * @returns — map of hidden field ID → unique values array
+ */
 export const getResponseHiddenFields = (
   survey: TSurvey,
   responses: Pick<TResponse, "contactAttributes" | "data" | "meta">[]
@@ -383,6 +462,14 @@ export const getResponseHiddenFields = (
   }
 };
 
+/**
+ * Generates every permutation of every non-empty subset of an array.
+ * Used for the "includesOne" / "doesNotIncludeOne" filter logic where the response
+ * could match any subset of the selected choices in any order.
+ *
+ * @param array — the input values
+ * @returns — all subset permutations (order-sensitive)
+ */
 export const generateAllPermutationsOfSubsets = (array: string[]): string[][] => {
   const subsets: string[][] = [];
 

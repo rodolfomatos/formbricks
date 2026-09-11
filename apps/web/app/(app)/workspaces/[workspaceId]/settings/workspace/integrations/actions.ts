@@ -19,6 +19,10 @@ const ZCreateOrUpdateIntegrationAction = z.object({
   integrationData: ZIntegrationInput,
 });
 
+/**
+ * Creates or updates a workspace integration (Slack, Notion, Airtable, etc.).
+ * Logs audit events and captures a PostHog event on success.
+ */
 export const createOrUpdateIntegrationAction = authenticatedActionClient
   .inputSchema(ZCreateOrUpdateIntegrationAction)
   .action(
@@ -65,6 +69,9 @@ const ZDeleteIntegrationAction = z.object({
   integrationId: ZId,
 });
 
+/**
+ * Deletes a workspace integration by ID. Logs an audit event on success.
+ */
 export const deleteIntegrationAction = authenticatedActionClient.inputSchema(ZDeleteIntegrationAction).action(
   withAuditLogging("deleted", "integration", async ({ ctx, parsedInput }) => {
     const organizationId = await getOrganizationIdFromIntegrationId(parsedInput.integrationId);

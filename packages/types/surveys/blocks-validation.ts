@@ -1,3 +1,4 @@
+/** Block cycle detection — DFS-based algorithm to find blocks with cyclic jump-to-block logic. */
 import type { TActionJumpToBlock, TSurveyBlock, TSurveyBlockLogicAction } from "./blocks";
 
 export const findBlocksWithCyclicLogic = (blocks: TSurveyBlock[]): string[] => {

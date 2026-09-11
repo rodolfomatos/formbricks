@@ -4,6 +4,7 @@ import type { TTemplate } from "@formbricks/types/templates";
 import type { TUserLocale } from "@formbricks/types/user";
 import { isInternalI18nString, isPlainObject } from "../../guards";
 
+/** Payload shape for creating a survey from a template via the v3 API. */
 export type TV3TemplateSurveyCreatePayload = {
   workspaceId: string;
   name: string;
@@ -48,6 +49,10 @@ function toV3PublicValue(value: unknown, defaultLanguage: TUserLocale): unknown 
   );
 }
 
+/**
+ * Converts a Formbricks template into a v3 survey create payload,
+ * replacing translatable placeholders along the way.
+ */
 export function buildV3SurveyCreatePayloadFromTemplate({
   template,
   workspaceId,

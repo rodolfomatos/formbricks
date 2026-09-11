@@ -1,5 +1,10 @@
 import { TJsWorkspaceStateSurvey, TJsWorkspaceStateWorkspaceSetting } from "@formbricks/types/js";
 
+/**
+ * Resolves the effective styling for a survey based on workspace and survey settings.
+ * Workspace `allowStyleOverwrite` and survey `overwriteThemeStyling` flags control
+ * which theme takes precedence.
+ */
 export const getStyling = (workspace: TJsWorkspaceStateWorkspaceSetting, survey: TJsWorkspaceStateSurvey) => {
   // allow style overwrite is disabled from the workspace
   if (!workspace.styling.allowStyleOverwrite) {

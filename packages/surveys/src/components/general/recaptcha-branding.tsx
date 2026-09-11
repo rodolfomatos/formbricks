@@ -1,3 +1,4 @@
+/** reCAPTCHA branding — renders the Google reCAPTCHA privacy policy and terms-of-service notice in the survey footer. */
 import { useTranslation } from "react-i18next";
 
 export function RecaptchaBranding() {

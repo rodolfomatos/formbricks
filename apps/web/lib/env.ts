@@ -1,3 +1,14 @@
+/**
+ * Environment variable validation and typing.
+ *
+ * Uses `@t3-oss/env-nextjs` with Zod schemas to validate all environment
+ * variables at startup. AI provider config is validated separately with
+ * cross-field constraints (e.g. AI_MODEL required when AI_PROVIDER is set,
+ * provider-specific credentials required per provider).
+ *
+ * The validated `env` object is the single source of truth for all env vars;
+ * direct `process.env` access should not be used outside this file.
+ */
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 import { AI_PROVIDERS } from "@formbricks/types/ai";
@@ -234,7 +245,6 @@ const parsedEnv = createEnv({
     EMAIL_AUTH_DISABLED: z.enum(["1", "0"]).optional(),
     EMAIL_VERIFICATION_DISABLED: z.enum(["1", "0"]).optional(),
     ENCRYPTION_KEY: z.string(),
-    ENTERPRISE_LICENSE_KEY: z.string().optional(),
     ENVIRONMENT: z.enum(["production", "staging"]).prefault("production"),
     GITHUB_ID: z.string().optional(),
     GITHUB_SECRET: z.string().optional(),
@@ -310,6 +320,10 @@ const parsedEnv = createEnv({
     S3_ENDPOINT_URL: z.string().optional(),
     S3_FORCE_PATH_STYLE: z.enum(["1", "0"]).optional(),
     SAML_DATABASE_URL: z.string().optional(),
+    SAML_IDP_SSO_URL: z.string().optional(),
+    SAML_IDP_ENTITY_ID: z.string().optional(),
+    SAML_IDP_CERT: z.string().optional(),
+    SAML_IDP_METADATA_URL: z.string().optional(),
     SENTRY_DSN: z.string().optional(),
     SLACK_CLIENT_ID: z.string().optional(),
     SLACK_CLIENT_SECRET: z.string().optional(),
@@ -399,7 +413,6 @@ const parsedEnv = createEnv({
     EMAIL_AUTH_DISABLED: process.env.EMAIL_AUTH_DISABLED,
     EMAIL_VERIFICATION_DISABLED: process.env.EMAIL_VERIFICATION_DISABLED,
     ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
-    ENTERPRISE_LICENSE_KEY: process.env.ENTERPRISE_LICENSE_KEY,
     ENVIRONMENT: process.env.ENVIRONMENT,
     GITHUB_ID: process.env.GITHUB_ID,
     GITHUB_SECRET: process.env.GITHUB_SECRET,
@@ -471,6 +484,10 @@ const parsedEnv = createEnv({
     S3_ENDPOINT_URL: process.env.S3_ENDPOINT_URL,
     S3_FORCE_PATH_STYLE: process.env.S3_FORCE_PATH_STYLE,
     SAML_DATABASE_URL: process.env.SAML_DATABASE_URL,
+    SAML_IDP_SSO_URL: process.env.SAML_IDP_SSO_URL,
+    SAML_IDP_ENTITY_ID: process.env.SAML_IDP_ENTITY_ID,
+    SAML_IDP_CERT: process.env.SAML_IDP_CERT,
+    SAML_IDP_METADATA_URL: process.env.SAML_IDP_METADATA_URL,
     SLACK_CLIENT_ID: process.env.SLACK_CLIENT_ID,
     SLACK_CLIENT_SECRET: process.env.SLACK_CLIENT_SECRET,
     SMTP_HOST: process.env.SMTP_HOST,
@@ -502,6 +519,10 @@ const parsedEnv = createEnv({
   },
 });
 
+/**
+ * Validated, typed environment variables.
+ * Access all env vars through this export — never read process.env directly.
+ */
 export const env = ZAIConfigurationEnv.superRefine(validateActiveAIProviderConfiguration)
   .transform(() => parsedEnv)
   .parse(parsedEnv);

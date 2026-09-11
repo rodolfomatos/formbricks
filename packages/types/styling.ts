@@ -1,3 +1,4 @@
+/** Survey styling schemas — brand colors, fonts, card arrangement, logo, button/input/option appearance. */
 import { z } from "zod";
 import { ZColor, ZStorageUrl } from "./common";
 

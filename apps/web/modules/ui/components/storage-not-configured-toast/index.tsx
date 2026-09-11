@@ -1,3 +1,7 @@
+/**
+ * Toast content shown when file storage is not configured or uploads are unavailable.
+ * Links to the documentation for setting up file uploads.
+ */
 "use client";
 
 import { useTranslation } from "react-i18next";

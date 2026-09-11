@@ -1,3 +1,7 @@
+/**
+ * Horizontal toolbar of icon buttons with tooltips. Each action has visibility,
+ * disabled, and loading state control. Renders nothing when all actions are hidden.
+ */
 import { LucideIcon } from "lucide-react";
 import { TooltipRenderer } from "@/modules/ui/components/tooltip";
 import { Button } from "../button";

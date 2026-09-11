@@ -1,5 +1,7 @@
+/** Default maximum allowed request body size (2 MB). */
 export const DEFAULT_REQUEST_BODY_LIMIT_BYTES = 2 * 1024 * 1024;
 
+/** Thrown when a request body exceeds the configured byte limit. */
 export class RequestBodyTooLargeError extends Error {
   readonly actualBytes: number | null;
   readonly limitBytes: number;
@@ -34,6 +36,10 @@ const assertBodySize = (actualBytes: number, limitBytes: number): void => {
   }
 };
 
+/**
+ * Reads the full request body as a string, enforcing a maximum byte limit.
+ * Throws RequestBodyTooLargeError if the body exceeds the limit.
+ */
 export const readRequestBodyWithLimit = async (
   request: Request,
   limitBytes: number = DEFAULT_REQUEST_BODY_LIMIT_BYTES
@@ -84,6 +90,9 @@ export const readRequestBodyWithLimit = async (
   return textDecoder.decode(body);
 };
 
+/**
+ * Reads the request body with a byte limit and parses it as JSON.
+ */
 export const parseJsonBodyWithLimit = async <TJson = unknown>(
   request: Request,
   limitBytes: number = DEFAULT_REQUEST_BODY_LIMIT_BYTES

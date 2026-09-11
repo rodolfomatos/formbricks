@@ -16,6 +16,11 @@ interface PlanPageProps {
   }>;
 }
 
+/**
+ * Route: `/organizations/[organizationId]/workspaces/new/plan` (onboarding, cloud only).
+ * Shows the plan/trial selection card for new organizations. Redirects existing subscribers
+ * past the trial screen and self-hosted users directly to survey creation.
+ */
 const Page = async (props: PlanPageProps) => {
   const params = await props.params;
 

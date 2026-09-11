@@ -1,3 +1,4 @@
+/** User identity — sets the current userId (triggers re-sync if different) and handles logout with full teardown. */
 import { Config } from "@/lib/common/config";
 import { Logger } from "@/lib/common/logger";
 import { tearDown } from "@/lib/common/setup";

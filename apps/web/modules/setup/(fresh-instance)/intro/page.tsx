@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description: "Open-source Experience Management. Free & open source.",
 };
 
+/** Serves the `/setup/intro` route — welcome screen displayed on the first launch of a fresh Formbricks instance. */
 export const IntroPage = async () => {
   const t = await getTranslate();
   return (

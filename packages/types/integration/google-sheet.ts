@@ -1,3 +1,4 @@
+/** Google Sheets integration schemas — OAuth credentials, spreadsheet config, and integration CRUD types. */
 import { z } from "zod";
 import { ZIntegrationBase, ZIntegrationBaseSurveyData } from "./shared-types";
 

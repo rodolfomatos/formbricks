@@ -1,3 +1,4 @@
+/** Action tracking — maps action names to surveys and triggers them; handles code-based and no-code action dispatching. */
 import { Config } from "@/lib/common/config";
 import { Logger } from "@/lib/common/logger";
 import { triggerSurvey } from "@/lib/survey/widget";

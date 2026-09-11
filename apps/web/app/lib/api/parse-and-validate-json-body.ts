@@ -33,6 +33,11 @@ const DEFAULT_VALIDATION_MESSAGE = "Fields are missing or incorrectly formatted"
 const getErrorMessage = (error: unknown): string =>
   error instanceof Error ? error.message : "Unknown error occurred";
 
+/**
+ * Parses the request body as JSON, validates it against a Zod schema, and
+ * returns the typed data or an error response object with the appropriate
+ * HTTP status (payload too large, invalid JSON, or schema mismatch).
+ */
 export const parseAndValidateJsonBody = async <TSchema extends z.ZodTypeAny>({
   request,
   schema,

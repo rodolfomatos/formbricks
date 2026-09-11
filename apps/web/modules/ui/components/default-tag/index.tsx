@@ -1,3 +1,6 @@
+/**
+ * A small badge-like label displaying "Default". Used to mark default segments or templates.
+ */
 "use client";
 
 import { useTranslation } from "react-i18next";

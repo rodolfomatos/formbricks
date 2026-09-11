@@ -1,3 +1,7 @@
+/**
+ * Read S3 configuration from environment variables at import time so values
+ * are available synchronously throughout the module.
+ */
 export const S3_ACCESS_KEY = process.env.S3_ACCESS_KEY;
 export const S3_SECRET_KEY = process.env.S3_SECRET_KEY;
 export const S3_REGION = process.env.S3_REGION;

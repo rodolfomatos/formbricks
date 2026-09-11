@@ -14,6 +14,7 @@ type TApiErrorContext = {
 
 type TSentryCaptureContext = NonNullable<Parameters<typeof Sentry.captureException>[1]>;
 
+/** Supported API version identifiers for error-reporting context. */
 export type TApiVersion = "v1" | "v2" | "v3" | "unknown";
 
 const getPathname = (url: string): string => {
@@ -28,6 +29,10 @@ const getPathname = (url: string): string => {
   }
 };
 
+/**
+ * Extracts the API version segment (v1/v2/v3) from a URL pathname, defaulting
+ * to "unknown" if it does not match a recognised pattern.
+ */
 export const getApiVersionFromPath = (pathname: string): TApiVersion => {
   const match = /^\/api\/(v\d+)(?:\/|$)/.exec(pathname);
 
@@ -109,6 +114,10 @@ const getSerializedValueType = (value: unknown): string => {
   return typeof value;
 };
 
+/**
+ * Safely serialises an unknown value to a plain object, handling Error
+ * instances and nested objects that may contain circular references.
+ */
 export const serializeErrorSafely = (value: unknown): unknown => {
   try {
     return serializeError(value);
@@ -164,6 +173,10 @@ const buildApiErrorContext = ({
   };
 };
 
+/**
+ * Builds the Sentry capture context (tags, extra, level) from an API error
+ * context for consistent error grouping in Sentry.
+ */
 export const buildSentryCaptureContext = ({
   context,
   errorPayload,
@@ -195,6 +208,9 @@ export const buildSentryCaptureContext = ({
   },
 });
 
+/**
+ * Emits a structured API error log entry via the @formbricks/logger.
+ */
 export const emitApiErrorLog = (context: TApiErrorContext, errorPayload?: unknown): void => {
   const logContext =
     errorPayload === undefined
@@ -207,6 +223,10 @@ export const emitApiErrorLog = (context: TApiErrorContext, errorPayload?: unknow
   logger.withContext(logContext).error(getLogMessage(context.apiVersion));
 };
 
+/**
+ * Captures an API error in Sentry with structured context, swallowing
+ * failures so observability issues never affect the API response.
+ */
 export const emitApiErrorToSentry = ({
   error,
   captureContext,
@@ -235,6 +255,10 @@ const logReporterFailure = (context: TApiErrorContext, reportingError: unknown):
   }
 };
 
+/**
+ * Convenience function that logs an API error and optionally sends it to
+ * Sentry, using the request URL to auto-detect the API version.
+ */
 export const reportApiError = ({
   request,
   status,

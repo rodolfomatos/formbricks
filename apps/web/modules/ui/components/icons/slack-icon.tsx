@@ -1,3 +1,6 @@
+/**
+ * Slack brand icon SVG (hashtag/logo stroke style).
+ */
 export const SlackIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg

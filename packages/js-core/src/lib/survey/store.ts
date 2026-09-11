@@ -1,3 +1,4 @@
+/** Survey store — singleton that holds the currently-active survey and notifies subscribers when it changes. */
 import type { TWorkspaceStateSurvey } from "@/types/config";
 
 type Listener = (state: TWorkspaceStateSurvey | null, prevSurvey: TWorkspaceStateSurvey | null) => void;

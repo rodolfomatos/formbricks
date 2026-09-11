@@ -1,3 +1,8 @@
+/**
+ * Portals the survey logo into a predefined DOM slot (#formbricks-cardless-preview-logo-slot)
+ * during cardless survey previews. This allows the logo to render outside the normal React tree,
+ * positioned absolutely in the preview iframe.
+ */
 "use client";
 
 import { useEffect, useState } from "react";

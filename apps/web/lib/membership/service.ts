@@ -1,3 +1,11 @@
+/**
+ * Service layer for Memberships — the join table linking users to organisations.
+ *
+ * Memberships carry a role (owner, manager, member, billing) that governs what
+ * the user can do within the organisation. Reads are cached via React's `cache()`
+ * except when a Prisma transaction handle is provided (to avoid stale reads inside
+ * a transaction).
+ */
 import "server-only";
 import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
@@ -46,6 +54,16 @@ const getMembershipByUserIdOrganizationIdCached = reactCache(async (userId: stri
   getMembershipByUserIdOrganizationIdUncached(userId, organizationId)
 );
 
+/**
+ * Retrieves a membership record, bypassing the cache when a transaction handle is passed.
+ * This is the single entry-point for membership reads so callers don't need to remember
+ * which internal function handles caching vs. transaction support.
+ *
+ * @param userId — the user
+ * @param organizationId — the organisation
+ * @param tx — optional transaction handle (bypasses cache)
+ * @returns — the membership, or null
+ */
 export const getMembershipByUserIdOrganizationId = async (
   userId: string,
   organizationId: string,
@@ -58,6 +76,16 @@ export const getMembershipByUserIdOrganizationId = async (
   return getMembershipByUserIdOrganizationIdCached(userId, organizationId);
 };
 
+/**
+ * Creates or updates a membership record. If the user already has a membership
+ * with the same role, the existing record is returned unchanged (idempotent).
+ *
+ * @param organizationId — the organisation to add the user to
+ * @param userId — the user
+ * @param data — accepted status and role
+ * @param tx — optional transaction handle
+ * @returns — the created or existing membership
+ */
 export const createMembership = async (
   organizationId: string,
   userId: string,

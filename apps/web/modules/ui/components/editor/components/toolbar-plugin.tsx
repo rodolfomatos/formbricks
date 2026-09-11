@@ -1,3 +1,8 @@
+/**
+ * Lexical toolbar plugin providing block type selection (paragraph, headings, lists)
+ * and inline formatting buttons (bold, italic, underline, link, recall, edit recall).
+ * Manages initial content load from HTML and continuous HTML serialization.
+ */
 "use client";
 
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";

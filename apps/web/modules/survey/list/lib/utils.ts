@@ -42,6 +42,7 @@ function getNormalizedSort(value: unknown): TSurveyOverviewSort {
   return allowedSort.has(value as never) ? (value as TSurveyOverviewSort) : initialFilters.sortBy;
 }
 
+/** Normalises raw filter values into a safe TSurveyOverviewFilters object, validating statuses, types, and sort-by. */
 export function normalizeSurveyFilters(
   filters: Partial<TSurveyOverviewFilters> | null | undefined,
   currentWorkspaceChannel?: TWorkspaceConfigChannel
@@ -54,6 +55,7 @@ export function normalizeSurveyFilters(
   };
 }
 
+/** Parses JSON-stored filter preferences from localStorage into a validated TSurveyOverviewFilters object. Returns null on parse failure. */
 export function parseStoredSurveyFilters(
   storedValue: string | null,
   currentWorkspaceChannel?: TWorkspaceConfigChannel
@@ -72,6 +74,7 @@ export function parseStoredSurveyFilters(
   }
 }
 
+/** Returns true if any filter (name search, status, or type) is actively applied. */
 export function hasActiveSurveyFilters(filters: TSurveyOverviewFilters): boolean {
   return Boolean(filters.name) || filters.status.length > 0 || filters.type.length > 0;
 }

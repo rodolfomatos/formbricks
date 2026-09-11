@@ -1,3 +1,6 @@
+/**
+ * Returns Tailwind positioning classes for each placement option (bottomRight, topRight, topLeft, bottomLeft, center).
+ */
 import { TPlacement } from "@formbricks/types/common";
 
 export const getPlacementStyle = (placement: TPlacement) => {

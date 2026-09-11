@@ -1,3 +1,4 @@
+/** Alert — contextual notification banner with variants (default, destructive) for survey UI feedback messages. */
 import { type VariantProps, cva } from "class-variance-authority";
 import * as React from "react";
 import { cn } from "@/lib/utils";

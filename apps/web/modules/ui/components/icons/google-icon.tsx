@@ -1,3 +1,6 @@
+/**
+ * Google brand icon SVG (filled "G" logo).
+ */
 export const GoogleIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg

@@ -1,3 +1,7 @@
+/**
+ * Dropdown menu for a data-table column with options to hide the column or open table settings.
+ * Triggered by a three-dots button on the column header.
+ */
 "use client";
 
 import { Column } from "@tanstack/react-table";

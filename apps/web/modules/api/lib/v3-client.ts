@@ -11,6 +11,10 @@ type TV3ProblemBody = {
   invalid_params?: TV3InvalidParam[];
 };
 
+/**
+ * Structured API error representing a failed V3 API request with problem-detail fields.
+ * Carries the HTTP status, optional error code, request ID for tracing, and invalid parameter details.
+ */
 export class V3ApiError extends Error {
   status: number;
   code?: string;
@@ -43,6 +47,13 @@ export class V3ApiError extends Error {
   }
 }
 
+/**
+ * Extracts a user-facing error message from an unknown error, with a fallback.
+ *
+ * @param error — The caught error value
+ * @param fallbackMessage — Default message if the error can't be parsed
+ * @returns — The extracted or fallback message
+ */
 export function getV3ApiErrorMessage(error: unknown, fallbackMessage: string): string {
   if (error instanceof V3ApiError) {
     return error.detail;
@@ -55,6 +66,13 @@ export function getV3ApiErrorMessage(error: unknown, fallbackMessage: string): s
   return fallbackMessage;
 }
 
+/**
+ * Parses a Fetch API Response into a structured V3ApiError.
+ * Attempts to extract problem-detail body fields from the response JSON.
+ *
+ * @param response — The fetch Response object to parse
+ * @returns — A parsed V3ApiError with status, detail, and optional metadata
+ */
 export async function parseV3ApiError(response: Response): Promise<V3ApiError> {
   let problemBody: TV3ProblemBody | undefined;
 

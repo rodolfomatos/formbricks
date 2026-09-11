@@ -1,3 +1,10 @@
+/**
+ * BullMQ job queue configuration derived from environment variables.
+ *
+ * Controls whether the job queue (and its worker) are enabled, the Redis URL to use,
+ * and how many workers/concurrent jobs to run. In test mode the worker is disabled
+ * by default to avoid hanging the test runner.
+ */
 import "server-only";
 import type { JobsRuntimeOptions } from "@formbricks/jobs";
 import { env } from "@/lib/env";
@@ -5,11 +12,13 @@ import { env } from "@/lib/env";
 const DEFAULT_BULLMQ_WORKER_CONCURRENCY = 1;
 const DEFAULT_BULLMQ_WORKER_COUNT = 1;
 
+/** Describes whether and how to start the BullMQ worker process. */
 export interface JobsWorkerBootstrapConfig {
   enabled: boolean;
   runtimeOptions: JobsRuntimeOptions | null;
 }
 
+/** Describes whether job queueing (pushing to Redis) is available. */
 export interface JobsQueueingConfig {
   enabled: boolean;
   redisUrl: string | null;

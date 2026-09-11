@@ -37,6 +37,7 @@ interface AddWebhookModalProps {
   allowInternalUrls: boolean;
 }
 
+/** Modal dialog for creating a new webhook — includes URL validation, endpoint testing, trigger/survey selection, and a post-creation secret display. */
 export const AddWebhookModal = ({
   workspaceId,
   surveys,

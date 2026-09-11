@@ -1,3 +1,4 @@
+/** Welcome card — renders the survey start screen with headline, description, recall-replaced text, optional media, and a start/submit button. */
 import { useEffect } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { type TI18nString } from "@formbricks/types/i18n";

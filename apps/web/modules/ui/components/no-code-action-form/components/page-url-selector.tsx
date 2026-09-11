@@ -1,3 +1,8 @@
+/**
+ * Page URL filter section for no-code action forms.
+ * Supports adding URL rules (exact match, contains, regex, etc.), choosing AND/OR connectors,
+ * and testing whether a sample URL would match the configured rules.
+ */
 "use client";
 
 import { TFunction } from "i18next";

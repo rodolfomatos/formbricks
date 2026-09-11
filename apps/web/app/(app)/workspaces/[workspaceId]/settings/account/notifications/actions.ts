@@ -10,6 +10,10 @@ const ZUpdateNotificationSettingsAction = z.object({
   notificationSettings: ZUserNotificationSettings,
 });
 
+/**
+ * Updates the user's notification settings (email alert toggles per survey).
+ * Logs an audit event on success.
+ */
 export const updateNotificationSettingsAction = authenticatedActionClient
   .inputSchema(ZUpdateNotificationSettingsAction)
   .action(

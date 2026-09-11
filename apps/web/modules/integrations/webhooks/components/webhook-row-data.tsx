@@ -66,6 +66,7 @@ const renderSelectedTriggersText = (webhook: Webhook, t: TFunction) => {
   }
 };
 
+/** Single data row in the webhooks table — displays name/URL, source badge, associated surveys, triggers, and last-updated time. */
 export const WebhookRowData = ({ webhook, surveys }: { webhook: Webhook; surveys: TSurvey[] }) => {
   const { t, i18n } = useTranslation();
   const locale = i18n.resolvedLanguage ?? i18n.language ?? "en-US";

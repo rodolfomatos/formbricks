@@ -26,6 +26,7 @@ interface SingleResponseCardBodyProps {
   locale: TUserLocale;
 }
 
+/** Body of a single response card — renders each answered element, skipped/aborted indicators, hidden fields, variables, quotas, and completion status. */
 export const SingleResponseCardBody = ({
   survey,
   response,

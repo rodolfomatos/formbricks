@@ -1,3 +1,7 @@
+/**
+ * Full-screen overlay shown on mobile viewports telling users the app works best on desktop.
+ * Hidden on `sm:` breakpoint and above.
+ */
 "use client";
 
 import { ExternalLinkIcon, Maximize2Icon, SmartphoneIcon } from "lucide-react";

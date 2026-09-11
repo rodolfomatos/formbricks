@@ -17,6 +17,11 @@ const scopes = [
   "https://www.googleapis.com/auth/userinfo.email",
 ];
 
+/**
+ * GET /api/google-sheet
+ * Initiates Google Sheets OAuth flow. Creates an OAuth state record and returns an
+ * authorization URL for the user to grant Sheets and email scopes.
+ */
 export const GET = async (req: NextRequest) => {
   const workspaceId = req.headers.get("workspaceId");
   const session = await getServerSession(authOptions);

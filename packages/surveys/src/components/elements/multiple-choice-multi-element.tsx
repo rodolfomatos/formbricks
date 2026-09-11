@@ -1,3 +1,4 @@
+/** Multiple choice multi — renders a multi-select checkbox survey question using the survey-ui MultiSelect component, with shuffled choices and TTC tracking. */
 import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { MultiSelect, type MultiSelectOption } from "@formbricks/survey-ui";

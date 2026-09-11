@@ -145,9 +145,9 @@ const evaluateFollowUp = async (
 };
 
 /**
- * Sends follow-up emails for a survey response.
- * This is the main entry point for sending follow-ups - it handles all the logic internally
- * and only requires a response ID.
+ * Sends follow-up emails for a survey response. The main entry point — loads the response,
+ * survey, and organisation, checks permissions and rate limits, then evaluates every
+ * configured follow-up action.
  */
 export const sendFollowUpsForResponse = async (
   responseId: string,

@@ -1,3 +1,7 @@
+/**
+ * Returns localized copy (text, docs link, button label, not-configured message) for a given
+ * integration type. Centralizes integration-specific strings to avoid repetition.
+ */
 import { TFunction } from "i18next";
 import { TIntegrationType } from "@formbricks/types/integration";
 

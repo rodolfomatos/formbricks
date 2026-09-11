@@ -32,6 +32,7 @@ interface LinkSurveyWrapperProps {
   dir?: "ltr" | "rtl" | "auto";
 }
 
+/** Orchestrates the visual layout of a link survey: background media, logo, card styling, loading animation, legal footer, and preview banner. Supports embed mode and carded/cardless/linkSurveys arrangements. */
 export const LinkSurveyWrapper = ({
   children,
   workspace,

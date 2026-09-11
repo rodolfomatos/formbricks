@@ -1,3 +1,10 @@
+/**
+ * User service — CRUD for the core User entity.
+ *
+ * Handles: fetching users by ID/email, updating profile data, cascading user
+ * deletion (removing owned organizations, invitations, and notifying Brevo),
+ * listing users in an organization, and reading locale preferences.
+ */
 import "server-only";
 import { cache as reactCache } from "react";
 import { z } from "zod";
@@ -12,7 +19,12 @@ import { deleteBrevoCustomerByEmail } from "@/modules/auth/lib/brevo";
 import { validateInputs } from "../utils/validate";
 import { publicUserSelect } from "./public-user";
 
-// function to retrive basic information about a user's user
+/**
+ * Retrieves a user's public profile by ID.
+ *
+ * @param id — the user ID
+ * @returns — the user, or null
+ */
 export const getUser = reactCache(async (id: string): Promise<TUser | null> => {
   validateInputs([id, ZId]);
 
@@ -37,6 +49,12 @@ export const getUser = reactCache(async (id: string): Promise<TUser | null> => {
   }
 });
 
+/**
+ * Finds a user by their email address.
+ *
+ * @param email — the email
+ * @returns — the matching user, or null
+ */
 export const getUserByEmail = reactCache(async (email: string): Promise<TUser | null> => {
   validateInputs([email, z.email()]);
 
@@ -58,7 +76,13 @@ export const getUserByEmail = reactCache(async (email: string): Promise<TUser | 
   }
 });
 
-// function to update a user's user
+/**
+ * Updates a user's profile fields.
+ *
+ * @param personId — the user ID
+ * @param data — the fields to update
+ * @returns — the updated user
+ */
 export const updateUser = async (personId: string, data: TUserUpdateInput): Promise<TUser> => {
   validateInputs([personId, ZId], [data, ZUserUpdateInput.partial()]);
 
@@ -103,7 +127,13 @@ const deleteUserById = async (id: string): Promise<TUser> => {
   }
 };
 
-// function to delete a user's user including organizations
+/**
+ * Deletes a user and all owned organizations.
+ * Also removes invitations they created and notifies Brevo.
+ *
+ * @param id — the user ID
+ * @returns — the deleted user
+ */
 export const deleteUser = async (id: string): Promise<TUser> => {
   validateInputs([id, ZId]);
 
@@ -129,6 +159,12 @@ export const deleteUser = async (id: string): Promise<TUser> => {
   }
 };
 
+/**
+ * Lists all users who belong to a given organization (via membership).
+ *
+ * @param organizationId — the organization
+ * @returns — array of users
+ */
 export const getUsersWithOrganization = async (organizationId: string): Promise<TUser[]> => {
   validateInputs([organizationId, ZId]);
 
@@ -154,6 +190,12 @@ export const getUsersWithOrganization = async (organizationId: string): Promise<
   }
 };
 
+/**
+ * Returns the user's locale preference for i18n formatting.
+ *
+ * @param id — the user ID
+ * @returns — locale string, or undefined
+ */
 export const getUserLocale = reactCache(async (id: string): Promise<TUserLocale | undefined> => {
   validateInputs([id, ZId]);
 

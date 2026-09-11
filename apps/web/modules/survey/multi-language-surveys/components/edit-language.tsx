@@ -74,6 +74,7 @@ const validateLanguages = (languages: Language[], t: TFunction) => {
   return true;
 };
 
+/** Workspace language management UI with add, edit, delete, and validation for duplicate codes/aliases. */
 export function EditLanguage({ workspace, locale, isReadOnly }: EditLanguageProps) {
   const { t } = useTranslation();
   const [languages, setLanguages] = useState<Language[]>(workspace.languages);

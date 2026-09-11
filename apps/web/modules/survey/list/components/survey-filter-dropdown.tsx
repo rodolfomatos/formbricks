@@ -20,6 +20,7 @@ interface SurveyFilterDropdownProps {
   toggleDropdown: (id: string) => void;
 }
 
+/** Multi-select filter dropdown with checkboxes for status or type options. */
 export const SurveyFilterDropdown = ({
   title,
   id,

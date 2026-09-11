@@ -12,6 +12,10 @@ const getOrgId = async (workspaceId: string): Promise<string> => {
   }
 };
 
+/**
+ * Logs a file deletion audit event. Gracefully handles failures to resolve
+ * the organization ID by using UNKNOWN_DATA as fallback.
+ */
 export const logFileDeletion = async ({
   workspaceId,
   accessType,

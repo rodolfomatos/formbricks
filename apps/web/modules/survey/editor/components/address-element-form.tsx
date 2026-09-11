@@ -1,3 +1,4 @@
+/** Form editor for the Address question element — headline, subheader, toggle-table of address sub-fields (line1, line2, city, state, zip, country), and validation rules. Automatically derives the top-level required flag from sub-field configs. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

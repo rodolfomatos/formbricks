@@ -1,3 +1,4 @@
+/** Display schemas — records of when a survey was shown to a contact, with filter and creation input types. */
 import { z } from "zod";
 
 export const ZDisplay = z.object({

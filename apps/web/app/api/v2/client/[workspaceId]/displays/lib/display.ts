@@ -8,6 +8,10 @@ import {
 import { validateInputs } from "@/lib/utils/validate";
 import { doesContactExistInWorkspace } from "./contact";
 
+/**
+ * Creates a display for v2 API, verifying the contact exists in the
+ * workspace before linking.
+ */
 export const createDisplay = async (displayInput: TDisplayCreateInputV2): Promise<{ id: string }> => {
   validateInputs([displayInput, ZDisplayCreateInputV2]);
 

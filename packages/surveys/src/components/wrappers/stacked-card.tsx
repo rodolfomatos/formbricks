@@ -1,3 +1,4 @@
+/** Stacked card — renders a single survey question as an animated card in the stacked-cards layout, with entrance/exit transitions and touch-scroll support. */
 import { MutableRef } from "preact/hooks";
 import { useEffect, useMemo, useState } from "preact/hooks";
 import { JSX } from "preact/jsx-runtime";

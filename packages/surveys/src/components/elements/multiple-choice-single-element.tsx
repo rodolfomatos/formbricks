@@ -1,3 +1,4 @@
+/** Multiple choice single — renders a single-select dropdown/radio survey question using the survey-ui SingleSelect, with shuffled choices and TTC tracking. */
 import { useEffect, useMemo, useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { SingleSelect, type SingleSelectOption } from "@formbricks/survey-ui";

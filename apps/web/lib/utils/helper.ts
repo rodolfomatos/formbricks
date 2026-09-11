@@ -1,3 +1,11 @@
+/**
+ * Shared helper functions for traversing the resource hierarchy.
+ *
+ * These `getOrganizationIdFrom*` and `getWorkspaceIdFrom*` helpers resolve
+ * the owning organization/workspace ID from any sub-resource ID by chaining
+ * lookups through the entity tree. Used by the authorisation layer to
+ * check access rights.
+ */
 import { ResourceNotFoundError } from "@formbricks/types/errors";
 import {
   getActionClass,
@@ -18,6 +26,7 @@ import {
   getWorkspace,
 } from "@/lib/utils/services";
 
+/** Formats a server action error result into a human-readable message string. */
 export const getFormattedErrorMessage = (result: {
   serverError?: string;
   validationErrors?: unknown;
@@ -282,6 +291,7 @@ export const getWorkspaceIdFromQuotaId = async (quotaId: string) => {
   return await getWorkspaceIdFromSurveyId(quota.surveyId);
 };
 
+/** Case-insensitive fuzzy match: strips spaces, underscores, dashes before comparing. */
 export const isStringMatch = (query: string, value: string): boolean => {
   // lowercase both query and value
   // replace all spaces with empty string

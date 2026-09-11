@@ -1,82 +1,137 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useTranslation } from "react-i18next";
-import { ConfirmPasswordForm } from "@/modules/ee/two-factor-auth/components/confirm-password-form";
-import { DisplayBackupCodes } from "@/modules/ee/two-factor-auth/components/display-backup-codes";
-import { EnterCode } from "@/modules/ee/two-factor-auth/components/enter-code";
-import { ScanQRCode } from "@/modules/ee/two-factor-auth/components/scan-qr-code";
+import { Button } from "@/modules/ui/components/button";
 import {
   Dialog,
-  DialogBody,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/modules/ui/components/dialog";
-
-export type EnableTwoFactorModalStep = "confirmPassword" | "scanQRCode" | "enterCode" | "backupCodes";
+import { Input } from "@/modules/ui/components/input";
+import { Label } from "@/modules/ui/components/label";
+import { enableTwoFactorAuth, finalizeTwoFactorSetup, verifyTwoFactorCode } from "../actions";
+import { TwoFactorBackup } from "./two-factor-backup";
 
 interface EnableTwoFactorModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
 }
 
-export const EnableTwoFactorModal = ({ open, setOpen }: EnableTwoFactorModalProps) => {
-  const router = useRouter();
-  const [currentStep, setCurrentStep] = useState<EnableTwoFactorModalStep>("confirmPassword");
-  const [backupCodes, setBackupCodes] = useState<string[]>([]);
-  const [dataUri, setDataUri] = useState<string>("");
-  const [secret, setSecret] = useState<string>("");
-
-  const refreshData = () => {
-    router.refresh();
-  };
-
+export function EnableTwoFactorModal({ open, setOpen }: Readonly<EnableTwoFactorModalProps>) {
   const { t } = useTranslation();
+  const { data: sessionData, update } = useSession();
+  const userId = sessionData?.user?.id ?? "";
+  const [step, setStep] = useState<"qr" | "verify" | "backup">("qr");
+  const [secret, setSecret] = useState("");
+  const [qrCode, setQrCode] = useState("");
+  const [backupCodes, setBackupCodes] = useState<string[]>([]);
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
 
-  const resetState = () => {
-    setCurrentStep("confirmPassword");
-    setBackupCodes([]);
-    setDataUri("");
-    setSecret("");
+  useEffect(() => {
+    if (open) {
+      setStep("qr");
+      setCode("");
+      setError("");
+      enableTwoFactorAuth(userId).then((result) => {
+        setSecret(result.secret);
+        setQrCode(result.qrCode);
+      });
+    }
+  }, [open, userId]);
+
+  const handleVerify = useCallback(async () => {
+    if (!code) return;
+    const result = await verifyTwoFactorCode(userId, code);
+    if (result.valid) {
+      const backup = await finalizeTwoFactorSetup(userId);
+      setBackupCodes(backup.backupCodes);
+      setStep("backup");
+    } else {
+      setError(t("invalid_code"));
+    }
+  }, [code, t, userId]);
+
+  const handleComplete = useCallback(async () => {
+    await update();
     setOpen(false);
-  };
+  }, [update, setOpen]);
 
   return (
-    <Dialog open={open} onOpenChange={() => resetState()}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("workspace.settings.profile.two_factor_authentication")}</DialogTitle>
-          <DialogDescription>
-            {t("workspace.settings.profile.confirm_your_current_password_to_get_started")}
-          </DialogDescription>
-        </DialogHeader>
-        <DialogBody>
-          {currentStep === "confirmPassword" && (
-            <ConfirmPasswordForm
-              setBackupCodes={setBackupCodes}
-              setCurrentStep={setCurrentStep}
-              setDataUri={setDataUri}
-              setSecret={setSecret}
-              setOpen={setOpen}
-            />
-          )}
+        {step === "qr" && (
+          <>
+            <DialogHeader>
+              <DialogTitle>{t("enable_two_factor_auth")}</DialogTitle>
+              <DialogDescription>{t("scan_qr_code")}</DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-center p-4">
+              <div className="h-48 w-48 bg-slate-100 flex items-center justify-center rounded-lg">
+                <span className="text-sm text-slate-500">{t("qr_code_placeholder")}</span>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="secondary" onClick={() => setOpen(false)}>
+                {t("cancel")}
+              </Button>
+              <Button variant="primary" onClick={() => setStep("verify")}>
+                {t("next")}
+              </Button>
+            </DialogFooter>
+          </>
+        )}
 
-          {currentStep === "scanQRCode" && (
-            <ScanQRCode setCurrentStep={setCurrentStep} dataUri={dataUri} secret={secret} setOpen={setOpen} />
-          )}
+        {step === "verify" && (
+          <>
+            <DialogHeader>
+              <DialogTitle>{t("verify_code")}</DialogTitle>
+              <DialogDescription>
+                {t("enter_the_code_from_your_authenticator_app")}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 p-4">
+              <Label htmlFor="code">{t("code")}</Label>
+              <Input
+                id="code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="000000"
+                maxLength={6}
+              />
+              {error && <p className="text-sm text-red-500">{error}</p>}
+            </div>
+            <DialogFooter>
+              <Button variant="secondary" onClick={() => setStep("qr")}>
+                {t("back")}
+              </Button>
+              <Button variant="primary" onClick={handleVerify}>
+                {t("verify")}
+              </Button>
+            </DialogFooter>
+          </>
+        )}
 
-          {currentStep === "enterCode" && (
-            <EnterCode setCurrentStep={setCurrentStep} setOpen={setOpen} refreshData={refreshData} />
-          )}
-
-          {currentStep === "backupCodes" && (
-            <DisplayBackupCodes backupCodes={backupCodes} setOpen={resetState} />
-          )}
-        </DialogBody>
+        {step === "backup" && (
+          <>
+            <DialogHeader>
+              <DialogTitle>{t("backup_codes")}</DialogTitle>
+              <DialogDescription>{t("save_backup_codes")}</DialogDescription>
+            </DialogHeader>
+            <TwoFactorBackup codes={backupCodes} />
+            <DialogFooter>
+              <Button variant="primary" onClick={handleComplete}>
+                {t("done")}
+              </Button>
+            </DialogFooter>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
-};
+}

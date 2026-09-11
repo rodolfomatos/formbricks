@@ -1,3 +1,4 @@
+/** Response queue — manages online/offline response submission with retry, quota enforcement, reCAPTCHA verification, and offline IndexedDB fallback. */
 import { Result, err, ok } from "@formbricks/types/error-handlers";
 import { ApiErrorResponse } from "@formbricks/types/errors";
 import { TQuotaFullResponse } from "@formbricks/types/quota";

@@ -1,3 +1,4 @@
+/** Collapsible editor for the survey welcome card — enable/disable toggle, company logo upload, headline, message, next-button label, time-to-finish, and response-count display switches. */
 "use client";
 
 import * as Collapsible from "@radix-ui/react-collapsible";

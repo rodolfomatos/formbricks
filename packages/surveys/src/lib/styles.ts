@@ -1,4 +1,4 @@
-// Add this import for survey-ui CSS variables
+/** Style injection — computes all survey CSS custom properties from branding/theme styling and injects them + global/preflight CSS into the host document's head with CSP nonce support. */
 import surveyUiCss from "@formbricks/survey-ui/styles?inline";
 import { type TSurveyStyling } from "@formbricks/types/surveys/types";
 import { type TWorkspaceStyling } from "@formbricks/types/workspace";

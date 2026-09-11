@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the IdBadge component.
+ * Covers default, column/row layout, disabled copy, hover, override, custom styling, and in-table usage.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { IdBadge } from "./index";
 

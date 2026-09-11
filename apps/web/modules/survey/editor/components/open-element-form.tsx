@@ -1,3 +1,4 @@
+/** Form editor for the Open Text question element — headline, subheader, placeholder, long-answer toggle, and validation rules editor with input type switching. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

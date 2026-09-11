@@ -1,3 +1,4 @@
+/** Sortable, collapsible editor for a single ending card — supports both end-screen content and redirect-to-URL type switching, duplicate/delete/move, and deletion validation against quotas, logic, and follow-ups. */
 "use client";
 
 import { useSortable } from "@dnd-kit/sortable";

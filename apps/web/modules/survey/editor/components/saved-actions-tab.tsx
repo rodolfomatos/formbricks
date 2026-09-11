@@ -1,3 +1,4 @@
+/** Saved actions tab of the Add Action modal — lists previously-created actions grouped by trigger type (surveyResponse, surveySubmission, whenToSend, etc.) with edit/delete and an add-new action button. */
 "use client";
 
 import { useState } from "react";

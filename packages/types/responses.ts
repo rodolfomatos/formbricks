@@ -1,3 +1,4 @@
+/** Response schemas — survey response data, filter criteria, meta info, and CRUD inputs for response management. */
 import { z } from "zod";
 import { ZId } from "./common";
 import { ZSurveyQuota } from "./quota";

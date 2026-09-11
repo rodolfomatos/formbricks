@@ -16,6 +16,13 @@ import {
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { hasPermission } from "@/modules/organization/settings/api-keys/lib/utils";
 
+/**
+ * Handles GET requests for `/api/v2/management/webhooks/[webhookId]`. Requires API key authentication. Returns the requested resource(s).
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export const GET = async (request: NextRequest, props: { params: Promise<{ webhookId: string }> }) =>
   authenticatedApiClient({
     request,
@@ -50,6 +57,13 @@ export const GET = async (request: NextRequest, props: { params: Promise<{ webho
     },
   });
 
+/**
+ * Handles PUT requests for `/api/v2/management/webhooks/[webhookId]`. Requires API key authentication. Updates an existing resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param request — The incoming Next.js Request object with parsed body
+ * @returns — A Next.js Response with the operation result
+ */
 export const PUT = async (request: NextRequest, props: { params: Promise<{ webhookId: string }> }) =>
   authenticatedApiClient({
     request,
@@ -132,6 +146,13 @@ export const PUT = async (request: NextRequest, props: { params: Promise<{ webho
     targetType: "webhook",
   });
 
+/**
+ * Handles DELETE requests for `/api/v2/management/webhooks/[webhookId]`. Requires API key authentication. Deletes an existing resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export const DELETE = async (request: NextRequest, props: { params: Promise<{ webhookId: string }> }) =>
   authenticatedApiClient({
     request,

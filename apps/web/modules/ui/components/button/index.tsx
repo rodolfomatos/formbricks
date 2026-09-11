@@ -1,3 +1,8 @@
+/**
+ * Polymorphic button component with variant (default, destructive, outline, secondary, ghost, link)
+ * and size (default, sm, lg, icon, tall) options. Supports a loading state that shows a spinner
+ * and disables interaction. Uses Radix Slot for asChild polymorphism.
+ */
 import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps, cva } from "class-variance-authority";
 import { Loader2 } from "lucide-react";

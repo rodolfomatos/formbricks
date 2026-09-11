@@ -1,3 +1,4 @@
+/** Language switch — dropdown selector that switches survey language at runtime, displaying each language in its native script and updating i18next. */
 import { useRef, useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { TJsWorkspaceStateSurvey } from "@formbricks/types/js";

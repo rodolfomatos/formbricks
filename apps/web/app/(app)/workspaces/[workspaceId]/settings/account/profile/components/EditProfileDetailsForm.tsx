@@ -37,6 +37,10 @@ interface IEditProfileDetailsFormProps {
   emailVerificationDisabled: boolean;
 }
 
+/**
+ * Form for editing user profile details: name, email, and locale.
+ * Requires password confirmation when changing email. Supports password reset flow for email-based users.
+ */
 export const EditProfileDetailsForm = ({
   user,
   isPasswordResetEnabled,

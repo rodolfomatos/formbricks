@@ -1,4 +1,7 @@
-// Mock data for email templates to use in React Email preview server
+/**
+ * Mock data for the React Email preview server — provides realistic props
+ * for every email template so devs can preview changes in the browser.
+ */
 import { TOrganization } from "@formbricks/types/organizations";
 import { TResponse } from "@formbricks/types/responses";
 import { TSurveyElementTypeEnum } from "@formbricks/types/surveys/elements";

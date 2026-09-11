@@ -1,3 +1,4 @@
+/** Top menu bar for the survey editor — back navigation, survey name input, auto-save indicator, storage warning, save/publish/schedule buttons, and unsaved-changes confirmation dialog. */
 "use client";
 
 import { ArrowLeftIcon, SettingsIcon } from "lucide-react";

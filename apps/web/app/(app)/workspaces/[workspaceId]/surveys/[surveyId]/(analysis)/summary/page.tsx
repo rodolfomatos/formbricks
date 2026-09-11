@@ -16,7 +16,6 @@ import { getSurvey } from "@/lib/survey/service";
 import { getUser } from "@/lib/user/service";
 import { getTranslate } from "@/lingodotdev/server";
 import { getSegments } from "@/modules/ee/contacts/segments/lib/segments";
-import { getIsContactsEnabled, getIsQuotasEnabled } from "@/modules/ee/license-check/lib/utils";
 import { getOrganizationBilling } from "@/modules/survey/lib/survey";
 import { IdBadge } from "@/modules/ui/components/id-badge";
 import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper";
@@ -47,8 +46,7 @@ const SurveyPage = async (props: { params: Promise<{ workspaceId: string; survey
     throw new AuthenticationError(t("common.not_authenticated"));
   }
 
-  const isContactsEnabled = await getIsContactsEnabled(organization.id);
-  const segments = isContactsEnabled ? await getSegments(workspace.id) : [];
+  const segments = await getSegments(workspace.id);
 
   if (!organization) {
     throw new ResourceNotFoundError(t("common.organization"), null);
@@ -57,8 +55,6 @@ const SurveyPage = async (props: { params: Promise<{ workspaceId: string; survey
   if (!organizationBilling) {
     throw new ResourceNotFoundError(t("common.organization"), organization.id);
   }
-  const isQuotasAllowed = await getIsQuotasEnabled(organization.id);
-
   const aiConfig = await getOrganizationAIConfig(organization.id);
   const aiUnavailableReason = getAISmartToolsUnavailableReason(aiConfig) ?? null;
 
@@ -78,7 +74,7 @@ const SurveyPage = async (props: { params: Promise<{ workspaceId: string; survey
             publicDomain={publicDomain}
             responseCount={initialSurveySummary?.meta.totalResponses ?? 0}
             segments={segments}
-            isContactsEnabled={isContactsEnabled}
+            isContactsEnabled={true}
             isFormbricksCloud={IS_FORMBRICKS_CLOUD}
             isStorageConfigured={IS_STORAGE_CONFIGURED}
             enterpriseLicenseRequestFormUrl={ENTERPRISE_LICENSE_REQUEST_FORM_URL}
@@ -92,7 +88,7 @@ const SurveyPage = async (props: { params: Promise<{ workspaceId: string; survey
         surveyId={params.surveyId}
         locale={user.locale ?? DEFAULT_LOCALE}
         initialSurveySummary={initialSurveySummary}
-        isQuotasAllowed={isQuotasAllowed}
+        isQuotasAllowed={true}
       />
 
       <IdBadge id={surveyId} label={t("common.survey_id")} variant="column" />

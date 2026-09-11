@@ -1,3 +1,7 @@
+/**
+ * Renders a list of response values as styled badges with optional icon and ID badges.
+ * Used in response data display for multi-select and other choice-type questions.
+ */
 import React from "react";
 import { cn } from "@/lib/cn";
 import { IdBadge } from "@/modules/ui/components/id-badge";

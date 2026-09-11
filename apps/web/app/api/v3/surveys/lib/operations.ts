@@ -137,6 +137,10 @@ function serializeValidationResult<TDocument extends TV3SurveyDocument>(
   };
 }
 
+/**
+ * Lists surveys for the authenticated workspace, with query-based
+ * filtering, pagination, and optional language localisation.
+ */
 export async function listV3Surveys({
   searchParams,
   authentication,
@@ -202,6 +206,9 @@ export async function listV3Surveys({
   }
 }
 
+/**
+ * Creates a new survey in the v3 API from a pre-validated body.
+ */
 export async function createV3SurveyResponse({
   body,
   authentication,
@@ -303,6 +310,10 @@ export async function createV3SurveyResponse({
   }
 }
 
+/**
+ * Creates a new survey from a raw request body, validating it against
+ * the V3 survey schema first.
+ */
 export async function createV3SurveyResponseFromRawInput({
   body,
   authentication,
@@ -331,6 +342,9 @@ export async function createV3SurveyResponseFromRawInput({
   });
 }
 
+/**
+ * Fetches a single survey by ID with optional language localisation.
+ */
 export async function getV3Survey({
   surveyId,
   lang,
@@ -400,6 +414,9 @@ export async function getV3Survey({
   }
 }
 
+/**
+ * Deletes a survey by ID after authorising write access.
+ */
 export async function deleteV3Survey({
   surveyId,
   authentication,
@@ -448,6 +465,9 @@ export async function deleteV3Survey({
   }
 }
 
+/**
+ * Patches an existing survey (partial update) after authorising write access.
+ */
 export async function patchV3SurveyResponse({
   surveyId,
   body,
@@ -536,6 +556,10 @@ export async function patchV3SurveyResponse({
   }
 }
 
+/**
+ * Validates a survey create/patch body for correctness (IDs, references,
+ * locales, etc.) without persisting anything.
+ */
 export async function validateV3Survey({
   body,
   authentication,
@@ -615,6 +639,9 @@ export async function validateV3Survey({
   }
 }
 
+/**
+ * Validates a survey from a raw request body, parsing it with Zod first.
+ */
 export async function validateV3SurveyFromRawInput({
   body,
   authentication,

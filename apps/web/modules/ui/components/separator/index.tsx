@@ -1,3 +1,6 @@
+/**
+ * Styled horizontal or vertical separator built on Radix Separator primitive.
+ */
 "use client";
 
 import * as SeparatorPrimitive from "@radix-ui/react-separator";

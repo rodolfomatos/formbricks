@@ -1,3 +1,7 @@
+/**
+ * Modal dialog for saving a filter segment with a name and description.
+ * Creates a new segment or converts a private (unnamed) segment into a named one.
+ */
 "use client";
 
 import { UsersIcon } from "lucide-react";

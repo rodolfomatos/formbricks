@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the DropdownMenu component.
+ * Covers default, disabled, checkbox, radio, with-label, and many-items variants.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import {
   BarChart,

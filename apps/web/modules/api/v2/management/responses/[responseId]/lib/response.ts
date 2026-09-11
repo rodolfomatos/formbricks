@@ -12,6 +12,12 @@ import { ZResponseUpdateSchema } from "@/modules/api/v2/management/responses/[re
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { evaluateResponseQuotas } from "@/modules/ee/quotas/lib/evaluation-service";
 
+/**
+ * Cached retrieval of a single response by ID.
+ *
+ * @param responseId — The response ID
+ * @returns — The response if found
+ */
 export const getResponse = reactCache(async (responseId: string) => {
   try {
     const responsePrisma = await prisma.response.findUnique({
@@ -35,6 +41,12 @@ export const getResponse = reactCache(async (responseId: string) => {
   }
 });
 
+/**
+ * Retrieves a response with related contact and tags, formatted for the response pipeline.
+ *
+ * @param responseId — The response ID
+ * @returns — The enriched response ready for pipeline processing
+ */
 export const getResponseForPipeline = async (
   responseId: string
 ): Promise<Result<TResponse, ApiErrorResponseV2>> => {
@@ -89,6 +101,12 @@ export const getResponseForPipeline = async (
   }
 };
 
+/**
+ * Deletes a response and its associated display record and uploaded files.
+ *
+ * @param responseId — The response ID to delete
+ * @returns — The deleted response
+ */
 export const deleteResponse = async (responseId: string): Promise<Result<Response, ApiErrorResponseV2>> => {
   try {
     const deletedResponse = await prisma.response.delete({
@@ -138,6 +156,14 @@ export const deleteResponse = async (responseId: string): Promise<Result<Respons
   }
 };
 
+/**
+ * Updates a response's fields by ID. Optionally runs inside a Prisma transaction.
+ *
+ * @param responseId — The response ID to update
+ * @param responseInput — The fields to update
+ * @param tx — Optional Prisma transaction client
+ * @returns — The updated response
+ */
 export const updateResponse = async (
   responseId: string,
   responseInput: z.infer<typeof ZResponseUpdateSchema>,
@@ -174,6 +200,14 @@ export const updateResponse = async (
   }
 };
 
+/**
+ * Updates a response within a transaction and evaluates response quotas.
+ * If a quota is full, the response is marked as finished.
+ *
+ * @param responseId — The response ID to update
+ * @param responseInput — The response fields to update
+ * @returns — The updated response, potentially modified by quota logic
+ */
 export const updateResponseWithQuotaEvaluation = async (
   responseId: string,
   responseInput: z.infer<typeof ZResponseUpdateSchema>

@@ -6,6 +6,12 @@ import { Result, err, ok } from "@formbricks/types/error-handlers";
 import { TContactAttributeKeyUpdateSchema } from "@/modules/api/v2/management/contact-attribute-keys/[contactAttributeKeyId]/types/contact-attribute-keys";
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 
+/**
+ * Retrieves a single contact attribute key by ID.
+ *
+ * @param contactAttributeKeyId — The unique ID of the contact attribute key to fetch
+ * @returns — The contact attribute key if found, or a not_found error
+ */
 export const getContactAttributeKey = reactCache(async (contactAttributeKeyId: string) => {
   try {
     const contactAttributeKey = await prisma.contactAttributeKey.findUnique({
@@ -35,6 +41,13 @@ export const getContactAttributeKey = reactCache(async (contactAttributeKeyId: s
   }
 });
 
+/**
+ * Updates the name/description of a contact attribute key. Cannot change the key itself.
+ *
+ * @param contactAttributeKeyId — The ID of the key to update
+ * @param contactAttributeKeyInput — The fields to update (name, description)
+ * @returns — The updated contact attribute key
+ */
 export const updateContactAttributeKey = async (
   contactAttributeKeyId: string,
   contactAttributeKeyInput: TContactAttributeKeyUpdateSchema
@@ -99,6 +112,12 @@ export const updateContactAttributeKey = async (
   }
 };
 
+/**
+ * Deletes a contact attribute key by ID.
+ *
+ * @param contactAttributeKeyId — The ID of the key to delete
+ * @returns — The deleted contact attribute key
+ */
 export const deleteContactAttributeKey = async (
   contactAttributeKeyId: string
 ): Promise<Result<ContactAttributeKey, ApiErrorResponseV2>> => {

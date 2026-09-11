@@ -13,6 +13,13 @@ import {
 import { resolveBodyIdsV2 } from "@/modules/api/v2/management/lib/workspace-resolver";
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 
+/**
+ * Handles GET requests for `/api/v2/management/contact-attribute-keys`. Requires API key authentication. Returns the requested resource(s).
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export const GET = async (request: NextRequest) =>
   authenticatedApiClient({
     request,
@@ -36,6 +43,13 @@ export const GET = async (request: NextRequest) =>
     },
   });
 
+/**
+ * Handles POST requests for `/api/v2/management/contact-attribute-keys`. Requires API key authentication. Creates a new resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param request — The incoming Next.js Request object with parsed body
+ * @returns — A Next.js Response with the operation result
+ */
 export const POST = async (request: NextRequest) =>
   authenticatedApiClient({
     request,

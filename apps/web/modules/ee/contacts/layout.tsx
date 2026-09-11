@@ -1,23 +1,9 @@
-import { redirect } from "next/navigation";
-import { IS_FORMBRICKS_CLOUD } from "@/lib/constants";
-import { getBillingFallbackPath } from "@/lib/membership/navigation";
-import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
-
-const ConfigLayout = async (props: {
-  params: Promise<{ workspaceId: string }>;
+interface ContactsLayoutProps {
   children: React.ReactNode;
-}) => {
-  const params = await props.params;
+}
 
-  const { children } = props;
-
-  const { isBilling } = await getWorkspaceAuth(params.workspaceId);
-
-  if (isBilling) {
-    return redirect(getBillingFallbackPath(params.workspaceId, IS_FORMBRICKS_CLOUD));
-  }
-
-  return children;
+export const ContactsLayout = ({ children }: Readonly<ContactsLayoutProps>) => {
+  return <div className="mx-auto max-w-7xl px-4 py-6">{children}</div>;
 };
 
-export default ConfigLayout;
+export default ContactsLayout;

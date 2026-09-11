@@ -1,3 +1,4 @@
+/** Form editor for the Matrix (rating scale) question element — manages sortable rows and columns, add/delete with validation against logic references, shuffle options, and validation rules. */
 "use client";
 
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";

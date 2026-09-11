@@ -1,13 +1,21 @@
 import type FormbricksHub from "@formbricks/hub";
 
+/** Hub SDK feedback record creation params. */
 export type FeedbackRecordCreateParams = FormbricksHub.FeedbackRecordCreateParams;
+/** Hub SDK feedback record response data. */
 export type FeedbackRecordData = FormbricksHub.FeedbackRecordData;
+/** Hub SDK feedback record list request params. */
 export type FeedbackRecordListParams = FormbricksHub.FeedbackRecordListParams;
+/** Hub SDK feedback record list response. */
 export type FeedbackRecordListResponse = FormbricksHub.FeedbackRecordListResponse;
+/** Hub SDK feedback record update params. */
 export type FeedbackRecordUpdateParams = FormbricksHub.FeedbackRecordUpdateParams;
 
+/** Hub SDK semantic search request params. */
 export type SemanticSearchInput = FormbricksHub.FeedbackRecords.SearchPerformSemanticSearchParams;
+/** Hub SDK semantic search response. */
 export type SemanticSearchResponse = FormbricksHub.FeedbackRecords.SearchPerformSemanticSearchResponse;
+/** An individual match from a semantic search result. */
 export type SemanticSearchResultItem = FormbricksHub.FeedbackRecords.SearchPerformSemanticSearchResponse.Data;
 
 export type TaxonomyScope = {

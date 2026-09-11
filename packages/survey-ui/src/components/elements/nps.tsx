@@ -1,3 +1,4 @@
+/** NPS (Net Promoter Score) — 0–10 scale selector with colored segments, bottom labels, RTL support, and optional "not applicable" choice. */
 import * as React from "react";
 import { ElementError } from "@/components/general/element-error";
 import { ElementHeader } from "@/components/general/element-header";

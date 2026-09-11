@@ -1,3 +1,4 @@
+/** Smiley face SVGs — full set of inline SVG emoji faces (tired, persevering, frowning, confused, neutral, slightly-smiling, smiling, grinning, squinting) for rating-scale smiley mode. */
 import type { FunctionComponent, JSX } from "preact";
 
 export const TiredFace: FunctionComponent<JSX.HTMLAttributes<SVGCircleElement>> = (props) => {

@@ -1,3 +1,4 @@
+/** Tab bar for the survey editor — renders navigation tabs (Questions, Styling, Language, Settings, Follow-ups) with optional alert indicator for language errors. Hides CX-mode tabs and conditionally hides the Styling tab. */
 "use client";
 
 import {

@@ -1,3 +1,6 @@
+/**
+ * Styled toggle switch built on Radix Switch primitive.
+ */
 "use client";
 
 import * as SwitchPrimitives from "@radix-ui/react-switch";

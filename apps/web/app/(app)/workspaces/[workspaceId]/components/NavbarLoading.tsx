@@ -1,3 +1,7 @@
+/**
+ * Skeleton loading placeholder for the top navigation bar.
+ * Renders animated pulse rectangles to indicate content is loading.
+ */
 export const NavbarLoading = () => {
   return (
     <div>

@@ -1,34 +1,14 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { type ChangeEvent, useRef, useState } from "react";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { TOrganization } from "@formbricks/types/organizations";
-import { TAllowedFileExtension } from "@formbricks/types/storage";
-import { useWorkspace } from "@/app/(app)/workspaces/[workspaceId]/context/workspace-context";
-import { SettingsCard } from "@/app/(app)/workspaces/[workspaceId]/settings/components/SettingsCard";
 import { getFormattedErrorMessage } from "@/lib/utils/helper";
-import {
-  removeOrganizationFaviconUrlAction,
-  updateOrganizationFaviconUrlAction,
-} from "@/modules/ee/whitelabel/favicon-customization/actions";
-import { handleFileUpload } from "@/modules/storage/file-upload";
-import { showFileUploadErrorToast } from "@/modules/storage/file-upload-error";
-import { Alert, AlertDescription } from "@/modules/ui/components/alert";
 import { Button } from "@/modules/ui/components/button";
-import { FileInput } from "@/modules/ui/components/file-input";
 import { Input } from "@/modules/ui/components/input";
-import { showStorageNotConfiguredToast } from "@/modules/ui/components/storage-not-configured-toast/lib/utils";
-import { ModalButton, UpgradePrompt } from "@/modules/ui/components/upgrade-prompt";
-
-// Favicon recommended formats - PNG and ICO are most widely supported
-const allowedFileExtensions: TAllowedFileExtension[] = ["png", "jpeg", "jpg", "ico", "webp"];
-
-// Maximum favicon size: 512x512 for high-DPI displays
-// File size limit: 100KB (realistically favicons should be much smaller)
-const MAX_FAVICON_SIZE_MB = 0.1; // 100KB
+import { updateOrganizationWhitelabelAction } from "@/modules/ee/whitelabel/actions";
 
 interface FaviconCustomizationSettingsProps {
   organization: TOrganization;
@@ -38,216 +18,67 @@ interface FaviconCustomizationSettingsProps {
   isStorageConfigured: boolean;
 }
 
-export const FaviconCustomizationSettings = ({
+export function FaviconCustomizationSettings({
   organization,
   hasWhiteLabelPermission,
-  workspaceId,
   isReadOnly,
-  isStorageConfigured,
-}: FaviconCustomizationSettingsProps) => {
-  const { workspace } = useWorkspace();
-  const workspaceBasePath = `/workspaces/${workspace?.id}`;
+}: FaviconCustomizationSettingsProps) {
   const { t } = useTranslation();
-  const router = useRouter();
+  const [faviconUrl, setFaviconUrl] = useState(organization.whitelabel?.faviconUrl ?? "");
+  const [isSaving, setIsSaving] = useState(false);
 
-  const [faviconUrl, setFaviconUrl] = useState<string | undefined>(
-    organization.whitelabel?.faviconUrl || undefined
-  );
-  const [isLoading, setIsLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleImageUpload = async (file: File) => {
-    setIsLoading(true);
-    try {
-      const uploadResult = await handleFileUpload(file, workspaceId, allowedFileExtensions);
-      if (uploadResult.error) {
-        showFileUploadErrorToast(uploadResult.error, t);
-        return;
-      }
-      setFaviconUrl(uploadResult.url);
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : t("common.something_went_wrong"));
-    } finally {
-      setIsLoading(false);
+  const handleSave = useCallback(async () => {
+    setIsSaving(true);
+    const result = await updateOrganizationWhitelabelAction({
+      organizationId: organization.id,
+      whitelabel: { logoUrl: organization.whitelabel?.logoUrl ?? null, faviconUrl: faviconUrl || null },
+    });
+    if (result?.data) {
+      toast.success(t("workspace.settings.domain.favicon_saved_successfully"));
+    } else {
+      const errorMessage = getFormattedErrorMessage(result);
+      toast.error(errorMessage);
     }
-  };
+    setIsSaving(false);
+  }, [organization.id, organization.whitelabel?.logoUrl, faviconUrl, t]);
 
-  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    if (!isStorageConfigured) {
-      showStorageNotConfiguredToast();
-      return;
-    }
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Validate file size
-    const fileSizeInMB = file.size / 1000000;
-    if (fileSizeInMB > MAX_FAVICON_SIZE_MB) {
-      toast.error(t("workspace.settings.domain.favicon_too_large"));
-      return;
-    }
-
-    await handleImageUpload(file);
-    setIsEditing(true);
-  };
-
-  const saveChanges = async () => {
-    if (!isEditing) {
-      setIsEditing(true);
-      return;
-    }
-
-    if (!faviconUrl) return;
-
-    setIsLoading(true);
-    try {
-      const updateFaviconResponse = await updateOrganizationFaviconUrlAction({
-        organizationId: organization.id,
-        faviconUrl,
-      });
-
-      if (updateFaviconResponse?.data) {
-        toast.success(t("workspace.settings.domain.favicon_saved_successfully"));
-        router.refresh();
-      } else {
-        const errorMessage = getFormattedErrorMessage(updateFaviconResponse);
-        toast.error(errorMessage);
-      }
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : t("common.something_went_wrong"));
-    } finally {
-      setIsLoading(false);
-      setIsEditing(false);
-    }
-  };
-
-  const removeFavicon = async () => {
-    setFaviconUrl(undefined);
-
-    if (!organization.whitelabel?.faviconUrl) {
-      setIsEditing(false);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const removeFaviconResponse = await removeOrganizationFaviconUrlAction({
-        organizationId: organization.id,
-      });
-
-      if (removeFaviconResponse?.data) {
-        toast.success(t("workspace.settings.domain.favicon_removed_successfully"));
-        router.refresh();
-      } else {
-        const errorMessage = getFormattedErrorMessage(removeFaviconResponse);
-        toast.error(errorMessage);
-      }
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : t("common.something_went_wrong"));
-    } finally {
-      setIsLoading(false);
-      setIsEditing(false);
-    }
-  };
-
-  const buttons: [ModalButton, ModalButton] = [
-    {
-      text: t("common.upgrade_plan"),
-      href: `${workspaceBasePath}/settings/organization/billing`,
-    },
-    {
-      text: t("common.learn_more"),
-      href: `${workspaceBasePath}/settings/organization/billing`,
-    },
-  ];
+  const disabled = isReadOnly || !hasWhiteLabelPermission;
 
   return (
-    <SettingsCard
-      title={t("workspace.settings.domain.favicon_customization")}
-      description={t("workspace.settings.domain.favicon_customization_description")}>
-      {hasWhiteLabelPermission ? (
-        <div className="w-full space-y-4">
-          {faviconUrl ? (
+    <div className="relative my-4 w-full max-w-4xl rounded-xl border border-slate-200 bg-white py-4 text-left shadow-sm">
+      <div className="flex justify-between border-b border-slate-200 px-4 pb-4">
+        <div>
+          <h4 className="text-lg font-medium tracking-normal">
+            {t("workspace.settings.domain.favicon_customization")}
+          </h4>
+          <p className="mt-1 text-sm text-slate-500">
+            {t("workspace.settings.domain.favicon_customization_description")}
+          </p>
+        </div>
+      </div>
+      <div className="space-y-4 px-4 pt-4">
+        {faviconUrl && (
+          <div className="flex items-center gap-4">
             <Image
               src={faviconUrl}
               alt="Favicon"
-              width={64}
-              height={64}
-              className="-mb-2 size-16 rounded-lg border object-contain p-1"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded border object-contain p-0.5"
             />
-          ) : (
-            <FileInput
-              id="favicon-input"
-              allowedFileExtensions={allowedFileExtensions}
-              workspaceId={workspaceId}
-              onFileUpload={(files: string[] | undefined, _fileType: "image" | "video") => {
-                if (files?.[0]) {
-                  setFaviconUrl(files[0]);
-                  setIsEditing(true);
-                }
-              }}
-              disabled={isReadOnly}
-              maxSizeInMB={MAX_FAVICON_SIZE_MB}
-              isStorageConfigured={isStorageConfigured}
-            />
-          )}
-
-          <Input
-            ref={fileInputRef}
-            type="file"
-            accept="image/jpeg, image/png, image/webp, image/x-icon, image/ico"
-            className="hidden"
-            disabled={isReadOnly}
-            onChange={handleFileChange}
-          />
-
-          {isEditing && faviconUrl && (
-            <div className="flex gap-2">
-              <Button
-                onClick={() => {
-                  if (!isStorageConfigured) {
-                    showStorageNotConfiguredToast();
-                    return;
-                  }
-                  fileInputRef.current?.click();
-                }}
-                variant="secondary"
-                size="sm">
-                {t("common.replace")}
-              </Button>
-              <Button variant="destructive" size="sm" onClick={removeFavicon} disabled={!isEditing}>
-                {t("common.remove")}
-              </Button>
-            </div>
-          )}
-
-          {faviconUrl && (
-            <Button onClick={saveChanges} disabled={isLoading || isReadOnly} size="sm">
-              {isEditing ? t("common.save") : t("common.edit")}
-            </Button>
-          )}
-
-          <Alert variant="info">
-            <AlertDescription>{t("workspace.settings.domain.favicon_size_hint")}</AlertDescription>
-          </Alert>
-
-          {isReadOnly && (
-            <Alert variant="warning">
-              <AlertDescription>
-                {t("common.only_owners_managers_and_manage_access_members_can_perform_this_action")}
-              </AlertDescription>
-            </Alert>
-          )}
-        </div>
-      ) : (
-        <UpgradePrompt
-          title={t("workspace.settings.domain.customize_favicon_with_higher_plan")}
-          description={t("workspace.settings.domain.customize_favicon_description")}
-          buttons={buttons}
-          feature="favicon_customization"
+          </div>
+        )}
+        <Input
+          type="text"
+          placeholder="https://example.com/favicon.ico"
+          value={faviconUrl}
+          onChange={(e) => setFaviconUrl(e.target.value)}
+          disabled={disabled}
         />
-      )}
-    </SettingsCard>
+        <Button type="button" size="sm" loading={isSaving} disabled={disabled} onClick={handleSave}>
+          {t("common.save")}
+        </Button>
+      </div>
+    </div>
   );
-};
+}

@@ -4,6 +4,11 @@ import { SLACK_AUTH_URL, SLACK_CLIENT_ID, SLACK_CLIENT_SECRET } from "@/lib/cons
 import { createIntegrationOAuthState } from "@/lib/oauth/integration-state";
 import { hasUserWorkspaceAccess } from "@/lib/workspace/auth";
 
+/**
+ * GET /api/v1/integrations/slack
+ * Initiates Slack OAuth flow. Creates an OAuth state record and returns an
+ * authorization URL for the user to grant access.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ req, authentication }) => {
     // session authentication

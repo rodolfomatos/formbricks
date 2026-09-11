@@ -1,3 +1,6 @@
+/**
+ * HTML5 brand icon SVG (filled shield+5 logo).
+ */
 export const Html5Icon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg

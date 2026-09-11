@@ -20,6 +20,7 @@ interface ShareInviteModalProps {
   setOpen: (open: boolean) => void;
 }
 
+/** Modal displaying a shareable invite link with a copy-to-clipboard button. */
 export const ShareInviteModal = ({ inviteToken, open, setOpen }: ShareInviteModalProps) => {
   const { t } = useTranslation();
 

@@ -15,6 +15,13 @@ import { hasPermission } from "@/modules/organization/settings/api-keys/lib/util
 import { resolveStorageUrlsInObject, validateFileUploads } from "@/modules/storage/utils";
 import { createResponseWithQuotaEvaluation, getResponses } from "./lib/response";
 
+/**
+ * Handles GET requests for `/api/v2/management/responses`. Requires API key authentication. Returns the requested resource(s).
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export const GET = async (request: NextRequest) =>
   authenticatedApiClient({
     request,
@@ -50,6 +57,13 @@ export const GET = async (request: NextRequest) =>
     },
   });
 
+/**
+ * Handles POST requests for `/api/v2/management/responses`. Requires API key authentication. Creates a new resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param request — The incoming Next.js Request object with parsed body
+ * @returns — A Next.js Response with the operation result
+ */
 export const POST = async (request: Request) =>
   authenticatedApiClient({
     request,

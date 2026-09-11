@@ -10,7 +10,7 @@ const methodPermissionMap = {
   DELETE: "manage", // Delete operations need manage permission
 };
 
-// Check if API key has sufficient permission for the requested workspace and method
+/** Checks if an API key's workspace permissions are sufficient for the given HTTP method on a specific workspace. */
 export const hasPermission = (
   permissions: TAPIKeyWorkspacePermission[],
   workspaceId: string,
@@ -42,7 +42,7 @@ export const hasPermission = (
   }
 };
 
-// Check if API key has sufficient permission for the requested workspace and method.
+/** Checks if an API key has sufficient workspace-level permission for a given HTTP method. */
 export const hasWorkspacePermission = (
   permissions: TAPIKeyWorkspacePermission[],
   workspaceId: string,
@@ -67,6 +67,7 @@ export const hasWorkspacePermission = (
   }
 };
 
+/** Checks if an API key has the required organization-level access type (read/write) based on its access control settings. */
 export const hasOrganizationAccess = (
   authentication: TAuthenticationApiKey,
   accessType: OrganizationAccessType

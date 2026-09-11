@@ -2414,6 +2414,7 @@
         "workspace": "Arbetsyta"
       },
       "enterprise": {
+        "ai_smart_tools": "AI-smarta verktyg",
         "audit_logs": "Granskningsloggar",
         "coming_soon": "Kommer snart",
         "contacts_and_segments": "Kontakthantering och segment",

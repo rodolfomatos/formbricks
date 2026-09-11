@@ -1,3 +1,11 @@
+/**
+ * Resource lookup service — fetches a minimal (id / parentId) projection of
+ * any entity type by its primary key. Used by the authorisation middleware
+ * to resolve parent-organisation/workspace without loading full rows.
+ *
+ * Every function follows the same pattern: Prisma findUnique → select { parentId }
+ * → return or throw ResourceNotFoundError / DatabaseError.
+ */
 "use server";
 
 import { cache as reactCache } from "react";

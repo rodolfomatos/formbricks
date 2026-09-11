@@ -9,6 +9,11 @@ export const OPTIONS = async (): Promise<Response> => {
   return responses.successResponse({}, true);
 };
 
+/**
+ * GET /api/v1/client/[workspaceId]/displays/[displayId]/response
+ * Returns the response ID associated with a given display event.
+ * Used by the SDK to link responses back to display events.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({
     req,

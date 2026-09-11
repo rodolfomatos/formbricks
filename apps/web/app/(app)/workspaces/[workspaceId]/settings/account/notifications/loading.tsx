@@ -5,6 +5,10 @@ import { LoadingCard } from "@/app/(app)/components/LoadingCard";
 import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper";
 import { PageHeader } from "@/modules/ui/components/page-header";
 
+/**
+ * Loading fallback for the notification settings page.
+ * Displays a skeleton card for the email alerts section.
+ */
 const Loading = () => {
   const { t } = useTranslation();
   const cards = [

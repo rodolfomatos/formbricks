@@ -1,3 +1,7 @@
+/**
+ * A delete confirmation dialog for contact segments that warns about active/inactive surveys
+ * still using the segment. Prevents deletion when the segment is in use.
+ */
 "use client";
 
 import React, { useMemo } from "react";

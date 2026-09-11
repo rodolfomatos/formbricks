@@ -1,3 +1,4 @@
+/** Survey element type enum — all supported question/element types in the survey builder. Kept in a separate file to avoid circular imports with Zod-heavy modules. */
 // Element Type Enum (same as question types)
 export enum TSurveyElementTypeEnum {
   FileUpload = "fileUpload",

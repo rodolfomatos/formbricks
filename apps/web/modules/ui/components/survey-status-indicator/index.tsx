@@ -1,3 +1,8 @@
+/**
+ * Visual indicator for survey status (inProgress, paused, completed, draft).
+ * Shows an animated ping dot for in-progress, or a static icon for other states.
+ * Optional tooltip mode adds a hover tooltip with status description.
+ */
 "use client";
 
 import { CalendarClockIcon, CheckIcon, type LucideIcon, PauseIcon, PencilIcon } from "lucide-react";

@@ -1,3 +1,7 @@
+/**
+ * Renders text with matching search terms highlighted in yellow.
+ * Escapes regex special characters in the search value for safe matching.
+ */
 interface HighlightedTextProps {
   value: string;
   searchValue: string;

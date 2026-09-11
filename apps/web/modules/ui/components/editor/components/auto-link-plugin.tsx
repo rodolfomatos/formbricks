@@ -1,3 +1,7 @@
+/**
+ * Lexical auto-link plugin that detects URLs and email addresses in text
+ * and automatically converts them to clickable link nodes.
+ */
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 
 const URL_MATCHER =

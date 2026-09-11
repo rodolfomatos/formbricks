@@ -9,6 +9,11 @@ import {
 import { createIntegrationOAuthState } from "@/lib/oauth/integration-state";
 import { hasUserWorkspaceAccess } from "@/lib/workspace/auth";
 
+/**
+ * GET /api/v1/integrations/notion
+ * Initiates Notion OAuth flow. Creates an OAuth state record and returns an
+ * authorization URL for the user to grant access.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ req, authentication }) => {
     if (!authentication || !("user" in authentication)) {

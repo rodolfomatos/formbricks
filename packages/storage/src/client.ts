@@ -14,8 +14,11 @@ import { type Result, type StorageError, StorageErrorCode, err, ok } from "./typ
 let cachedS3Client: S3Client | undefined;
 
 /**
- * Create an S3 client from environment variables
- * @returns A Result containing the S3 client or an error: S3CredentialsError | UnknownError
+ * Builds an S3Client from env vars (S3_REGION, S3_ENDPOINT_URL, S3_ACCESS_KEY,
+ * S3_SECRET_KEY). Only S3_BUCKET_NAME is strictly required; missing credentials
+ * fall back to the AWS SDK's default credential chain (IAM roles, etc.).
+ *
+ * @returns — S3Client instance on success, or a StorageError
  */
 export const createS3ClientFromEnv = (): Result<S3Client, StorageError> => {
   try {
@@ -59,8 +62,8 @@ export const createS3ClientFromEnv = (): Result<S3Client, StorageError> => {
 };
 
 /**
- * Get a cached singleton S3 client instance. Lazily initializes from env on first successful call.
- * Subsequent calls return the same instance.
+ * Returns a cached singleton S3 client. Lazily initialises from environment
+ * on first call; subsequent calls reuse the same instance.
  */
 export const getCachedS3Client = (): S3Client | undefined => {
   if (!cachedS3Client) {
@@ -73,9 +76,12 @@ export const getCachedS3Client = (): S3Client | undefined => {
 };
 
 /**
- * Create an S3 client from an existing client or from environment variables
- * @param s3Client - An existing S3 client
- * @returns An S3 client or undefined if the S3 credentials are not set in the environment variables or if there is an error creating the client
+ * Returns the provided S3 client or falls back to the cached singleton.
+ * This lets callers inject a custom client (e.g. for testing) while defaulting
+ * to the env-based singleton in production.
+ *
+ * @param s3Client — Optional pre-configured client that takes priority
+ * @returns — S3 client instance, or undefined if not configured
  */
 export const createS3Client = (s3Client?: S3Client): S3Client | undefined => {
   if (s3Client) {

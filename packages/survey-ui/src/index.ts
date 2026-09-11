@@ -1,3 +1,4 @@
+/** Survey UI — barrel export of all reusable survey form elements (Button, Input, OpenText, Matrix, NPS, etc.) and Storybook helpers. */
 import "@/styles/globals.css";
 
 export { Button, buttonVariants } from "@/components/general/button";

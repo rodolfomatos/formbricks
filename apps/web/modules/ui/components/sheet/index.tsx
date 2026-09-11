@@ -1,3 +1,7 @@
+/**
+ * Styled sheet (slide-in panel) built on Radix Dialog primitive with CVA variants.
+ * Supports top, bottom, left, and right sides with overlay, header, footer, title, and description.
+ */
 "use client";
 
 import * as SheetPrimitive from "@radix-ui/react-dialog";

@@ -12,6 +12,12 @@ type WebhookWithoutSecret = Omit<Webhook, "secret">;
 
 // Safe by default — the signing secret stays in the database.
 // Use getWebhookWithSecret only for server-side flows that legitimately need to sign payloads.
+/**
+ * Retrieves a webhook by ID, omitting the signing secret.
+ *
+ * @param webhookId — The webhook ID
+ * @returns — The webhook without its secret
+ */
 export const getWebhook = async (
   webhookId: string
 ): Promise<Result<WebhookWithoutSecret, ApiErrorResponseV2>> => {
@@ -44,6 +50,12 @@ export const getWebhook = async (
 };
 
 // Internal-only — returns the signing secret. Never expose the result through an API response.
+/**
+ * Retrieves a webhook by ID including the signing secret. Internal use only.
+ *
+ * @param webhookId — The webhook ID
+ * @returns — The full webhook including secret
+ */
 export const getWebhookWithSecret = async (
   webhookId: string
 ): Promise<Result<Webhook, ApiErrorResponseV2>> => {
@@ -72,6 +84,13 @@ export const getWebhookWithSecret = async (
   }
 };
 
+/**
+ * Updates a webhook's fields by ID. Validates URL if changed. Omits secret from response.
+ *
+ * @param webhookId — The webhook ID to update
+ * @param webhookInput — The fields to update
+ * @returns — The updated webhook without its secret
+ */
 export const updateWebhook = async (
   webhookId: string,
   webhookInput: z.infer<typeof ZWebhookUpdateSchema>
@@ -126,6 +145,12 @@ export const updateWebhook = async (
   }
 };
 
+/**
+ * Deletes a webhook by ID.
+ *
+ * @param webhookId — The webhook ID to delete
+ * @returns — The deleted webhook without its secret
+ */
 export const deleteWebhook = async (
   webhookId: string
 ): Promise<Result<WebhookWithoutSecret, ApiErrorResponseV2>> => {

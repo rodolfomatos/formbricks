@@ -1,3 +1,7 @@
+/**
+ * Higher-level skeleton loader that renders a full-page placeholder UI based on type.
+ * Supports "response" (single card), "responseTable" (table with rows), and "summary" layouts.
+ */
 import { Skeleton } from "@/modules/ui/components/skeleton";
 
 type SkeletonLoaderProps = {

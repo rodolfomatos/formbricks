@@ -8,12 +8,7 @@ import { getTranslate } from "@/lingodotdev/server";
 import { authOptions } from "@/modules/auth/lib/authOptions";
 import { TOrganizationAuth } from "../types/organization-auth";
 
-/**
- * Common utility to fetch organization data and perform authorization checks
- *
- * Usage:
- *   const { session, organization, ... } = await getOrganizationAuth(params.organizationId);
- */
+/** Common utility that fetches organization data and performs authorization checks for the current session user. */
 export const getOrganizationAuth = reactCache(async (organizationId: string): Promise<TOrganizationAuth> => {
   const t = await getTranslate();
 

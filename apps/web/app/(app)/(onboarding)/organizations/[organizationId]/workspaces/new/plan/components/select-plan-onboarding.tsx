@@ -6,6 +6,10 @@ interface SelectPlanOnboardingProps {
   ctaVariant: "control" | "variant_b" | "variant_c" | "variant_d";
 }
 
+/**
+ * Onboarding step that renders the plan selection card with A/B test feature variants.
+ * Points the "next" button to the survey creation step on completion.
+ */
 export const SelectPlanOnboarding = ({
   organizationId,
   featureVariant,

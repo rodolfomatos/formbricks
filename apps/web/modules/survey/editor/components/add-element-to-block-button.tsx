@@ -1,3 +1,4 @@
+/** Dropdown button that adds a new question element to an existing block — validates, applies defaults with multi-language labels, and scrolls the new card into view. */
 "use client";
 
 import { createId } from "@paralleldrive/cuid2";

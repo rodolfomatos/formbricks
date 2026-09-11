@@ -35,6 +35,7 @@ import {
   DropdownMenuTrigger,
 } from "@/modules/ui/components/dropdown-menu";
 
+/** Action dropdown for a survey card: edit, duplicate, copy to workspace, preview, copy link, and delete with confirmation. */
 interface SurveyDropDownMenuProps {
   survey: TSurveyListItem;
   publicDomain: string;

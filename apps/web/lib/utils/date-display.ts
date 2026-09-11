@@ -1,3 +1,10 @@
+/**
+ * Date display formatting for survey date elements.
+ *
+ * Parses stored date values (ISO-8601 or legacy format strings) and formats them
+ * for display using locale-aware methods. The `TSurveyDateFormatMap` tracks each
+ * element's configured date format for correct parsing.
+ */
 import type { TSurveyDateElement, TSurveyElement } from "@formbricks/types/surveys/elements";
 import { formatDateWithOrdinal } from "./datetime";
 
@@ -42,6 +49,13 @@ const parseLegacyStoredDateValue = (value: string, format: TSurveyDateElement["f
   }
 };
 
+/**
+ * Parses a stored date string (ISO-8601 or legacy M-d-y / d-M-y / y-M-d) into a Date.
+ *
+ * @param value — the stored value
+ * @param format — optional legacy format hint
+ * @returns — the parsed Date, or null
+ */
 export const parseStoredDateValue = (value: string, format?: TSurveyDateElement["format"]): Date | null => {
   const isoMatch = ISO_STORED_DATE_PATTERN.exec(value);
 
@@ -60,6 +74,14 @@ export const parseStoredDateValue = (value: string, format?: TSurveyDateElement[
   return null;
 };
 
+/**
+ * Converts a stored date value into a locale-formatted display string (with ordinal).
+ *
+ * @param value — the stored date string
+ * @param format — optional legacy format hint
+ * @param locale — the target locale (default: en-US)
+ * @returns — the formatted string, or null if unparseable
+ */
 export const formatStoredDateForDisplay = (
   value: string,
   format: TSurveyDateElement["format"] | undefined,
@@ -74,6 +96,7 @@ export const formatStoredDateForDisplay = (
   return formatDateWithOrdinal(parsedDate, locale);
 };
 
+/** Builds a map of element ID → date format for all date-type elements in a survey. */
 export const getSurveyDateFormatMap = (elements: TSurveyElement[]): TSurveyDateFormatMap => {
   return elements.reduce<TSurveyDateFormatMap>((dateFormats, element) => {
     if (element.type === "date") {

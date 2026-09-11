@@ -27,7 +27,6 @@ import { applyIPRateLimit } from "@/modules/core/rate-limit/helpers";
 import { rateLimitConfigs } from "@/modules/core/rate-limit/rate-limit-configs";
 import { withAuditLogging } from "@/modules/ee/audit-logs/lib/handler";
 import { ensureCloudStripeSetupForOrganization } from "@/modules/ee/billing/lib/organization-billing";
-import { getIsMultiOrgEnabled } from "@/modules/ee/license-check/lib/utils";
 import { subscribeUserToMailingList } from "@/modules/ee/mailing/lib/mailing-subscription";
 import { sendInviteAcceptedEmail, sendVerificationEmail } from "@/modules/email";
 import { createWorkspace } from "@/modules/workspaces/settings/lib/workspace";
@@ -175,9 +174,6 @@ async function handleInviteAcceptance(
  * not blocked by billing synchronisation.
  */
 async function handleOrganizationCreation(ctx: ActionClientCtx, user: TCreatedUser): Promise<void> {
-  const isMultiOrgEnabled = await getIsMultiOrgEnabled();
-  if (!isMultiOrgEnabled) return;
-
   const organization = await createOrganization({ name: `${user.name}'s Organization` });
   ctx.auditLoggingCtx.organizationId = organization.id;
 

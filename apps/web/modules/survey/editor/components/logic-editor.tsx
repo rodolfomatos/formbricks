@@ -1,3 +1,4 @@
+/** Root component for a single conditional-logic item — renders conditions, actions, and the fallback-block selector for the last logic item. */
 "use client";
 
 import { ArrowRightIcon } from "lucide-react";

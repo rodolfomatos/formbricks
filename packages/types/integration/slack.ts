@@ -1,3 +1,4 @@
+/** Slack integration schemas — OAuth credentials, channel-config mapping, and integration input types. */
 import { z } from "zod";
 import { ZIntegrationBase, ZIntegrationBaseSurveyData } from "./shared-types";
 

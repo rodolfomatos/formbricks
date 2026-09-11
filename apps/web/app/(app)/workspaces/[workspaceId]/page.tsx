@@ -5,6 +5,11 @@ import { getMembershipByUserIdOrganizationId } from "@/lib/membership/service";
 import { getAccessFlags } from "@/lib/membership/utils";
 import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
 
+/**
+ * Route: `/workspaces/[workspaceId]` (authenticated).
+ * Redirects billing-only members to their billing fallback page and all other members
+ * to the surveys list for this workspace.
+ */
 const WorkspacePage = async (props: { params: Promise<{ workspaceId: string }> }) => {
   const params = await props.params;
   const { session, organization } = await getWorkspaceAuth(params.workspaceId);

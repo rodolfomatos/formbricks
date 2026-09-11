@@ -112,6 +112,14 @@ const toUserLocale = (locale: string): TUserLocale => {
   return parsedLocale.success ? parsedLocale.data : DEFAULT_NOTIFICATION_LOCALE;
 };
 
+/**
+ * Detect whether an error indicates database connection-pool exhaustion
+ * (Prisma P2024 or a timeout message). These errors are retryable — the
+ * pipeline should re-queue rather than permanently fail.
+ *
+ * @param error — the error to inspect
+ * @returns — true if the error is a pool-exhaustion condition
+ */
 export const isPipelinePoolExhaustionError = (error: unknown): boolean => {
   if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2024") {
     return true;

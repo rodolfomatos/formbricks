@@ -22,7 +22,7 @@ import { requiresPasswordConfirmationForAccountDeletion } from "@/modules/accoun
 import {
   getSsoProviderLookupCandidates,
   normalizeSsoProvider,
-} from "@/modules/ee/sso/lib/provider-normalization";
+} from "@/modules/auth/sso/lib/provider-normalization";
 
 const ACCOUNT_DELETION_SSO_REAUTH_INTENT_TTL_MS = 10 * 60 * 1000;
 const ACCOUNT_DELETION_SSO_REAUTH_MARKER_TTL_MS = 5 * 60 * 1000;
@@ -402,6 +402,17 @@ const validateAccountDeletionSsoReauthenticationCallbackContext = async ({
   return { intent, normalizedProvider, storedIntent };
 };
 
+/**
+ * Begin the SSO re-authentication flow for account deletion. Creates a
+ * short-lived intent in Redis and returns a NextAuth sign-in config so
+ * the client can redirect the user to their identity provider.
+ *
+ * @param confirmationEmail — the user's email typed as confirmation
+ * @param returnToUrl — fallback URL after successful re-auth
+ * @param userId — the user requesting deletion
+ * @returns — provider name, callback URL, and authorization params for signIn()
+ * @throws — AuthorizationError if email does not match or SSO identity is missing
+ */
 export const startAccountDeletionSsoReauthentication = async ({
   confirmationEmail,
   returnToUrl,
@@ -453,6 +464,14 @@ export const startAccountDeletionSsoReauthentication = async ({
   };
 };
 
+/**
+ * Verify the SSO re-authentication callback and mark the intent as
+ * fulfilled. Consumes the Redis intent and stores a completion marker
+ * so the deletion flow can proceed.
+ *
+ * @param account — the NextAuth account from the callback
+ * @param intentToken — the JWT intent token
+ */
 export const completeAccountDeletionSsoReauthentication = async ({
   account,
   intentToken,
@@ -490,6 +509,11 @@ export const completeAccountDeletionSsoReauthentication = async ({
   );
 };
 
+/**
+ * Validate that an SSO callback matches the stored intent without
+ * consuming the intent. Used by the callback page to verify the request
+ * before showing a confirmation UI.
+ */
 export const validateAccountDeletionSsoReauthenticationCallback = async ({
   account,
   intentToken,
@@ -503,6 +527,15 @@ export const validateAccountDeletionSsoReauthenticationCallback = async ({
   });
 };
 
+/**
+ * Atomically read-and-delete the SSO re-authentication completion marker
+ * from Redis and verify it matches the current user. Called by the
+ * deletion service to confirm the user re-authenticated within the TTL.
+ *
+ * @param identityProvider — the user's identity provider
+ * @param providerAccountId — the provider account ID
+ * @param userId — the user requesting deletion
+ */
 export const consumeAccountDeletionSsoReauthentication = async ({
   identityProvider,
   providerAccountId,

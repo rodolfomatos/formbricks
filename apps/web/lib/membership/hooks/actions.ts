@@ -5,6 +5,15 @@ import { AuthorizationError, ResourceNotFoundError } from "@formbricks/types/err
 import { getOrganizationByWorkspaceId } from "../../organization/service";
 import { getMembershipByUserIdOrganizationId } from "../service";
 
+/**
+ * Server action that resolves the current user's membership role for a workspace.
+ * Bridges the gap between React components (which have the workspace ID) and the
+ * membership service (which uses organisation ID).
+ *
+ * @param workspaceId — the workspace to check membership for
+ * @param userId — the user to look up
+ * @returns — the user's organisation role
+ */
 export const getMembershipByUserIdOrganizationIdAction = async (workspaceId: string, userId: string) => {
   const organization = await getOrganizationByWorkspaceId(workspaceId);
 

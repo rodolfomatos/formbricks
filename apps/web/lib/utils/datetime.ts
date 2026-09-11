@@ -14,12 +14,13 @@ const DEFAULT_DATE_TIME_DISPLAY_OPTIONS: Intl.DateTimeFormatOptions = {
   minute: "2-digit",
 };
 
-// Helper function to calculate difference in days between two dates
+/** Calculates the absolute difference in days between two dates. */
 export const diffInDays = (date1: Date, date2: Date) => {
   const diffTime = Math.abs(date2.getTime() - date1.getTime());
   return Math.floor(diffTime / (1000 * 60 * 60 * 24));
 };
 
+/** Formats a date for display using Intl.DateTimeFormat with the given locale. */
 export const formatDateForDisplay = (
   date: Date,
   locale: string = DEFAULT_LOCALE,
@@ -28,6 +29,7 @@ export const formatDateForDisplay = (
   return new Intl.DateTimeFormat(locale, options).format(date);
 };
 
+/** Formats a date with time for display using Intl.DateTimeFormat. */
 export const formatDateTimeForDisplay = (
   date: Date,
   locale: string = DEFAULT_LOCALE,
@@ -36,6 +38,7 @@ export const formatDateTimeForDisplay = (
   return new Intl.DateTimeFormat(locale, options).format(date);
 };
 
+/** Formats a date with ordinal suffix (e.g. "Jan 5th, 2025") using the given locale. */
 export const formatDateWithOrdinal = (date: Date, locale: string = DEFAULT_LOCALE): string => {
   return formatDateForDisplay(date, locale, {
     weekday: "long",
@@ -45,6 +48,7 @@ export const formatDateWithOrdinal = (date: Date, locale: string = DEFAULT_LOCAL
   });
 };
 
+/** Checks whether a string can be parsed as a valid date. */
 export const isValidDateString = (value: string) => {
   const regex = /^(?:\d{4}-\d{1,2}-\d{1,2}|\d{1,2}-\d{1,2}-\d{4})$/;
 
@@ -60,6 +64,7 @@ export const isValidDateString = (value: string) => {
   return !Number.isNaN(date.getTime());
 };
 
+/** Formats a date as a stable sortable string (YYYY-MM-DD HH:MM:SS) for exports. */
 export const getFormattedDateTimeString = (date: Date): string => {
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",

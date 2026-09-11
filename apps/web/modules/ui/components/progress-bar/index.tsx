@@ -1,3 +1,8 @@
+/**
+ * A horizontal progress bar (0-1) and a half-circle NPS-style gauge.
+ * ProgressBar: fills from left to right with animated width.
+ * HalfCircle: rotates a filled arc to represent values from -100 to 100.
+ */
 "use client";
 
 import { cn } from "@/lib/cn";

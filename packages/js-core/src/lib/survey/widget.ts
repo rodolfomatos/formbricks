@@ -1,3 +1,4 @@
+/** Survey widget — triggers surveys, renders them via the `@formbricks/surveys` UMD bundle, manages survey lifecycle (open/close/retry). */
 /* eslint-disable no-console -- Required for error logging */
 import { Config } from "@/lib/common/config";
 import { CONTAINER_ID } from "@/lib/common/constants";

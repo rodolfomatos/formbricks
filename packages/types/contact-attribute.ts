@@ -1,3 +1,4 @@
+/** Contact attribute value schemas — stored attribute values linked to attribute keys and contacts. */
 import { z } from "zod";
 import { ZId } from "./common";
 

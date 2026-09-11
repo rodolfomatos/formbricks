@@ -16,6 +16,7 @@ import { createV3SurveyResponse } from "../../lib/operations";
 import { ZV3CreateSurveyBody, formatV3ZodInvalidParams } from "../../schemas";
 import { buildV3SurveyCreatePayloadFromTemplate } from "./template-to-v3";
 
+/** Zod schema for trusted template-create body (template ID + workspace). */
 export const ZV3TrustedTemplateCreateBody = z.object({
   workspaceId: z.cuid2(),
   templateId: z.string().trim().min(1),
@@ -66,6 +67,10 @@ async function resolveTrustedTemplate(body: TTrustedTemplateCreateBody): Promise
   };
 }
 
+/**
+ * Creates a survey from a trusted template ID, resolving the template
+ * and delegating to the v3 create operation.
+ */
 export async function createTrustedTemplateSurveyResponse({
   body,
   authentication,

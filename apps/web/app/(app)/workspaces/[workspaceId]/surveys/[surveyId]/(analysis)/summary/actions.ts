@@ -23,7 +23,6 @@ import { applyRateLimit } from "@/modules/core/rate-limit/helpers";
 import { rateLimitConfigs } from "@/modules/core/rate-limit/rate-limit-configs";
 import { withAuditLogging } from "@/modules/ee/audit-logs/lib/handler";
 import { generatePersonalLinks } from "@/modules/ee/contacts/lib/contacts";
-import { getIsContactsEnabled } from "@/modules/ee/license-check/lib/utils";
 import { getOrganizationLogoUrl } from "@/modules/ee/whitelabel/email-customization/lib/organization";
 import { sendEmbedSurveyPreviewEmail } from "@/modules/email";
 import { deleteResponsesAndDisplaysForSurvey } from "./lib/survey";
@@ -261,10 +260,6 @@ export const generatePersonalLinksAction = authenticatedActionClient
   .action(async ({ ctx, parsedInput }) => {
     const organizationId = await getOrganizationIdFromSurveyId(parsedInput.surveyId);
     const workspaceId = await getWorkspaceIdFromSurveyId(parsedInput.surveyId);
-    const isContactsEnabled = await getIsContactsEnabled(organizationId);
-    if (!isContactsEnabled) {
-      throw new OperationNotAllowedError("Contacts are not enabled for this workspace");
-    }
 
     await checkAuthorizationUpdated({
       userId: ctx.user.id,

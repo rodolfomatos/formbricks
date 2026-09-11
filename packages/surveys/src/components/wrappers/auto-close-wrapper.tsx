@@ -1,3 +1,4 @@
+/** Auto-close wrapper — counts down and auto-dismisses the survey with an optional onClose callback after a configurable timeout, showing a progress bar. */
 import React from "preact/compat";
 import { useEffect, useMemo, useRef, useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";

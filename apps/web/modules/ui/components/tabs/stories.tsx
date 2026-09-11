@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the Tabs component.
+ * Covers default, with-icons, fill-width, fit-width, big-size, and disabled variants.
+ */
 import type { Meta, StoryObj } from "@storybook/react";
 import { BarChart, FileText, InfoIcon, KeyRound, Settings, UserIcon } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./index";

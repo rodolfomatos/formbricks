@@ -15,6 +15,13 @@ import {
   isReservedFutureDefaultAttributeKey,
 } from "@/modules/ee/contacts/lib/attribute-key-policy";
 
+/**
+ * Lists contact attribute keys for the given workspaces, with optional filtering.
+ *
+ * @param workspaceIds — The workspaces to scope the query to
+ * @param params — Pagination and filter parameters
+ * @returns — Paginated list of contact attribute keys
+ */
 export const getContactAttributeKeys = reactCache(
   async (workspaceIds: string[], params: TGetContactAttributeKeysFilter) => {
     try {
@@ -44,6 +51,12 @@ export const getContactAttributeKeys = reactCache(
   }
 );
 
+/**
+ * Creates a new contact attribute key in a workspace.
+ *
+ * @param contactAttributeKey — The key definition (key, name, description, workspaceId, dataType)
+ * @returns — The created contact attribute key
+ */
 export const createContactAttributeKey = async (
   contactAttributeKey: TContactAttributeKeyInput
 ): Promise<Result<ContactAttributeKey, ApiErrorResponseV2>> => {

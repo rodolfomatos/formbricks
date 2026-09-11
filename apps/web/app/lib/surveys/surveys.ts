@@ -114,6 +114,11 @@ const META_OP_MAP = {
   "Does not end with": "doesNotEndWith",
 } as const;
 
+/**
+ * Generates the element options and filter options for the response filtering UI.
+ * Processes survey blocks, tags, contact attributes, meta fields, hidden fields,
+ * languages, and quotas into structured option lists.
+ */
 export const generateElementAndFilterOptions = (
   survey: TSurvey,
   environmentTags: TTag[] | undefined,
@@ -550,7 +555,10 @@ const processQuotaFilters = (quotas: FilterValue[], filters: TResponseFilterCrit
   });
 };
 
-// get the formatted filter expression to fetch filtered responses
+/**
+ * Converts the selected filter values from the response filter UI into the
+ * structured TResponseFilterCriteria used to query filtered responses.
+ */
 export const getFormattedFilters = (
   survey: TSurvey,
   selectedFilter: SelectedFilterValue,
@@ -646,7 +654,9 @@ export const getFormattedFilters = (
   return filters;
 };
 
-// get the today date with full hours
+/**
+ * Returns today's date with the time set to 23:59:59.999 (end of day).
+ */
 export const getTodayDate = (): Date => {
   const date = new Date();
   date.setHours(23, 59, 59, 999);

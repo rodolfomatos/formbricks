@@ -1,3 +1,4 @@
+/** Integration base types — shared foundation for all integration configs and survey data mappings. */
 import { z } from "zod";
 
 export const ZIntegrationBase = z.object({

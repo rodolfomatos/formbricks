@@ -1,3 +1,8 @@
+/**
+ * Preview panel for the Theme/Styling settings page.
+ * Toggles between link survey and app survey preview types with full-screen expansion support.
+ * Uses framer-motion for smooth transitions between preview modes.
+ */
 "use client";
 
 import { MotionConfig, Variants, motion } from "framer-motion";

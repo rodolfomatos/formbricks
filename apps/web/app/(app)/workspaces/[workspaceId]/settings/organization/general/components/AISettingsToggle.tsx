@@ -24,6 +24,10 @@ interface AISettingsToggleProps {
   enterpriseLicenseRequestFormUrl: string;
 }
 
+/**
+ * Toggle switch for enabling/disabling AI smart tools at the organization level.
+ * Shows an upgrade prompt if the plan lacks AI permission, or a warning if the instance is not configured.
+ */
 export const AISettingsToggle = ({
   organization,
   membershipRole,

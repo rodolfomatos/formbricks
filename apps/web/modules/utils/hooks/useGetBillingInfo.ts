@@ -2,6 +2,13 @@ import { useEffect, useState } from "react";
 import { TOrganizationBilling } from "@formbricks/types/organizations";
 import { getOrganizationBillingInfoAction } from "./actions";
 
+/**
+ * React hook that fetches billing info for the given organization and
+ * surfaces loading/error states. Re-fetches when organizationId changes.
+ *
+ * @param organizationId — the org whose billing info to load
+ * @returns — { billingInfo, isLoading, error }
+ */
 export const useGetBillingInfo = (organizationId: string) => {
   const [billingInfo, setBillingInfo] = useState<TOrganizationBilling>();
   const [isLoading, setIsLoading] = useState<boolean>(false);

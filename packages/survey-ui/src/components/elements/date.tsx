@@ -1,3 +1,4 @@
+/** Date element — date picker survey field with calendar popover, text input fallback, locale-aware formatting, and RTL support. */
 import * as React from "react";
 import { Calendar } from "@/components/general/calendar";
 import { ElementError } from "@/components/general/element-error";

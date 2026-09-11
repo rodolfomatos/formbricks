@@ -1,5 +1,6 @@
 "use client";
 
+/** Animated placeholder rows shown while the survey list is loading. */
 export const SurveyLoading = () => {
   return (
     <div className="grid h-full w-full animate-pulse place-content-stretch gap-4">

@@ -13,6 +13,13 @@ const toDateOrNull = (value: Date | string | null | undefined): Date | null => {
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 };
 
+/**
+ * Build the full entitlement context for a cloud organisation by merging
+ * Stripe subscription data with the enterprise license record.
+ *
+ * @param organizationId — the organisation to look up
+ * @returns — the full entitlement context (features, limits, license status)
+ */
 export const getCloudOrganizationEntitlementsContext = async (
   organizationId: string
 ): Promise<TOrganizationEntitlementsContext> => {

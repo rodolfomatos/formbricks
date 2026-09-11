@@ -1,3 +1,4 @@
+/** Main survey editor orchestrator — manages tab navigation (elements/styling/language/settings/follow-ups), local survey state with auto-save stub, element/styling/language sub-views, and the live preview sidebar. */
 "use client";
 
 import { type Dispatch, type SetStateAction, useCallback, useEffect, useRef, useState } from "react";

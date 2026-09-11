@@ -33,6 +33,7 @@ interface InviteMemberModalProps {
   isBulkInviteAllowed: boolean;
 }
 
+/** Modal dialog for inviting members — toggles between individual and bulk-invite tabs. */
 export const InviteMemberModal = ({
   open,
   setOpen,

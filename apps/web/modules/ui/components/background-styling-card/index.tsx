@@ -1,3 +1,8 @@
+/**
+ * Collapsible card that lets users configure the survey background (color, image, animation, Unsplash).
+ * Used in survey editor styling panel and workspace look settings.
+ * Contains a brightness slider and a SurveyBgSelectorTab for picking the background source.
+ */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

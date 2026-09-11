@@ -1,3 +1,7 @@
+/**
+ * Password input with a visibility toggle button (eye icon).
+ * Forwards ref for form library integration.
+ */
 "use client";
 
 import { EyeIcon, EyeOff } from "lucide-react";

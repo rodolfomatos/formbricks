@@ -1,3 +1,9 @@
+/**
+ * Workspace service — CRUD and user-listing for workspaces.
+ *
+ * Handles: listing workspaces a user belongs to (with role-based filtering),
+ * retrieving a single workspace by ID, and creating/updating workspaces.
+ */
 import "server-only";
 import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
@@ -29,6 +35,14 @@ const selectWorkspace = {
   customHeadScripts: true,
 };
 
+/**
+ * Lists all workspaces a user can see within an organisation.
+ * Members see only workspaces they have a team link to; owner/manager/billing see all.
+ *
+ * @param userId — the user
+ * @param organizationId — the organisation
+ * @param page — page number (1-based)
+ */
 export const getUserWorkspaces = reactCache(
   async (userId: string, organizationId: string, page?: number): Promise<TWorkspace[]> => {
     validateInputs([userId, ZString], [organizationId, ZId], [page, ZOptionalNumber]);
@@ -83,6 +97,12 @@ export const getUserWorkspaces = reactCache(
   }
 );
 
+/**
+ * Lists all workspaces in an organisation (no user-access filtering).
+ *
+ * @param organizationId — the organisation
+ * @param page — page number (1-based)
+ */
 export const getWorkspaces = reactCache(
   async (organizationId: string, page?: number): Promise<TWorkspace[]> => {
     validateInputs([organizationId, ZId], [page, ZOptionalNumber]);
@@ -107,6 +127,7 @@ export const getWorkspaces = reactCache(
   }
 );
 
+/** Retrieves a single workspace by ID. */
 export const getWorkspace = reactCache(async (workspaceId: string): Promise<TWorkspace | null> => {
   let workspacePrisma;
   try {
@@ -126,6 +147,7 @@ export const getWorkspace = reactCache(async (workspaceId: string): Promise<TWor
   }
 });
 
+/** Counts the total number of workspaces in an organisation. */
 export const getOrganizationWorkspacesCount = reactCache(async (organizationId: string): Promise<number> => {
   validateInputs([organizationId, ZId]);
 
@@ -145,6 +167,13 @@ export const getOrganizationWorkspacesCount = reactCache(async (organizationId: 
   }
 });
 
+/**
+ * Lists workspace IDs accessible by a user across multiple organisations.
+ * Members are filtered by team membership; owner/manager/billing see all.
+ *
+ * @param organizationIds — the organisations to check
+ * @param userId — the user
+ */
 export const getUserWorkspacesByOrganizationIds = reactCache(
   async (organizationIds: string[], userId: string): Promise<Pick<TWorkspace, "id">[]> => {
     validateInputs([organizationIds, ZId.array()], [userId, ZId]);

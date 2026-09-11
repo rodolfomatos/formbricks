@@ -11,6 +11,7 @@ import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper
 import { PageHeader } from "@/modules/ui/components/page-header";
 import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
 
+/** Serves the integrations/webhooks page — lists all webhooks in a workspace with options to add, view, edit, and delete them. */
 export const WebhooksPage = async (props: { params: Promise<{ workspaceId: string }> }) => {
   const params = await props.params;
   const t = await getTranslate();

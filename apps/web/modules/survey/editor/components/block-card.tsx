@@ -1,3 +1,4 @@
+/** Top-level card for a single survey block — renders the block header (name, questions count, drag handle, block menu), expandable element forms routed by type, advanced settings, and block settings (button labels, conditional logic). */
 "use client";
 
 import { useSortable } from "@dnd-kit/sortable";

@@ -1,3 +1,6 @@
+/**
+ * Utility to show the storage-not-configured toast with a given variant.
+ */
 import toast from "react-hot-toast";
 import { StorageNotConfiguredToast } from "../index";
 

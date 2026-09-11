@@ -1,3 +1,9 @@
+/**
+ * Prisma facade — re-exports the generated PrismaClient, enums, and model
+ * types under a stable path that other packages import from. Also re-exports
+ * PrismaClientKnownRequestError from the internal namespace (unstable surface,
+ * revisit on every Prisma upgrade).
+ */
 /* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-namespace, import/export, no-redeclare -- Prisma facade mirrors @prisma/client's merged value/namespace API. */
 import type * as runtime from "@prisma/client/runtime/client";
 import { Prisma as GeneratedPrisma, PrismaClient as GeneratedPrismaClient } from "../generated/prisma/client";

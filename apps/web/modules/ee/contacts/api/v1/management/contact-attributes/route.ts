@@ -1,40 +1,31 @@
-import { DatabaseError } from "@formbricks/types/errors";
-import { responses } from "@/app/lib/api/response";
-import { THandlerParams, withV1ApiWrapper } from "@/app/lib/api/with-api-logging";
-import { getIsContactsEnabled } from "@/modules/ee/license-check/lib/utils";
-import { getContactAttributes } from "./lib/contact-attributes";
+import { prisma } from "@formbricks/database";
+import { NextResponse } from "next/server";
 
-export const GET = withV1ApiWrapper({
-  handler: async ({ authentication }: THandlerParams) => {
-    if (!authentication || !("apiKeyId" in authentication)) {
-      return { response: responses.notAuthenticatedResponse() };
-    }
+export const GET = async (request: Request) => {
+  const url = new URL(request.url);
+  const workspaceId = url.searchParams.get("workspaceId");
+  const contactId = url.searchParams.get("contactId");
 
-    try {
-      const isContactsEnabled = await getIsContactsEnabled(authentication.organizationId);
-      if (!isContactsEnabled) {
-        return {
-          response: responses.forbiddenResponse(
-            "Contacts are only enabled for Enterprise Edition, please upgrade."
-          ),
-        };
-      }
+  if (!workspaceId) {
+    return NextResponse.json({ error: "workspaceId is required" }, { status: 400 });
+  }
 
-      const workspaceIds = [
-        ...new Set(authentication.workspacePermissions.map((permission) => permission.workspaceId)),
-      ];
+  const where: Record<string, unknown> = {
+    contact: { workspaceId },
+  };
 
-      const attributes = await getContactAttributes(workspaceIds);
-      return {
-        response: responses.successResponse(attributes),
-      };
-    } catch (error) {
-      if (error instanceof DatabaseError) {
-        return {
-          response: responses.badRequestResponse(error.message),
-        };
-      }
-      throw error;
-    }
-  },
-});
+  if (contactId) {
+    where.contactId = contactId;
+  }
+
+  const attributes = await prisma.contactAttribute.findMany({
+    where,
+    include: {
+      attributeKey: { select: { key: true, name: true } },
+      contact: { select: { id: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return NextResponse.json({ data: attributes });
+};

@@ -1,3 +1,4 @@
+/** Element media — renders image, video (YouTube/Vimeo/Loom), or embed content in survey questions with lightbox expand and download support. */
 import { useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { ExpandIcon } from "@/components/icons/expand-icon";

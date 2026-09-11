@@ -4,6 +4,10 @@ import type { AIProviderAdapter } from "../registry";
 import { normalizeValue } from "../shared";
 import type { AIEnvironment } from "../types";
 
+/**
+ * Azure OpenAI provider adapter. Requires AI_AZURE_API_KEY and either
+ * AI_AZURE_BASE_URL or AI_AZURE_RESOURCE_NAME.
+ */
 export const azureProviderAdapter: AIProviderAdapter = {
   validate: (environment: AIEnvironment) => {
     const missingFields: string[] = [];

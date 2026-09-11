@@ -81,6 +81,12 @@ const captureGoogleSheetsConnectedEvent = async (userId: string, workspaceId: st
   }
 };
 
+/**
+ * GET /api/google-sheet/callback
+ * Handles the Google Sheets OAuth callback. Exchanges the auth code for tokens,
+ * creates/updates the integration, captures a PostHog event, and redirects back
+ * to the integration settings page.
+ */
 export const GET = async (req: Request) => {
   const url = new URL(req.url);
   const state = url.searchParams.get("state");

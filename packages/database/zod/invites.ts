@@ -1,3 +1,6 @@
+/**
+ * Zod schema for organization invites.
+ */
 import { z } from "zod";
 import { type Invite } from "../src/prisma";
 

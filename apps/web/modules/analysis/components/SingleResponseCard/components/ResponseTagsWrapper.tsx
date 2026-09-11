@@ -29,6 +29,7 @@ interface ResponseTagsWrapperProps {
   locale: TUserLocale;
 }
 
+/** Manages tag assignment for a single response — supports adding existing tags, creating new ones, and deleting tags. */
 export const ResponseTagsWrapper: React.FC<ResponseTagsWrapperProps> = ({
   tags,
   workspaceId,

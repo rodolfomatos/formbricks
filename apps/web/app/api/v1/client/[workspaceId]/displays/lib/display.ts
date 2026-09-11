@@ -5,6 +5,9 @@ import { DatabaseError, InvalidInputError, ResourceNotFoundError } from "@formbr
 import { validateInputs } from "@/lib/utils/validate";
 import { getContactByUserId } from "./contact";
 
+/**
+ * Creates a display record, optionally linking it to a contact resolved by userId.
+ */
 export const createDisplay = async (displayInput: TDisplayCreateInput): Promise<{ id: string }> => {
   validateInputs([displayInput, ZDisplayCreateInput]);
 

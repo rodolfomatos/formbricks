@@ -63,14 +63,17 @@ type TGetSurveyListPageOptions = {
 
 type TCursorDirection = "asc" | "desc";
 
+/** Normalises the sort-by parameter, defaulting to "updatedAt" when undefined. */
 export function normalizeSurveyListSort(sortBy?: TSurveyFilterCriteria["sortBy"]): TSurveyListSort {
   return sortBy ?? "updatedAt";
 }
 
+/** Encodes a cursor object into a base64url string for use in API responses. */
 export function encodeSurveyListPageCursor(cursor: TSurveyListPageCursor): string {
   return Buffer.from(JSON.stringify(cursor), "utf8").toString("base64url");
 }
 
+/** Decodes and validates a base64url cursor string. Throws InvalidInputError if the cursor is malformed or doesn't match the requested sort order. */
 export function decodeSurveyListPageCursor(
   encodedCursor: string,
   sortBy: TSurveyListSort
@@ -409,6 +412,7 @@ async function getRelevanceSurveyListPage(
   return await buildRelevancePage(pageRows, hasMoreOther ? OTHER_BUCKET : null);
 }
 
+/** Fetches a single page of surveys using cursor-based pagination. Supports standard sorts (name, createdAt, updatedAt) and relevance (in-progress first). */
 export async function getSurveyListPage(
   workspaceId: string,
   options: TGetSurveyListPageOptions

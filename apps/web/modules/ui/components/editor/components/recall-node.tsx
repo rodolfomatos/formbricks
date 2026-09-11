@@ -1,3 +1,8 @@
+/**
+ * Custom Lexical DecoratorNode for survey recall placeholders (e.g. @{{name}}).
+ * Stores a recallItem reference and optional fallback value. Renders as an inline
+ * decorated span with the recall label, and serializes to a #recall:.../fallback:...# format.
+ */
 "use client";
 
 import type { DOMConversionMap, DOMConversionOutput, DOMExportOutput, NodeKey, Spread } from "lexical";

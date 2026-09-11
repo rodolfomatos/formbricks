@@ -4,6 +4,10 @@ import { TResponseUpdateInput } from "@formbricks/types/responses";
 import { updateResponse } from "@/lib/response/service";
 import { evaluateResponseQuotas } from "@/modules/ee/quotas/lib/evaluation-service";
 
+/**
+ * Updates a client response within a Prisma transaction and evaluates
+ * response quotas afterward.
+ */
 export const updateResponseWithQuotaEvaluation = async (
   responseId: string,
   responseInput: TResponseUpdateInput

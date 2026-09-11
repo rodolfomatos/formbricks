@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the PageHeader component.
+ * Covers default, title-only, with-CTA, and with-children variants.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { Button } from "@/modules/ui/components/button";
 import { PageHeader } from "@/modules/ui/components/page-header";

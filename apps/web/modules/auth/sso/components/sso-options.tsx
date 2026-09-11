@@ -21,9 +21,6 @@ interface SSOOptionsProps {
  * Renders SSO provider buttons on the sign-in / sign-up pages.
  * Each provider is gated by its own boolean prop so the parent decides
  * which buttons to show based on server-validated environment config.
- *
- * SAML props are destructured with underscore prefixes to avoid unused-variable
- * warnings — SAML is out of scope for the AGPL fork but the parent may still pass them.
  */
 export const SSOOptions = ({
   googleOAuthEnabled,
@@ -31,7 +28,7 @@ export const SSOOptions = ({
   azureOAuthEnabled,
   oidcOAuthEnabled,
   oidcDisplayName,
-  samlSsoEnabled: _samlSsoEnabled,
+  samlSsoEnabled,
   samlTenant: _samlTenant,
   samlProduct: _samlProduct,
   returnToUrl,
@@ -73,6 +70,14 @@ export const SSOOptions = ({
           {t("auth.continue_with_oidc", {
             oidcDisplayName: oidcDisplayName || "OpenID",
           })}
+        </Button>
+      )}
+      {samlSsoEnabled && (
+        <Button
+          className="relative w-full justify-center"
+          variant="secondary"
+          onClick={() => signIn("saml", { callbackUrl: returnToUrl })}>
+          {t("auth.continue_with_saml")}
         </Button>
       )}
     </div>

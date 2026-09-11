@@ -6,6 +6,7 @@ interface SurveyLinkDisplayProps {
   enforceSurveyUrlWidth?: boolean;
 }
 
+/** Read-only input that displays the shareable survey URL. Shows a skeleton placeholder while the URL is empty. */
 export const SurveyLinkDisplay = ({ surveyUrl, enforceSurveyUrlWidth = false }: SurveyLinkDisplayProps) => {
   return (
     <>

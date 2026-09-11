@@ -2,6 +2,10 @@ import { logger } from "@formbricks/logger";
 import type { JobHandler } from "@/src/contracts";
 import type { TTestLogJobData } from "@/src/types";
 
+/**
+ * Test/health-check processor — logs the message and optionally fails if
+ * `shouldFail` is true. Used to verify the job pipeline is functioning.
+ */
 export const processTestLogJob: JobHandler<TTestLogJobData> = (data, context) => {
   logger.debug(
     {

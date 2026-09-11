@@ -12,7 +12,9 @@ import type {
 import type { TTemplate, TTemplateRole } from "@formbricks/types/templates";
 import { createI18nString, extractLanguageCodes } from "@/lib/i18n/utils";
 
-// Helper function to create standard jump logic based on operator
+/**
+ * Creates a standard block jump logic rule (isSkipped / isSubmitted / isClicked).
+ */
 export const createJumpLogic = (
   sourceQuestionId: string,
   targetId: string,
@@ -42,7 +44,9 @@ export const createJumpLogic = (
   ],
 });
 
-// Helper function to create jump logic based on choice selection
+/**
+ * Creates a block jump logic rule based on a specific choice being selected.
+ */
 export const createChoiceJumpLogic = (
   sourceQuestionId: string,
   choiceId: string | number,
@@ -76,6 +80,9 @@ export const createChoiceJumpLogic = (
   ],
 });
 
+/**
+ * Returns a default end screen card with translated headline/subheader/button.
+ */
 export const getDefaultEndingCard = (languages: TSurveyLanguage[], t: TFunction): TSurveyEndScreenCard => {
   const languageCodes = extractLanguageCodes(languages);
   return {
@@ -88,11 +95,15 @@ export const getDefaultEndingCard = (languages: TSurveyLanguage[], t: TFunction)
   };
 };
 
+/** Default configuration with hidden fields enabled but no pre-defined field IDs. */
 export const hiddenFieldsDefault: TSurveyHiddenFields = {
   enabled: true,
   fieldIds: [],
 };
 
+/**
+ * Returns a disabled default welcome card with translated text.
+ */
 export const getDefaultWelcomeCard = (t: TFunction): TSurveyWelcomeCard => {
   return {
     enabled: false,
@@ -104,6 +115,10 @@ export const getDefaultWelcomeCard = (t: TFunction): TSurveyWelcomeCard => {
   };
 };
 
+/**
+ * Returns a minimal survey preset with a welcome card, a single default
+ * ending card, hidden fields enabled, and no blocks.
+ */
 export const getDefaultSurveyPreset = (t: TFunction): TTemplate["preset"] => {
   return {
     name: "New Survey",

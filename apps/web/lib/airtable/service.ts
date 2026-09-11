@@ -1,3 +1,10 @@
+/**
+ * Integration service for Airtable.
+ *
+ * Handles OAuth token lifecycle (initial exchange, refresh), base/table metadata
+ * discovery, and writing survey response data into Airtable records. Airtable's
+ * API limits (5 req/s per base) are respected via throttling in `writeData`.
+ */
 import { Prisma } from "@formbricks/database/prisma";
 import { logger } from "@formbricks/logger";
 import { DatabaseError } from "@formbricks/types/errors";
@@ -16,6 +23,12 @@ import { createOrUpdateIntegration, getIntegrationByType } from "../integration/
 import { delay } from "../utils/promises";
 import { truncateText } from "../utils/strings";
 
+/**
+ * Fetches the list of Airtable bases accessible with the given OAuth token.
+ *
+ * @param key — the Airtable OAuth access token
+ * @returns — parsed list of bases
+ */
 export const getBases = async (key: string) => {
   const req = await fetch("https://api.airtable.com/v0/meta/bases", {
     headers: {
@@ -49,11 +62,25 @@ const tableFetcher = async (key: TIntegrationAirtableCredential, baseId: string)
   return res;
 };
 
+/**
+ * Fetches the list of tables within a specific Airtable base.
+ *
+ * @param key — the OAuth credentials
+ * @param baseId — the Airtable base to query
+ * @returns — parsed list of table metadata
+ */
 export const getTables = async (key: TIntegrationAirtableCredential, baseId: string) => {
   const res = await tableFetcher(key, baseId);
   return ZIntegrationAirtableTables.parse(res);
 };
 
+/**
+ * Exchanges an authorisation code or refresh token with the Airtable OAuth endpoint.
+ * Returns a token object with access/refresh tokens and expiry.
+ *
+ * @param formData — the URL-encoded body for the OAuth token request
+ * @returns — parsed token response with ISO-8601 expiry date
+ */
 export const fetchAirtableAuthToken = async (formData: Record<string, any>) => {
   const formBody = Object.keys(formData)
     .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(formData[key])}`)
@@ -85,6 +112,13 @@ export const fetchAirtableAuthToken = async (formData: Record<string, any>) => {
   };
 };
 
+/**
+ * Retrieves a valid Airtable OAuth token for a workspace, refreshing it automatically
+ * if expired. Persists the refreshed token via `createOrUpdateIntegration`.
+ *
+ * @param workspaceId — the workspace whose Airtable integration to query
+ * @returns — the current (possibly refreshed) access token string
+ */
 export const getAirtableToken = async (workspaceId: string) => {
   try {
     const airtableIntegration = await getIntegrationByType(workspaceId, "airtable");
@@ -141,6 +175,13 @@ export const getAirtableToken = async (workspaceId: string) => {
   }
 };
 
+/**
+ * Lists all Airtable bases available to the workspace's Airtable integration.
+ * Convenience wrapper around `getAirtableToken` + `getBases`.
+ *
+ * @param workspaceId — the workspace to query
+ * @returns — array of base integration items
+ */
 export const getAirtableTables = async (workspaceId: string) => {
   let tables: TIntegrationItem[] = [];
   try {
@@ -209,6 +250,18 @@ const getExistingFields = async (key: TIntegrationAirtableCredential, baseId: st
   return new Set(currentTable.fields.map((f) => f.name));
 };
 
+/**
+ * Writes survey responses into an Airtable table.
+ *
+ * Automatically creates missing fields as `singleLineText` columns before inserting
+ * records, respecting Airtable's 5 req/s rate limit via staggered delays. If a field
+ * value exceeds the message limit it is truncated.
+ *
+ * @param key — the OAuth credentials
+ * @param configData — the Airtable base + table target
+ * @param responses — response values, one per element
+ * @param elements — element headlines acting as column names
+ */
 export const writeData = async (
   key: TIntegrationAirtableCredential,
   configData: TIntegrationAirtableConfigData,

@@ -5,8 +5,10 @@ import { type CacheError, ErrorCode, type Result, err, ok } from "@/types/error"
 import { CacheService } from "./service";
 
 /**
- * Creates a Redis client from the REDIS_URL environment variable
- * @returns Result containing RedisClient or RedisConfigurationError if REDIS_URL is not set
+ * Creates a Redis client from the REDIS_URL environment variable. Registers
+ * error/connect/ready/end handlers for observability.
+ *
+ * @returns — Connected RedisClient on success, or a CacheError if REDIS_URL is not set or connection fails
  */
 export async function createRedisClientFromEnv(): Promise<Result<RedisClient, CacheError>> {
   const url = process.env.REDIS_URL;
@@ -65,9 +67,12 @@ const globalForCache = globalThis as unknown as {
 let singleton: CacheService | null = globalForCache.formbricksCache ?? null;
 
 /**
- * Returns existing instance immediately if available
- * Creates a cache service instance instead if not available
- * Fails fast if Redis is not available - consumers handle reconnection
+ * Returns the singleton CacheService. On first call, creates the Redis client
+ * and wraps it in a CacheService. Concurrent initialisation is serialised via
+ * a module-level promise so multiple fast callers don't create duplicate
+ * connections.
+ *
+ * @returns — Existing or freshly created CacheService, or a CacheError if Redis is unavailable
  */
 export async function getCacheService(): Promise<Result<CacheService, CacheError>> {
   // Return existing instance immediately
@@ -119,6 +124,10 @@ export async function getCacheService(): Promise<Result<CacheService, CacheError
   return result;
 }
 
+/**
+ * Resets the cache singleton so the next getCacheService() call creates a
+ * fresh connection. Useful during integration tests or credential rotation.
+ */
 export function resetCacheFactory(): void {
   singleton = null;
   globalForCache.formbricksCache = undefined;

@@ -1,3 +1,4 @@
+/** Displays choice/variable IDs as ID badges in the survey editor, for choices (multi-select, picture selection, ranking) or top-level variables. */
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { TSurveyElement, TSurveyElementTypeEnum } from "@formbricks/types/surveys/elements";

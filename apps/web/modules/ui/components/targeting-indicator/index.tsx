@@ -1,3 +1,7 @@
+/**
+ * Displays whether a survey is targeted (has segment filters) or sent to everyone.
+ * Shows different icons and descriptions based on the segment state.
+ */
 "use client";
 
 import { FilterIcon, UsersIcon } from "lucide-react";

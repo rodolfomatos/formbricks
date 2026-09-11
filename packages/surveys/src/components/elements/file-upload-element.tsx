@@ -1,3 +1,4 @@
+/** File upload element — renders a drag-and-drop file upload survey question with chunked upload, progress tracking, TTC, and i18n error handling. */
 import { useCallback, useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { FileUpload, type UploadedFile } from "@formbricks/survey-ui";

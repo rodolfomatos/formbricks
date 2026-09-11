@@ -2,6 +2,15 @@ import { Output, generateText } from "ai";
 import { getAiModel } from "./provider";
 import type { AIEnvironment, TGenerateObjectOptions, TGenerateObjectResult } from "./types";
 
+/**
+ * Generates a structured (typed) object from the AI model by providing a Zod
+ * schema. The result includes the parsed object, reasoning text, usage
+ * metadata, and a convenience `toJsonResponse()` method for API handlers.
+ *
+ * @param options — Zod schema, schema metadata, and all AI SDK text-generation options except `model`
+ * @param environment — Optional env overrides (defaults to process.env)
+ * @returns — Typed generation result with the parsed object, metadata, and a JSON Response factory
+ */
 export const generateObject = async <T = unknown>(
   options: TGenerateObjectOptions<T>,
   environment?: AIEnvironment

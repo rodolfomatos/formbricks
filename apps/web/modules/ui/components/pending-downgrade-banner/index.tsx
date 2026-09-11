@@ -1,7 +1,11 @@
+/**
+ * Dismissable toast-style banner warning about a pending license downgrade.
+ * Shows when license check fails or is unreachable and the organization
+ * will be downgraded to the community edition.
+ */
 "use client";
 
 import { TriangleAlertIcon, XIcon } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { TUserLocale } from "@formbricks/types/user";
@@ -87,9 +91,9 @@ export const PendingDowngradeBanner = ({
                     </p>
                     <p className="mt-1 text-sm text-slate-500">{getDescription()}</p>
 
-                    <Link href={`${workspaceBasePath}/settings/organization/enterprise`}>
-                      <span className="text-sm text-slate-900">{t("common.learn_more")}</span>
-                    </Link>
+                    <span className="text-sm text-slate-500">
+                      All features are available under AGPLv3.
+                    </span>
                   </div>
                 </div>
 

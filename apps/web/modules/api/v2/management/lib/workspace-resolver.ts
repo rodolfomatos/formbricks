@@ -14,6 +14,11 @@ type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
  * - If not provided: returns an error.
  *
  * On success, returns the resolved `workspaceId`.
+ *
+ * @param body — The request body containing workspaceId or environmentId
+ * @param permissions — The API key's workspace permissions
+ * @param method — The HTTP method for permission checking
+ * @returns — The resolved workspace ID
  */
 export const resolveBodyIdsV2 = async (
   body: { workspaceId?: string; environmentId?: string },

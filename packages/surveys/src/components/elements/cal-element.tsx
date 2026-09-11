@@ -1,3 +1,4 @@
+/** Cal.com element — renders a Cal.com booking embed survey question with headline, subheader, media, and booking-success callback. */
 import { useCallback, useState } from "preact/hooks";
 import { type TResponseData, type TResponseTtc } from "@formbricks/types/responses";
 import type { TSurveyCalElement } from "@formbricks/types/surveys/elements";

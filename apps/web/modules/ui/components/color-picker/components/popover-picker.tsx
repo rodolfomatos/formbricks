@@ -1,3 +1,7 @@
+/**
+ * Popover that opens a HexColorPicker (react-colorful) on trigger button click.
+ * The trigger button displays the currently selected color as its background.
+ */
 import { useState } from "react";
 import { HexColorPicker } from "react-colorful";
 import { Popover, PopoverContent, PopoverTrigger } from "@/modules/ui/components/popover";

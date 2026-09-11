@@ -1,3 +1,8 @@
+/**
+ * Dismissable banner that warns when the organization has reached its monthly
+ * response limit. Links to the billing page for upgrade. Only renders when
+ * the limit is actually reached.
+ */
 "use client";
 
 import { TriangleAlertIcon, XIcon } from "lucide-react";

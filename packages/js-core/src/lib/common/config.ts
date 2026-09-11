@@ -1,3 +1,4 @@
+/** Config singleton — manages SDK config persistence (in-memory + localStorage) with thread-safe accessors. */
 import { JS_LOCAL_STORAGE_KEY } from "@/lib/common/constants";
 import { wrapThrows } from "@/lib/common/utils";
 import type { TConfig, TConfigUpdateInput } from "@/types/config";

@@ -4,10 +4,15 @@ import {
   parseAndValidateJsonBody,
 } from "@/app/lib/api/parse-and-validate-json-body";
 
+/** Union type representing either a valid parsed input or an error response. */
 export type TValidatedResponseUpdateInputResult =
   | { response: Response }
   | { responseUpdateInput: TResponseUpdateInput };
 
+/**
+ * Parses and validates the request body as a TResponseUpdateInput against
+ * its Zod schema.
+ */
 export const getValidatedResponseUpdateInput = async (
   req: Request
 ): Promise<TValidatedResponseUpdateInputResult> => {

@@ -1,6 +1,7 @@
 import { Toaster } from "react-hot-toast";
 import { FormbricksLogo } from "@/modules/ui/components/formbricks-logo";
 
+/** Root layout for the setup flow. Renders children inside a centered card with the Formbricks logo. */
 export const SetupLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>

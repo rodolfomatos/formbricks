@@ -1,3 +1,8 @@
+/**
+ * Live survey preview component used in the survey editor.
+ * Supports modal and full-width preview types, mobile/desktop modes,
+ * language switching, full-screen mode, and progress reset.
+ */
 "use client";
 
 import { MotionConfig, motion } from "framer-motion";

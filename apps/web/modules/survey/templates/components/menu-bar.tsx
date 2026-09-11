@@ -2,6 +2,7 @@
 
 import { BackButton } from "@/modules/survey/templates/components/back-button";
 
+/** Top navigation bar for the template picker page, containing the back button. */
 export const MenuBar = () => {
   return (
     <>

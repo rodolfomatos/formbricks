@@ -1,3 +1,4 @@
+/** Consent element — renders a checkbox consent/opt-in survey question using the survey-ui Consent component with TTC tracking. */
 import { useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { Consent } from "@formbricks/survey-ui";

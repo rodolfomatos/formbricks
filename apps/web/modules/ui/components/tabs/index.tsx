@@ -1,3 +1,7 @@
+/**
+ * Styled tabs component built on Radix Tabs primitive with CVA variants.
+ * Supports default/big sizes, fill/fit widths, row/column layouts, and disabled variant.
+ */
 "use client";
 
 import * as TabsPrimitive from "@radix-ui/react-tabs";

@@ -1,3 +1,7 @@
+/**
+ * Tabbed selector for survey card arrangement: simple, straight, or casual (plus cardless for link surveys).
+ * Used in the card styling settings panel.
+ */
 "use client";
 
 import { SquareDashedTopSolid } from "lucide-react";

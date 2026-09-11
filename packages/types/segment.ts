@@ -1,3 +1,4 @@
+/** Segment/filter schemas — contact targeting rules with attribute, person, device, and segment-based filters. */
 import { z } from "zod";
 
 // The segment filter has operators, these are all the types of operators that can be used

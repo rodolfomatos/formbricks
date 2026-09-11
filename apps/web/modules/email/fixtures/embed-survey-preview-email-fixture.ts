@@ -14,39 +14,58 @@ import { createI18nString } from "@/lib/i18n/utils";
 
 const fixtureT = ((key: string) => key) as TFunction;
 
+/**
+ * Stable survey ID used for embed preview emails to avoid collisions with
+ * real survey data.
+ */
 export const EMBED_SURVEY_PREVIEW_SURVEY_ID = "embed-survey-preview-survey";
+/** Stable block ID for embed preview surveys. */
 export const EMBED_SURVEY_PREVIEW_BLOCK_ID = "embed-survey-preview-block";
+/** Stable question ID for embed preview surveys. */
 export const EMBED_SURVEY_PREVIEW_QUESTION_ID = "embed-survey-preview-question";
 
+/** Stable choice IDs for the multi-choice preview fixture. */
 export const EMBED_SURVEY_PREVIEW_CHOICE_IDS = {
   apples: "embed-survey-preview-choice-apples",
   bananas: "embed-survey-preview-choice-bananas",
   pineapples: "embed-survey-preview-choice-pineapples",
 } as const;
 
+/** Default preview headline used across all fixture question types. */
 export const EMBED_SURVEY_PREVIEW_HEADLINE = "Which fruits do you like";
+/** Default choice labels for the multiple-choice fixture. */
 export const EMBED_SURVEY_PREVIEW_CHOICES = ["Apples", "Bananas", "Pineapples"] as const;
+/** Base survey URL used when building prefilled links in the preview email. */
 export const EMBED_SURVEY_PREVIEW_SURVEY_URL = "https://app.formbricks.com/s/embed-survey-preview";
+/** Locale used in the preview fixture. */
 export const EMBED_SURVEY_PREVIEW_LOCALE = "en-US";
+/** Placeholder text for the open-text preview question. */
 export const EMBED_SURVEY_PREVIEW_OPEN_TEXT_PLACEHOLDER = "Share your thoughts";
+/** Placeholder values for address sub-fields in the address preview fixture. */
 export const EMBED_SURVEY_PREVIEW_ADDRESS_PLACEHOLDERS = {
   addressLine1: "Street address",
   city: "City",
   country: "Country",
 } as const;
+/** Placeholder values for contact-info sub-fields in the contact-info preview fixture. */
 export const EMBED_SURVEY_PREVIEW_CONTACT_PLACEHOLDERS = {
   firstName: "First name",
   email: "Work email",
   company: "Company",
 } as const;
+/** Row labels for the matrix question preview fixture. */
 export const EMBED_SURVEY_PREVIEW_MATRIX_ROWS = ["Product quality", "Ease of use"] as const;
+/** Column labels for the matrix question preview fixture. */
 export const EMBED_SURVEY_PREVIEW_MATRIX_COLUMNS = ["Poor", "Great"] as const;
+/** Image URLs for the picture-selection preview fixture. */
 export const EMBED_SURVEY_PREVIEW_PICTURE_CHOICES = [
   "https://app.formbricks.com/static/media/powered-by-formbricks.7aec4b1c.svg",
   "https://app.formbricks.com/static/media/powered-by-formbricks.7aec4b1c.svg?variant=2",
 ] as const;
+/** Button URL for the CTA question preview fixture. */
 export const EMBED_SURVEY_PREVIEW_CTA_URL = "https://formbricks.com/docs";
 
+/** Styling configuration used in the preview email to demonstrate branded appearance. */
 export const EMBED_SURVEY_PREVIEW_STYLING: TSurveyStyling = {
   brandColor: { light: "#22c55e" },
   cardBackgroundColor: { light: "#4a865f" },
@@ -299,6 +318,13 @@ const createPreviewElementByType = (type: TSurveyElementTypeEnum): TSurveyElemen
   }
 };
 
+/**
+ * Build a synthetic survey matching the given question type for use in
+ * embed preview emails. The returned survey is not persisted.
+ *
+ * @param type — the question type to generate a preview for
+ * @returns — a minimal TSurvey with one block containing one question
+ */
 export const createEmbedSurveyPreviewEmailSurvey = (
   type: TSurveyElementTypeEnum = TSurveyElementTypeEnum.MultipleChoiceMulti
 ): TSurvey => createPreviewSurvey(createPreviewElementByType(type));

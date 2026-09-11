@@ -1,3 +1,7 @@
+/**
+ * Compound breadcrumb navigation component with list, items, links, separators, and ellipsis.
+ * Follows the WAI-ARIA breadcrumb pattern for hierarchical navigation display.
+ */
 import { Slot } from "@radix-ui/react-slot";
 import { ChevronRightIcon, EllipsisIcon } from "lucide-react";
 import * as React from "react";

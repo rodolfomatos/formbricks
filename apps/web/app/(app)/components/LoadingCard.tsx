@@ -1,6 +1,10 @@
 import { SettingsCard } from "@/app/(app)/workspaces/[workspaceId]/settings/components/SettingsCard";
 import { cn } from "@/lib/cn";
 
+/**
+ * Skeleton placeholder card used while settings pages are loading.
+ * Renders a SettingsCard shell with animated pulse lines to indicate pending content.
+ */
 export const LoadingCard = ({
   title,
   description,

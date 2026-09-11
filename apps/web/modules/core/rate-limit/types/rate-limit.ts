@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+/**
+ * Zod schema and type for a rate-limit window definition.
+ * Consumers provide interval + allowedPerInterval + namespace.
+ */
 export const ZRateLimitConfig = z.object({
   /** Rate limit window in seconds */
   interval: z.int().positive().describe("Rate limit window in seconds"),
@@ -9,6 +13,7 @@ export const ZRateLimitConfig = z.object({
   namespace: z.string().min(1).describe("Namespace for grouping rate limit per feature"),
 });
 
+/** Inferred type for a rate-limit configuration object. */
 export type TRateLimitConfig = z.infer<typeof ZRateLimitConfig>;
 
 const ZRateLimitResponse = z.object({
@@ -16,4 +21,5 @@ const ZRateLimitResponse = z.object({
   retryAfter: z.int().positive().optional().describe("Seconds until the current rate-limit window resets"),
 });
 
+/** Inferred type for a rate-limit check result. */
 export type TRateLimitResponse = z.infer<typeof ZRateLimitResponse>;

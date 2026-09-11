@@ -1,3 +1,4 @@
+/** Form editor for the Consent (checkbox) question element — headline, subheader, and checkbox label. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

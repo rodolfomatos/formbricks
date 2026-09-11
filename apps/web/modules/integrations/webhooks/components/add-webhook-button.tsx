@@ -13,6 +13,7 @@ interface AddWebhookButtonProps {
   allowInternalUrls: boolean;
 }
 
+/** Button that opens the add-webhook modal. */
 export const AddWebhookButton = ({ workspaceId, surveys, allowInternalUrls }: AddWebhookButtonProps) => {
   const { t } = useTranslation();
   const [isAddWebhookModalOpen, setAddWebhookModalOpen] = useState(false);

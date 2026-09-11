@@ -1,3 +1,8 @@
+/**
+ * Modal dialog for browsing and loading a different contact segment into a survey.
+ * Lists segments with title, description, and timestamps. Shows a loading state
+ * while fetching the selected segment's data.
+ */
 "use client";
 
 import { Loader2, UsersIcon } from "lucide-react";

@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the IntegrationCard component.
+ * Covers primary (connected), disconnected, and with-icon variants.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { BellRing } from "lucide-react";
 import { Card } from "./index";

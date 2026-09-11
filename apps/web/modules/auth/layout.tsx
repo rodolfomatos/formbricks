@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 import { getIsFreshInstance } from "@/lib/instance/service";
 import { authOptions } from "@/modules/auth/lib/authOptions";
-import { getIsMultiOrgEnabled } from "@/modules/ee/license-check/lib/utils";
 
 /**
  * Shared auth layout: redirects authenticated users to `/`, redirects
@@ -11,19 +10,15 @@ import { getIsMultiOrgEnabled } from "@/modules/ee/license-check/lib/utils";
  * all auth pages in a centered card layout with toast support.
  */
 export const AuthLayout = async ({ children }: Readonly<{ children: React.ReactNode }>) => {
-  const [session, isFreshInstance, isMultiOrgEnabled] = await Promise.all([
+  const [session, isFreshInstance] = await Promise.all([
     getServerSession(authOptions),
     getIsFreshInstance(),
-    getIsMultiOrgEnabled(),
   ]);
 
   if (session) {
     redirect(`/`);
   }
 
-  if (isFreshInstance && !isMultiOrgEnabled) {
-    redirect("/setup/intro");
-  }
   return (
     <>
       <Toaster />

@@ -28,6 +28,15 @@ const isUserLocale = (locale: string): locale is TUserLocale => Object.hasOwn(TI
 const getLocaleForTimeSince = (locale: string): Locale =>
   isUserLocale(locale) ? TIME_SINCE_LOCALES[locale] : enUS;
 
+/**
+ * Formats a past date as a human-readable relative string (e.g. "5 minutes ago")
+ * in the user's locale. Used wherever audit trails or activity feeds need to
+ * show temporal distance without an absolute timestamp.
+ *
+ * @param dateString — ISO-8601 string to compute distance from
+ * @param locale — user locale for i18n (defaults to en-US)
+ * @returns — localised relative-time string with suffix
+ */
 export const timeSince = (dateString: string, locale: string = DEFAULT_LOCALE) => {
   const date = new Date(dateString);
   return formatDistance(date, new Date(), {
@@ -36,6 +45,14 @@ export const timeSince = (dateString: string, locale: string = DEFAULT_LOCALE) =
   });
 };
 
+/**
+ * Same as `timeSince` but accepts a Date object directly.
+ * Used when the caller already has a parsed Date and wants to avoid re-parsing.
+ *
+ * @param date — parsed Date to compute distance from
+ * @param locale — user locale for i18n
+ * @returns — localised relative-time string with suffix
+ */
 export const timeSinceDate = (date: Date, locale: string = DEFAULT_LOCALE) => {
   return formatDistance(date, new Date(), {
     addSuffix: true,
@@ -43,6 +60,14 @@ export const timeSinceDate = (date: Date, locale: string = DEFAULT_LOCALE) => {
   });
 };
 
+/**
+ * Formats a Date into a localised long-date string (e.g. "June 28, 2026").
+ * Used for displaying absolute dates in tables, detail panels, and emails.
+ *
+ * @param date — the Date to format
+ * @param locale — user locale for i18n
+ * @returns — localised date string
+ */
 export const formatDate = (date: Date, locale: string = DEFAULT_LOCALE) => {
   return formatDateForDisplay(date, locale, {
     year: "numeric",
@@ -51,6 +76,19 @@ export const formatDate = (date: Date, locale: string = DEFAULT_LOCALE) => {
   });
 };
 
+/**
+ * Builds a compact date-time token using an arbitrary separator.
+ * Used internally for file names, API parameters, and log prefixes
+ * where a stable, sortable string format is needed.
+ *
+ * @param seperator — character(s) to join date and time segments
+ * @returns — "YYYY{sep}MM{sep}DD{sep}HH{sep}mm{sep}SS"
+ *
+ * @example
+ * ```typescript
+ * getTodaysDateTimeFormatted("-") // => "2026-06-28-15-30-00"
+ * ```
+ */
 export const getTodaysDateTimeFormatted = (seperator: string) => {
   const date = new Date();
   const formattedDate = date.toISOString().split("T")[0].split("-").join(seperator);
@@ -59,6 +97,22 @@ export const getTodaysDateTimeFormatted = (seperator: string) => {
   return [formattedDate, formattedTime].join(seperator);
 };
 
+/**
+ * Recursively walks an object tree and converts ISO-8601 string values at
+ * well-known date keys (`createdAt`, `updatedAt`) into native Date instances.
+ * Solves the mismatch between Prisma returning ISO strings and UI code
+ * expecting Date objects.
+ *
+ * @param obj — the value to transform (object, array, or primitive)
+ * @param keysToIgnore — optional set of top-level keys to skip conversion for
+ * @returns — a deeply-cloned copy with dates materialised
+ *
+ * @example
+ * ```typescript
+ * convertDatesInObject({ createdAt: "2026-06-28T00:00:00.000Z" })
+ * // => { createdAt: Date("2026-06-28T00:00:00.000Z") }
+ * ```
+ */
 export const convertDatesInObject = <T>(obj: T, keysToIgnore?: Set<string>): T => {
   if (obj === null || typeof obj !== "object") {
     return obj; // Return if obj is not an object

@@ -52,6 +52,7 @@ const getWebhookTestErrorMessage = async (statusCode: number): Promise<string | 
   }
 };
 
+/** Updates a webhook's name, URL, triggers, and/or survey associations in the database. */
 export const updateWebhook = async (
   webhookId: string,
   webhookInput: Partial<TWebhookInput>
@@ -83,6 +84,7 @@ export const updateWebhook = async (
   }
 };
 
+/** Deletes a webhook from the database by ID. */
 export const deleteWebhook = async (id: string): Promise<boolean> => {
   try {
     await prisma.webhook.delete({
@@ -103,6 +105,7 @@ export const deleteWebhook = async (id: string): Promise<boolean> => {
   }
 };
 
+/** Creates a new webhook record in the database with a generated signing secret. */
 export const createWebhook = async (
   workspaceId: string,
   webhookInput: TWebhookInput,
@@ -144,6 +147,7 @@ export const createWebhook = async (
   }
 };
 
+/** Retrieves all webhooks for a workspace, ordered by creation date descending. */
 export const getWebhooks = async (workspaceId: string): Promise<Webhook[]> => {
   validateInputs([workspaceId, ZId]);
 
@@ -166,6 +170,7 @@ export const getWebhooks = async (workspaceId: string): Promise<Webhook[]> => {
   }
 };
 
+/** Sends a test POST request to a webhook URL with a standard webhook signature header to verify reachability. */
 export const testEndpoint = async (url: string, secret?: string): Promise<boolean> => {
   const address = await validateAndResolveWebhookUrl(url);
 

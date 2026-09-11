@@ -1,3 +1,4 @@
+/** Response processing — serialises survey response values (string, number, array, or record) to a JSON-stringifiable string for API submission. */
 export const processResponseData = (
   responseData: string | number | string[] | Record<string, string>
 ): string => {

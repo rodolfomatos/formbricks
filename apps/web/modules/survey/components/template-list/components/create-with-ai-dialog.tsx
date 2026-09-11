@@ -19,6 +19,7 @@ import {
   DialogTrigger,
 } from "@/modules/ui/components/dialog";
 
+/** Dialog that hosts the AI-powered survey creation form. Supports controlled or uncontrolled open state and handles post-creation navigation. */
 type CreateWithAIDialogProps = {
   workspaceId: string;
   language: TUserLocale;

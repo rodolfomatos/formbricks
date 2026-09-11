@@ -27,6 +27,10 @@ import { getOrganizationIdFromWorkspaceId } from "@/lib/utils/helper";
 import { validateInputs } from "@/lib/utils/validate";
 import { getContact } from "./contact";
 
+/**
+ * Creates a v2 client response via the shared module, evaluating quotas
+ * afterward.
+ */
 export const createResponseWithQuotaEvaluation = async (
   responseInput: TResponseInputV2
 ): Promise<TResponseWithQuotaFull> => {
@@ -65,6 +69,10 @@ const buildPrismaResponseData = (
   };
 };
 
+/**
+ * Creates a v2 response record, resolving the contact and verifying
+ * display ownership.
+ */
 export const createResponse = async (
   responseInput: TResponseInputV2,
   tx?: Prisma.TransactionClient

@@ -1,3 +1,8 @@
+/**
+ * Type definitions for the ConditionsEditor component.
+ * Defines generic condition/group structures, editor callbacks, and configuration
+ * for rendering left-operand, operator, and value fields dynamically based on condition type.
+ */
 import { TConnector } from "@formbricks/types/surveys/logic";
 import { TComboboxGroupedOption, TComboboxOption } from "@/modules/ui/components/input-combo-box";
 

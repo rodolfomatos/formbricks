@@ -1,3 +1,7 @@
+/**
+ * Page-level header with title, optional CTA, and optional children below.
+ * Used as a consistent page heading pattern across modules.
+ */
 import { cn } from "@/lib/cn";
 
 export interface PageHeaderProps {

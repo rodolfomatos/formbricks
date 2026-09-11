@@ -3,6 +3,10 @@ import { getTranslate } from "@/lingodotdev/server";
 import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper";
 import { PageHeader } from "@/modules/ui/components/page-header";
 
+/**
+ * Loading fallback for organization general settings.
+ * Displays skeleton cards matching the settings page structure.
+ */
 const Loading = async () => {
   const t = await getTranslate();
 

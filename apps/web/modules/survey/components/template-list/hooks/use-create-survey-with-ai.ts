@@ -21,6 +21,11 @@ type UseCreateSurveyWithAIProps = {
   onSuccess: (surveyId: string) => void;
 };
 
+/**
+ * Manages the AI-driven survey creation flow: prompt input, payload generation,
+ * validation, survey creation, and navigation to the editor. Exposes form state,
+ * error handling, and the submit handler.
+ */
 export const useCreateSurveyWithAI = ({
   workspaceId,
   language,

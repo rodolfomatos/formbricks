@@ -25,6 +25,7 @@ const ZCreateLanguageAction = z.object({
   languageInput: ZLanguageInput,
 });
 
+/** Creates a new workspace language. Requires owner/manager role and manage permission. Logs audit trail and PostHog event. */
 export const createLanguageAction = authenticatedActionClient.inputSchema(ZCreateLanguageAction).action(
   withAuditLogging("created", "language", async ({ ctx, parsedInput }) => {
     const organizationId = await getOrganizationIdFromWorkspaceId(parsedInput.workspaceId);
@@ -72,6 +73,7 @@ const ZDeleteLanguageAction = z.object({
   workspaceId: ZId,
 });
 
+/** Deletes a workspace language. Validates that the language belongs to the workspace. Requires owner/manager role. Logs audit trail. */
 export const deleteLanguageAction = authenticatedActionClient.inputSchema(ZDeleteLanguageAction).action(
   withAuditLogging("deleted", "language", async ({ ctx, parsedInput }) => {
     const languageWorkspaceId = await getWorkspaceIdFromLanguageId(parsedInput.languageId);
@@ -110,6 +112,7 @@ const ZGetSurveysUsingGivenLanguageAction = z.object({
   languageId: ZId,
 });
 
+/** Returns the names of all surveys that use the given language. Used to warn before deletion. */
 export const getSurveysUsingGivenLanguageAction = authenticatedActionClient
   .inputSchema(ZGetSurveysUsingGivenLanguageAction)
   .action(async ({ ctx, parsedInput }) => {
@@ -140,6 +143,7 @@ const ZUpdateLanguageAction = z.object({
   languageInput: ZLanguageInput,
 });
 
+/** Updates a workspace language's code or alias. Requires owner/manager role. Logs audit trail. */
 export const updateLanguageAction = authenticatedActionClient.inputSchema(ZUpdateLanguageAction).action(
   withAuditLogging("updated", "language", async ({ ctx, parsedInput }) => {
     const languageProductId = await getWorkspaceIdFromLanguageId(parsedInput.languageId);

@@ -7,6 +7,13 @@ import { Result, err, ok } from "@formbricks/types/error-handlers";
 import { ZTeamUpdateSchema } from "@/modules/api/v2/organizations/[organizationId]/teams/[teamId]/types/teams";
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 
+/**
+ * Cached retrieval of a team by organization ID and team ID.
+ *
+ * @param organizationId — The organization the team belongs to
+ * @param teamId — The team ID
+ * @returns — The team if found
+ */
 export const getTeam = reactCache(async (organizationId: string, teamId: string) => {
   try {
     const responsePrisma = await prisma.team.findUnique({
@@ -29,6 +36,13 @@ export const getTeam = reactCache(async (organizationId: string, teamId: string)
   }
 });
 
+/**
+ * Deletes a team by organization and team ID.
+ *
+ * @param organizationId — The organization containing the team
+ * @param teamId — The team ID to delete
+ * @returns — The deleted team with its workspace relationships
+ */
 export const deleteTeam = async (
   organizationId: string,
   teamId: string
@@ -69,6 +83,14 @@ export const deleteTeam = async (
   }
 };
 
+/**
+ * Updates a team's fields by organization and team ID.
+ *
+ * @param organizationId — The organization containing the team
+ * @param teamId — The team ID to update
+ * @param teamInput — The fields to update
+ * @returns — The updated team with its workspace relationships
+ */
 export const updateTeam = async (
   organizationId: string,
   teamId: string,

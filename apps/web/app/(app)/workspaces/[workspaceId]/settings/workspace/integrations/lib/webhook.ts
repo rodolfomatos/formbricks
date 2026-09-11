@@ -5,6 +5,9 @@ import { ZId } from "@formbricks/types/common";
 import { DatabaseError } from "@formbricks/types/errors";
 import { validateInputs } from "@/lib/utils/validate";
 
+/**
+ * Counts webhooks for a workspace, optionally filtered by source type (user, zapier, make, etc.).
+ */
 export const getWebhookCountBySource = async (
   workspaceId: string,
   source?: Webhook["source"]

@@ -64,6 +64,7 @@ import {
 } from "@/modules/ui/components/select";
 import { cn } from "@/modules/ui/lib/utils";
 
+/** Modal dialog for creating or editing a survey follow-up email action. Handles trigger configuration (response submitted vs. ending reached), email recipient selection, subject/body editing with rich text, and toggles for attaching response data. */
 interface AddFollowUpModalProps {
   localSurvey: TSurvey;
   open: boolean;

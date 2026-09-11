@@ -5,6 +5,10 @@ import { ZString } from "@formbricks/types/common";
 import { DatabaseError, ResourceNotFoundError } from "@formbricks/types/errors";
 import { validateInputs } from "@/lib/utils/validate";
 
+/**
+ * Fetches all organizations the user is a member of.
+ * Cached per request via React cache().
+ */
 export const getOrganizationsByUserId = reactCache(
   async (userId: string): Promise<{ id: string; name: string }[]> => {
     validateInputs([userId, ZString]);

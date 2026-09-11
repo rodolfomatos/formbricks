@@ -1,3 +1,4 @@
+/** Organization schemas — billing plans, Stripe integration, whitelabel config, and organization CRUD. */
 import { z } from "zod";
 import { ZStorageUrl } from "./common";
 

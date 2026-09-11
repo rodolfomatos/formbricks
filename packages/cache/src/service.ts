@@ -15,7 +15,10 @@ interface NullableCacheBox<T> {
 }
 
 /**
- * Core cache service providing basic Redis operations with JSON serialization
+ * Redis-backed cache service providing get/set/delete operations with JSON
+ * serialisation, TTL, distributed locking, and cache-aside helper patterns.
+ * Every public method returns a `Result` type so callers can handle failures
+ * without try/catch.
  */
 export class CacheService {
   constructor(private readonly redis: RedisClient) {}

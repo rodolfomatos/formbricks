@@ -32,6 +32,7 @@ import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
 import { SurveyEditor } from "./components/survey-editor";
 import { getUserLocale } from "./lib/user";
 
+/** Generates the page title for the survey editor route based on the survey name. */
 export const generateMetadata = async (props: { params: Promise<{ surveyId: string }> }) => {
   const params = await props.params;
   const survey = await getSurvey(params.surveyId);
@@ -40,6 +41,7 @@ export const generateMetadata = async (props: { params: Promise<{ surveyId: stri
   };
 };
 
+/** Server component for the survey editor route. Fetches all editor data (survey, workspace, action classes, segments, permissions) and renders the SurveyEditor client component. */
 export const SurveyEditorPage = async (props: {
   params: Promise<{ workspaceId: string; surveyId: string }>;
   searchParams: Promise<{ mode?: string }>;

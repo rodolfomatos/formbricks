@@ -1,3 +1,4 @@
+/** Logger singleton — configurable debug/error logger with timestamped, prefixed output for SDK diagnostics. */
 /* eslint-disable no-console -- Required for logging */
 type LogLevel = "debug" | "error";
 

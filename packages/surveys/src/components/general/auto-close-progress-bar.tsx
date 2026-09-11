@@ -1,3 +1,4 @@
+/** Auto-close progress bar — an animated CSS progress bar that shrinks to zero over `autoCloseTimeout` milliseconds, indicating impending survey auto-dismissal. */
 interface AutoCloseProgressBarProps {
   autoCloseTimeout: number;
 }

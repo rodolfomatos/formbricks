@@ -1,3 +1,7 @@
+/**
+ * A single draggable row in the data table settings modal, showing the column header label
+ * and a visibility toggle switch. Uses @dnd-kit sortable for drag-and-drop reordering.
+ */
 "use client";
 
 import { useSortable } from "@dnd-kit/sortable";

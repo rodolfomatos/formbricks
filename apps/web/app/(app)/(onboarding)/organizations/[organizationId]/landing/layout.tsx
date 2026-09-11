@@ -4,6 +4,11 @@ import { getMembershipByUserIdOrganizationId } from "@/lib/membership/service";
 import { getUserWorkspaces } from "@/lib/workspace/service";
 import { authOptions } from "@/modules/auth/lib/authOptions";
 
+/**
+ * Layout for the organization landing page during onboarding.
+ * Authenticates the user, validates organization membership, and redirects to the first workspace
+ * if any exist. Shows children (the landing "no workspaces" page) only when no workspaces are found.
+ */
 const LandingLayout = async (props: {
   params: Promise<{ organizationId: string }>;
   children: React.ReactNode;

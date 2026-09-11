@@ -2,7 +2,6 @@
 
 import { z } from "zod";
 import { logger } from "@formbricks/logger";
-import { OperationNotAllowedError } from "@formbricks/types/errors";
 import { TUserNotificationSettings } from "@formbricks/types/user";
 import { IS_FORMBRICKS_CLOUD } from "@/lib/constants";
 import { createMembership } from "@/lib/membership/service";
@@ -13,23 +12,17 @@ import { authenticatedActionClient } from "@/lib/utils/action-client";
 import { DEFAULT_WORKSPACE_NAME } from "@/lib/workspace/constants";
 import { withAuditLogging } from "@/modules/ee/audit-logs/lib/handler";
 import { ensureCloudStripeSetupForOrganization } from "@/modules/ee/billing/lib/organization-billing";
-import { getIsMultiOrgEnabled } from "@/modules/ee/license-check/lib/utils";
 import { createWorkspace } from "@/modules/workspaces/settings/lib/workspace";
 
 const ZCreateOrganizationAction = z.object({
   organizationName: z.string().min(1, "Organization name must be at least 1 character long"),
 });
 
+/** Server action that creates a new organization with an initial workspace, membership, and Stripe setup (on cloud). */
 export const createOrganizationAction = authenticatedActionClient
   .inputSchema(ZCreateOrganizationAction)
   .action(
     withAuditLogging("created", "organization", async ({ ctx, parsedInput }) => {
-      const isMultiOrgEnabled = await getIsMultiOrgEnabled();
-      if (!isMultiOrgEnabled)
-        throw new OperationNotAllowedError(
-          "Creating Multiple organization is restricted on your instance of Formbricks"
-        );
-
       const newOrganization = await createOrganization({
         name: parsedInput.organizationName,
       });

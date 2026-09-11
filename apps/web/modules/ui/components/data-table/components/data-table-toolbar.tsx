@@ -1,3 +1,8 @@
+/**
+ * Main toolbar for the data table: shows either the selected-row settings bar (when rows are
+ * selected) or the left content slot, plus action buttons for refresh, table settings, and
+ * expand/collapse toggle.
+ */
 "use client";
 
 import { Table } from "@tanstack/react-table";

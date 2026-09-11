@@ -9,6 +9,20 @@
  * @param fileURL The storage URL to parse
  * @returns The original file name, or empty string if parsing fails
  */
+/**
+ * Extract the original human-readable file name from a storage URL.
+ * Handles both relative paths (/storage/...) and absolute URLs, stripping
+ * the internal `--fid--{uuid}` suffix inserted during upload.
+ *
+ * @param fileURL — the storage URL to parse
+ * @returns — the original file name, or empty string if parsing fails
+ *
+ * @example
+ * ```typescript
+ * getOriginalFileNameFromUrl("/storage/ws1/public/report--fid--abc123.pdf")
+ * // => "report.pdf"
+ * ```
+ */
 export const getOriginalFileNameFromUrl = (fileURL: string): string => {
   try {
     const lastSegment = fileURL.startsWith("/storage/")

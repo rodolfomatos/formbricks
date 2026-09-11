@@ -9,6 +9,16 @@ import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { queueAuditEvent } from "@/modules/ee/audit-logs/lib/handler";
 import { logApiErrorEdge } from "./utils-edge";
 
+/**
+ * Converts an ApiErrorResponseV2 into the appropriate HTTP Response with error logging.
+ * Logs the error via the audit log and error reporting system.
+ *
+ * @param request — The original request for context
+ * @param err — The structured API error
+ * @param auditLog — Optional audit log to mark as failed
+ * @param originalError — The original error for debugging
+ * @returns — The HTTP Response with appropriate status code
+ */
 export const handleApiError = (
   request: Request,
   err: ApiErrorResponseV2,
@@ -47,6 +57,12 @@ export const handleApiError = (
   }
 };
 
+/**
+ * Converts Zod validation errors into the API error detail format.
+ *
+ * @param error — The Zod error with issues
+ * @returns — Array of field-level API error details
+ */
 export const formatZodError = (error: { issues: (ZodIssue | ZodCustomIssue)[] }) => {
   return error.issues.map((issue) => {
     const issueParams = issue.code === "custom" ? issue.params : undefined;
@@ -59,6 +75,13 @@ export const formatZodError = (error: { issues: (ZodIssue | ZodCustomIssue)[] })
   });
 };
 
+/**
+ * Logs an API request to the logger with method, path, status, duration, and redacted query params.
+ *
+ * @param request — The original request
+ * @param responseStatus — The HTTP response status
+ * @param auditLog — Optional audit event to queue
+ */
 export const logApiRequest = (request: Request, responseStatus: number, auditLog?: TApiAuditLog): void => {
   const method = request.method;
   const url = new URL(request.url);
@@ -86,6 +109,14 @@ export const logApiRequest = (request: Request, responseStatus: number, auditLog
   logAuditLog(request, auditLog);
 };
 
+/**
+ * Logs an API error to the error reporter and queues an audit event if applicable.
+ *
+ * @param request — The original request
+ * @param error — The API error
+ * @param auditLog — Optional audit event context
+ * @param originalError — The original error for debugging
+ */
 export const logApiError = (
   request: Request,
   error: ApiErrorResponseV2,

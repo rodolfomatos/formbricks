@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the AlertDialog component.
+ * Covers default, destructive, warning, success, and destructive-decline variants.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { AlertDialog } from "./index";
 

@@ -4,6 +4,13 @@ import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
 import { err, ok } from "@formbricks/types/error-handlers";
 
+/**
+ * Cached lookup of workspace ID from a survey or response ID.
+ *
+ * @param id — The survey or response ID
+ * @param isResponseId — Whether the ID belongs to a response
+ * @returns — The associated workspace ID
+ */
 export const fetchWorkspaceId = reactCache(async (id: string, isResponseId: boolean) => {
   try {
     const result = await prisma.survey.findFirst({
@@ -34,6 +41,12 @@ export const fetchWorkspaceId = reactCache(async (id: string, isResponseId: bool
   }
 });
 
+/**
+ * Cached lookup of workspace IDs from an array of survey IDs.
+ *
+ * @param surveyIds — The survey IDs to look up
+ * @returns — Array of workspace IDs
+ */
 export const fetchWorkspaceIdFromSurveyIds = reactCache(async (surveyIds: string[]) => {
   try {
     const results = await prisma.survey.findMany({

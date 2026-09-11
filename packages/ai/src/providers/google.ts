@@ -4,18 +4,34 @@ import type { AIProviderAdapter } from "../registry";
 import { getCredentialFingerprint, normalizeValue } from "../shared";
 import type { AIEnvironment } from "../types";
 
+/**
+ * Internal type for the Google Vertex AI SDK settings.
+ */
 type GoogleProviderSettings = NonNullable<Parameters<typeof createGoogleCloudProvider>[0]>;
 
+/**
+ * The API version used for multi-region base URL construction.
+ */
 const GOOGLE_VERTEX_MULTI_REGION_API_VERSION = "v1";
-
+/**
+ * Maps location shorthand to the Google Vertex multi-region endpoint host.
+ */
 const GOOGLE_VERTEX_MULTI_REGION_HOSTS: Partial<Record<string, string>> = {
   eu: "https://aiplatform.eu.rep.googleapis.com",
   us: "https://aiplatform.us.rep.googleapis.com",
 };
 
+/**
+ * Type guard: checks that the unknown value is a plain (non-array) object.
+ */
 const isCredentialsObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
+/**
+ * Builds a multi-region base URL for Google Vertex when the location is a
+ * recognised multi-region (e.g. "eu" or "us"), otherwise returns undefined
+ * so the SDK falls back to the default per-location endpoint.
+ */
 const getGoogleVertexMultiRegionBaseURL = (project?: string, location?: string): string | undefined => {
   if (!project || !location) {
     return undefined;
@@ -30,6 +46,12 @@ const getGoogleVertexMultiRegionBaseURL = (project?: string, location?: string):
   return `${multiRegionHost}/${GOOGLE_VERTEX_MULTI_REGION_API_VERSION}/projects/${project}/locations/${location}/publishers/google`;
 };
 
+/**
+ * Parses the AI_GOOGLE_CLOUD_CREDENTIALS_JSON env var into a credentials
+ * object for the Vertex AI SDK.
+ *
+ * @throws — If the value is not a valid JSON object
+ */
 const parseGoogleCredentialsJson = (value?: string | null): Record<string, unknown> | undefined => {
   const normalizedValue = normalizeValue(value);
 
@@ -46,6 +68,11 @@ const parseGoogleCredentialsJson = (value?: string | null): Record<string, unkno
   return parsedValue;
 };
 
+/**
+ * Google Vertex AI provider adapter. Requires AI_GOOGLE_CLOUD_PROJECT and
+ * AI_GOOGLE_CLOUD_LOCATION. Supports both inline credentials JSON and
+ * application-default credential file path.
+ */
 export const googleProviderAdapter: AIProviderAdapter = {
   validate: (environment: AIEnvironment) => {
     const missingFields: string[] = [];

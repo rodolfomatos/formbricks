@@ -4,6 +4,7 @@ import { Prisma } from "@formbricks/database/prisma";
 import { DatabaseError, ResourceNotFoundError } from "@formbricks/types/errors";
 import { TOrganizationBilling } from "@formbricks/types/organizations";
 
+/** Resolves the owning organization ID for a given workspace. */
 export const getOrganizationIdFromWorkspaceId = reactCache(async (workspaceId: string): Promise<string> => {
   const workspace = await prisma.workspace.findUnique({
     where: { id: workspaceId },
@@ -17,6 +18,7 @@ export const getOrganizationIdFromWorkspaceId = reactCache(async (workspaceId: s
   return workspace.organizationId;
 });
 
+/** Fetches the AI feature configuration (smart tools enabled flag and billing info) for an organization. */
 export const getOrganizationAIKeys = reactCache(
   async (
     organizationId: string

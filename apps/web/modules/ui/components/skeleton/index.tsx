@@ -1,3 +1,6 @@
+/**
+ * A pulsing placeholder shape used as a loading skeleton for content that has not loaded yet.
+ */
 import { cn } from "@/lib/cn";
 
 export const Skeleton = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {

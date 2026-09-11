@@ -16,6 +16,7 @@ type TSurveyAIAvailabilityOptions = {
   isAISmartToolsEntitled?: boolean;
 };
 
+/** Resolves whether AI-assisted survey creation is available for an organization, considering read-only status, entitlement, and feature flags. */
 export const getSurveyAIAvailability = async (
   organizationId: string,
   options?: TSurveyAIAvailabilityOptions

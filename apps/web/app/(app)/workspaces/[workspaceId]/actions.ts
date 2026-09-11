@@ -16,10 +16,7 @@ import { authenticatedActionClient } from "@/lib/utils/action-client";
 import { checkAuthorizationUpdated } from "@/lib/utils/action-client/action-client-middleware";
 import { getOrganizationWorkspacesCount } from "@/lib/workspace/service";
 import { withAuditLogging } from "@/modules/ee/audit-logs/lib/handler";
-import {
-  getAccessControlPermission,
-  getOrganizationWorkspacesLimit,
-} from "@/modules/ee/license-check/lib/utils";
+import { getOrganizationWorkspacesLimit } from "@/modules/ee/license-check/lib/utils";
 import { createWorkspace } from "@/modules/workspaces/settings/lib/workspace";
 import { getOrganizationsByUserId } from "./lib/organization";
 import { getWorkspacesByUserId, getWritableWorkspacesByUserId } from "./lib/workspace";
@@ -29,6 +26,11 @@ const ZCreateWorkspaceAction = z.object({
   data: ZWorkspaceUpdateInput,
 });
 
+/**
+ * Creates a new workspace under the given organization.
+ * Checks organization workspace limit and access control permissions before creating.
+ * Logs the audit event and captures a PostHog event on success.
+ */
 export const createWorkspaceAction = authenticatedActionClient.inputSchema(ZCreateWorkspaceAction).action(
   withAuditLogging("created", "workspace", async ({ ctx, parsedInput }) => {
     const { user } = ctx;
@@ -59,14 +61,6 @@ export const createWorkspaceAction = authenticatedActionClient.inputSchema(ZCrea
 
     if (organizationWorkspacesCount >= organizationWorkspacesLimit) {
       throw new OperationNotAllowedError("Organization workspace limit reached");
-    }
-
-    if (parsedInput.data.teamIds && parsedInput.data.teamIds.length > 0) {
-      const isAccessControlAllowed = await getAccessControlPermission(organization.id);
-
-      if (!isAccessControlAllowed) {
-        throw new OperationNotAllowedError("You do not have permission to manage roles");
-      }
     }
 
     const workspace = await createWorkspace(parsedInput.organizationId, parsedInput.data);

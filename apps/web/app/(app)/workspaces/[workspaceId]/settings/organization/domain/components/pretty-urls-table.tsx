@@ -23,6 +23,10 @@ interface PrettyUrlsTableProps {
   surveys: SurveyWithSlug[];
 }
 
+/**
+ * Table listing all surveys with their slug-based pretty URLs for the domain settings page.
+ * Each row links to the survey summary and shows the slug/workspace info.
+ */
 export const PrettyUrlsTable = ({ surveys }: PrettyUrlsTableProps) => {
   const { t } = useTranslation();
 

@@ -1,9 +1,11 @@
+/** Capitalises the first character of a string and lowercases the rest. */
 export const capitalize = (value: string): string => {
   if (!value) return "";
 
   return `${value.charAt(0).toUpperCase()}${value.slice(1).toLowerCase()}`;
 };
 
+/** Deep equality check for JSON-serialisable values (objects, arrays, Dates, primitives). */
 export const isDeepEqual = (left: unknown, right: unknown): boolean => {
   if (Object.is(left, right)) return true;
 

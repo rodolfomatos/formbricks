@@ -8,6 +8,10 @@ import { getTranslate } from "@/lingodotdev/server";
 import { authOptions } from "@/modules/auth/lib/authOptions";
 import { ToasterClient } from "@/modules/ui/components/toaster-client";
 
+/**
+ * Layout for organization-scoped onboarding pages `/organizations/[organizationId]/*`.
+ * Validates authentication, organization access, and wraps children in a basic shell with toast support.
+ */
 const WorkspaceOnboardingLayout = async (props: {
   params: Promise<{ organizationId: string }>;
   children: React.ReactNode;

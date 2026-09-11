@@ -1,3 +1,14 @@
+/**
+ * Service layer for Surveys — the core Formbricks entity.
+ *
+ * Surveys combine blocks (questions, CTAs, etc.), triggers (action classes that
+ * launch them), segments (who sees them), languages, styling, and scheduling
+ * (publish-on / close-on). This service manages the full lifecycle: creation
+ * (with private segment auto-creation for app surveys), read (single, list by
+ * workspace, by action class, by segment), update (with complex language-diffing,
+ * trigger reconciliation, segment management, and scheduling normalisation), and
+ * draft updates that skip validation for fast autosave.
+ */
 import "server-only";
 import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
@@ -156,6 +167,12 @@ const reconcilePersistedSurveySchedulingIfDue = async ({
   return transformPrismaSurvey<TSurvey>(reconciledSurvey);
 };
 
+/**
+ * Retrieves a single survey by ID with all relations (languages, triggers, segment, follow-ups).
+ *
+ * @param surveyId — the survey to fetch
+ * @returns — the survey, or null
+ */
 export const getSurvey = reactCache(async (surveyId: string): Promise<TSurvey | null> => {
   validateInputs([surveyId, ZId]);
 
@@ -182,6 +199,13 @@ export const getSurvey = reactCache(async (surveyId: string): Promise<TSurvey | 
   return transformPrismaSurvey<TSurvey>(surveyPrisma);
 });
 
+/**
+ * Lists surveys triggered by a specific action class, with optional pagination.
+ *
+ * @param actionClassId — the action class to find surveys for
+ * @param page — page number (1-based)
+ * @returns — matching surveys
+ */
 export const getSurveysByActionClassId = reactCache(
   async (actionClassId: string, page?: number): Promise<TSurvey[]> => {
     validateInputs([actionClassId, ZId], [page, ZOptionalNumber]);
@@ -222,6 +246,14 @@ export const getSurveysByActionClassId = reactCache(
   }
 );
 
+/**
+ * Lists all surveys in a workspace, sorted by most recently updated.
+ *
+ * @param workspaceId — the owning workspace
+ * @param limit — max records to return
+ * @param offset — record offset
+ * @returns — array of surveys
+ */
 export const getSurveys = reactCache(
   async (workspaceId: string, limit?: number, offset?: number): Promise<TSurvey[]> => {
     validateInputs([workspaceId, ZId], [limit, ZOptionalNumber], [offset, ZOptionalNumber]);
@@ -250,6 +282,12 @@ export const getSurveys = reactCache(
   }
 );
 
+/**
+ * Counts the total number of surveys in a workspace.
+ *
+ * @param workspaceId — the workspace
+ * @returns — the survey count
+ */
 export const getSurveyCount = reactCache(async (workspaceId: string): Promise<number> => {
   validateInputs([workspaceId, ZId]);
   try {
@@ -555,11 +593,25 @@ export const updateSurveyInternal = async (
   }
 };
 
+/**
+ * Updates a survey with full validation (media checks, segment/language ownership).
+ * The public entry-point for survey updates from server actions.
+ *
+ * @param updatedSurvey — the survey with changes applied
+ * @returns — the persisted survey
+ */
 export const updateSurvey = async (updatedSurvey: TSurvey): Promise<TSurvey> => {
   return updateSurveyInternal(updatedSurvey);
 };
 
-// Draft update without validation
+/**
+ * Saves a survey draft without media or segment validation.
+ * Used for fast autosave during editing — the user cannot publish invalid media,
+ * but they can save while their image upload is still in progress.
+ *
+ * @param updatedSurvey — the survey with draft changes
+ * @returns — the persisted survey
+ */
 export const updateSurveyDraft = async (updatedSurvey: TSurvey): Promise<TSurvey> => {
   return updateSurveyInternal(updatedSurvey, true);
 };
@@ -776,6 +828,14 @@ export const createSurvey = async (workspaceId: string, surveyBody: TSurveyCreat
   }
 };
 
+/**
+ * Replaces the current segment of a survey with a new one.
+ * If the old segment is private (auto-created for app surveys), it is deleted.
+ *
+ * @param surveyId — the survey
+ * @param newSegmentId — the segment to connect
+ * @returns — the updated survey
+ */
 export const loadNewSegmentInSurvey = async (surveyId: string, newSegmentId: string): Promise<TSurvey> => {
   validateInputs([surveyId, ZId], [newSegmentId, ZId]);
   try {
@@ -839,6 +899,12 @@ export const loadNewSegmentInSurvey = async (surveyId: string, newSegmentId: str
   }
 };
 
+/**
+ * Lists all surveys that use a given segment.
+ *
+ * @param segmentId — the segment
+ * @returns — surveys connected to this segment
+ */
 export const getSurveysBySegmentId = reactCache(async (segmentId: string): Promise<TSurvey[]> => {
   try {
     const surveysPrisma = await prisma.survey.findMany({

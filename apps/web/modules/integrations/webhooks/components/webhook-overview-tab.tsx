@@ -38,6 +38,7 @@ const convertTriggerIdToName = (triggerId: string, t: TFunction): string => {
   }
 };
 
+/** Read-only overview tab for a webhook — displays name, source, URL, associated surveys, triggers, and timestamps. */
 export const WebhookOverviewTab = ({ webhook, surveys, locale }: ActivityTabProps) => {
   const { t } = useTranslation();
   return (

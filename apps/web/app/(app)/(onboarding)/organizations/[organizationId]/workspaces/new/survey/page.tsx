@@ -16,6 +16,11 @@ interface SurveyOnboardingPageProps {
   }>;
 }
 
+/**
+ * Route: `/organizations/[organizationId]/workspaces/new/survey` (onboarding).
+ * Lets the user create their first survey from scratch, a template, or with AI.
+ * Redirects to login if unauthenticated, or away if onboarding is already complete.
+ */
 const Page = async (props: SurveyOnboardingPageProps) => {
   const params = await props.params;
   const t = await getTranslate();

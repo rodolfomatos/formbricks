@@ -1,3 +1,8 @@
+/**
+ * Global PrismaJson namespace augmentation — maps Prisma JSON column types to
+ * their TypeScript representations so that the generated Prisma client works
+ * with Formbricks' domain types instead of raw `PrismaJsonValue`.
+ */
 /* eslint-disable @typescript-eslint/no-namespace -- using namespaces is required for prisma-json-types-generator */
 import { type TActionClassNoCodeConfig } from "@formbricks/types/action-classes";
 import type { TChartConfig, TChartQuery, TWidgetLayout } from "@formbricks/types/analysis";

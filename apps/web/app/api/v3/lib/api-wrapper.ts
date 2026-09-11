@@ -26,6 +26,7 @@ import type { TV3AuditLog, TV3Authentication } from "./types";
 type TV3Schema = z.ZodTypeAny;
 type MaybePromise<T> = T | Promise<T>;
 
+/** Supported v3 API authentication modes. */
 export type TV3AuthMode = "none" | "session" | "apiKey" | "both";
 
 export type TV3Schemas = {

@@ -1,3 +1,4 @@
+/** Element conditional — dispatches survey responses to the correct element-type renderer (open-text, NPS, rating, CTA, matrix, multiple-choice, etc.) and handles file-upload callbacks. */
 import { useEffect, useRef } from "preact/hooks";
 import { type TJsFileUploadParams } from "@formbricks/types/js";
 import { type TResponseData, type TResponseDataValue, type TResponseTtc } from "@formbricks/types/responses";

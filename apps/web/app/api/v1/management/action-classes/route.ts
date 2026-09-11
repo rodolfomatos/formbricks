@@ -10,6 +10,10 @@ import { createActionClass } from "@/lib/actionClass/service";
 import { hasPermission } from "@/modules/organization/settings/api-keys/lib/utils";
 import { getActionClasses } from "./lib/action-classes";
 
+/**
+ * GET /api/v1/management/action-classes
+ * Returns all action classes for the API key's accessible workspaces.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ authentication }) => {
     if (!authentication || !("apiKeyId" in authentication)) {
@@ -37,6 +41,10 @@ export const GET = withV1ApiWrapper({
   },
 });
 
+/**
+ * POST /api/v1/management/action-classes
+ * Creates a new action class. Validates input and logs an audit event on success.
+ */
 export const POST = withV1ApiWrapper({
   handler: async ({ req, auditLog, authentication }: THandlerParams) => {
     if (!authentication || !("apiKeyId" in authentication)) {

@@ -1,3 +1,4 @@
+/** Survey UI component props — interfaces for SurveyInline, SurveyModal, and SurveyContainer rendering in the browser SDK. */
 import type { TJsFileUploadParams, TJsWorkspaceStateSurvey } from "./js";
 import type { TResponseData, TResponseHiddenFieldValue, TResponseUpdate } from "./responses";
 import type { TUploadFileConfig } from "./storage";

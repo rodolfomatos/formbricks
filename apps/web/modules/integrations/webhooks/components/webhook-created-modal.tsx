@@ -25,6 +25,7 @@ interface WebhookCreatedModalProps {
   onClose: () => void;
 }
 
+/** Post-creation dialog that displays the webhook signing secret with a copy button, shown once after a webhook is created. */
 export const WebhookCreatedModal = ({ open, webhook, onClose }: WebhookCreatedModalProps) => {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);

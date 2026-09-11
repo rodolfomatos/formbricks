@@ -13,6 +13,11 @@ import { deleteFile, getFileStreamForDownload } from "@/modules/storage/service"
 import { getErrorResponseFromStorageError } from "@/modules/storage/utils";
 import { logFileDeletion } from "./lib/audit-logs";
 
+/**
+ * GET /storage/[workspaceId]/[accessType]/[...filePath]
+ * Streams a stored file (public or private). Private files require session
+ * or API key authentication. Supports legacy environmentId in the URL.
+ */
 export const GET = async (
   request: NextRequest,
   props: { params: Promise<{ workspaceId: string; accessType: string; filePath: string[] }> }
@@ -74,6 +79,11 @@ export const GET = async (
   });
 };
 
+/**
+ * DELETE /storage/[workspaceId]/[accessType]/[...filePath]
+ * Deletes a stored file. Requires authentication and applies rate limiting
+ * for session-authenticated requests. Logs audit events on success/failure.
+ */
 export const DELETE = async (
   request: NextRequest,
   props: { params: Promise<{ workspaceId: string; accessType: string; filePath: string[] }> }

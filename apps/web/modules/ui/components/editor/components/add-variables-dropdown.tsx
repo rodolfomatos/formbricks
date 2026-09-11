@@ -1,3 +1,7 @@
+/**
+ * Dropdown menu for inserting dynamic variable placeholders into the editor.
+ * Renders the variable list from the survey, allowing the user to pick one to insert.
+ */
 import { ChevronDownIcon } from "lucide-react";
 import {
   DropdownMenu,

@@ -1,3 +1,4 @@
+/** API client — HTTP methods (createDisplay, createResponse, updateResponse, uploadFile, etc.) for the Formbricks survey backend, with typed error handling via `Result<T>`. */
 import { TDisplayCreateInput } from "@formbricks/types/displays";
 import { Result } from "@formbricks/types/error-handlers";
 import { type ApiErrorResponse, FILE_UPLOAD_ERROR_NAMES } from "@formbricks/types/errors";

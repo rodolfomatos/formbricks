@@ -1,6 +1,14 @@
 "use server";
 
 import "server-only";
+/**
+ * Service layer for Action Classes — the taxonomy of user behaviours that can trigger surveys.
+ *
+ * Action classes define "what a user did" (clicked a button, visited a page, performed a code
+ * event). This service provides CRUD operations scoped to a workspace and uses React's `cache()`
+ * for request-level deduplication, since action classes are read frequently during survey
+ * targeting but change rarely.
+ */
 import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
 import { ActionClass, Prisma } from "@formbricks/database/prisma";
@@ -23,6 +31,13 @@ const selectActionClass = {
   workspaceId: true,
 } satisfies Prisma.ActionClassSelect;
 
+/**
+ * Lists action classes for a workspace with optional pagination.
+ *
+ * @param workspaceId — scopes the query to a single workspace
+ * @param page — page number (1-based); omit for all results
+ * @returns — paginated array of action classes
+ */
 export const getActionClasses = reactCache(
   async (workspaceId: string, page?: number): Promise<TActionClass[]> => {
     validateInputs([workspaceId, ZId], [page, ZOptionalNumber]);
@@ -45,7 +60,14 @@ export const getActionClasses = reactCache(
   }
 );
 
-// This function is used to get an action by its name and workspaceId(it can return private actions as well)
+/**
+ * Looks up an action class by its human-readable name within a workspace.
+ * Returns private actions too, which is necessary for survey targeting logic.
+ *
+ * @param workspaceId — the workspace scope
+ * @param name — the action class name (e.g. "Clicked Sign Up")
+ * @returns — the matching action class, or null
+ */
 export const getActionClassByWorkspaceIdAndName = reactCache(
   async (workspaceId: string, name: string): Promise<TActionClass | null> => {
     validateInputs([workspaceId, ZId], [name, ZString]);
@@ -66,6 +88,12 @@ export const getActionClassByWorkspaceIdAndName = reactCache(
   }
 );
 
+/**
+ * Retrieves a single action class by its ID.
+ *
+ * @param actionClassId — the action class to fetch
+ * @returns — the action class, or null if it doesn't exist
+ */
 export const getActionClass = reactCache(async (actionClassId: string): Promise<TActionClass | null> => {
   validateInputs([actionClassId, ZId]);
 
@@ -83,6 +111,12 @@ export const getActionClass = reactCache(async (actionClassId: string): Promise<
   }
 });
 
+/**
+ * Deletes an action class by ID. Throws `ResourceNotFoundError` if it doesn't exist.
+ *
+ * @param actionClassId — the action class to delete
+ * @returns — the deleted action class
+ */
 export const deleteActionClass = async (actionClassId: string): Promise<TActionClass> => {
   validateInputs([actionClassId, ZId]);
 
@@ -104,6 +138,13 @@ export const deleteActionClass = async (actionClassId: string): Promise<TActionC
   }
 };
 
+/**
+ * Creates a new action class within a workspace.
+ * Handles code-type (custom key) and noCode-type (UI interaction) actions differently.
+ *
+ * @param actionClass — the action class input data
+ * @returns — the created ActionClass record
+ */
 export const createActionClass = async (actionClass: TActionClassInput): Promise<ActionClass> => {
   validateInputs([actionClass, ZActionClassInput]);
 
@@ -141,6 +182,15 @@ export const createActionClass = async (actionClass: TActionClassInput): Promise
   }
 };
 
+/**
+ * Updates an existing action class. Only mutable fields are sent; the workspace
+ * identity fields in the input are stripped to avoid accidental re-parenting.
+ *
+ * @param workspaceId — used for authorisation scope
+ * @param actionClassId — the action class to update
+ * @param inputActionClass — the new values
+ * @returns — the updated action class
+ */
 export const updateActionClass = async (
   workspaceId: string,
   actionClassId: string,

@@ -1,3 +1,4 @@
+/** Dropdown to select a unit option for a validation rule (e.g. minutes, hours for time-based rules). */
 "use client";
 
 import {

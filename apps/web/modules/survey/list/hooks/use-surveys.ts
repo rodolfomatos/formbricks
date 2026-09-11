@@ -5,6 +5,7 @@ import { flattenSurveyPages, surveyKeys } from "@/modules/survey/list/lib/query"
 import { TSurveyOverviewFilters } from "@/modules/survey/list/types/survey-overview";
 import { listSurveys } from "../lib/v3-surveys-client";
 
+/** Infinite-query hook that loads paginated survey list data with filters, returning flattened survey items and total count. */
 export const useSurveys = ({
   workspaceId,
   limit,

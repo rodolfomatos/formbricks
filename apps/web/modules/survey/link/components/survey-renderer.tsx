@@ -12,7 +12,6 @@ import {
   TERMS_URL,
 } from "@/lib/constants";
 import { getPublicDomain } from "@/lib/getPublicUrl";
-import { getIsContactsEnabled } from "@/modules/ee/license-check/lib/utils";
 import { PinScreen } from "@/modules/survey/link/components/pin-screen";
 import { SurveyClientWrapper } from "@/modules/survey/link/components/survey-client-wrapper";
 import { SurveyCompletedMessage } from "@/modules/survey/link/components/survey-completed-message";
@@ -48,6 +47,7 @@ interface SurveyRendererProps {
  * @param locale - User's locale from Accept-Language header
  * @param responseCount - Conditionally fetched if showResponseCount is enabled
  */
+/** Dispatches between PinScreen, VerifyEmail, SurveyInactive, SurveyClientWrapper, or SurveyCompletedMessage based on survey status, single-use state, pin config, and email verification settings. */
 export const renderSurvey = async ({
   survey,
   searchParams,
@@ -132,9 +132,7 @@ export const renderSurvey = async ({
   const languageCode = getLanguageCode(langParam, survey);
   const publicDomain = getPublicDomain();
   const canReadUserIdFromUrl =
-    allowUrlUserIdLookup && !contactId && hasUserIdSearchParam(searchParams)
-      ? await getIsContactsEnabled(workspaceContext.organizationId)
-      : false;
+    allowUrlUserIdLookup && !contactId && hasUserIdSearchParam(searchParams);
 
   // Handle PIN-protected surveys
   if (survey.pin) {

@@ -1,3 +1,6 @@
+/**
+ * Form field for numeric input with optional step, min, max constraints.
+ */
 "use client";
 
 import { FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/modules/ui/components/form";

@@ -1,3 +1,7 @@
+/**
+ * Tabbed selector for choosing a survey background source: color, animation, upload, or Unsplash image.
+ * Manages separate state for each background type to avoid cross-contamination when switching tabs.
+ */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

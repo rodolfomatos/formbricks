@@ -2414,6 +2414,7 @@
         "workspace": "Workspace"
       },
       "enterprise": {
+        "ai_smart_tools": "KI-Smart-Tools",
         "audit_logs": "Audit-Logs",
         "coming_soon": "Demnächst verfügbar",
         "contacts_and_segments": "Kontaktverwaltung & Segmente",

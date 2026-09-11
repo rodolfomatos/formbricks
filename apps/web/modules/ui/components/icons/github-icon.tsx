@@ -1,3 +1,6 @@
+/**
+ * GitHub brand icon SVG (filled octocat).
+ */
 export const GithubIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg

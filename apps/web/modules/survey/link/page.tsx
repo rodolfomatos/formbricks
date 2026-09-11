@@ -20,6 +20,7 @@ interface LinkSurveyPageProps {
   searchParams: Promise<TLinkSurveySearchParams>;
 }
 
+/** Generates page metadata (title, description, OG image) for the link survey page. */
 export const generateMetadata = async (props: LinkSurveyPageProps): Promise<Metadata> => {
   const params = await props.params;
   const searchParams = await props.searchParams;
@@ -34,6 +35,7 @@ export const generateMetadata = async (props: LinkSurveyPageProps): Promise<Meta
   return getMetadataForLinkSurvey(params.surveyId, languageCode);
 };
 
+/** Public link survey page at /s/[surveyId]. Fetches survey, workspace, locale, and response data in staged parallel queries, then renders the survey or an inactive/pin/verify screen. */
 export const LinkSurveyPage = async (props: LinkSurveyPageProps) => {
   const searchParams = await props.searchParams;
   const params = await props.params;

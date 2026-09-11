@@ -1,3 +1,7 @@
+/**
+ * Radio-style tab group for selecting between styling options.
+ * Supports icons, labels, sub-labels, and custom active/inactive class names.
+ */
 import React, { useState } from "react";
 import { cn } from "@/lib/cn";
 import { Label } from "@/modules/ui/components/label";

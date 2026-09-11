@@ -7,9 +7,18 @@ import type { JobHandlerOverrides } from "@/src/contracts";
 import { processJob } from "@/src/processors/registry";
 import { createJobsQueue } from "@/src/queue";
 
+/**
+ * Default concurrency per worker (1 = sequential processing).
+ */
 const DEFAULT_WORKER_CONCURRENCY = 1;
+/**
+ * Default number of worker processes to spawn.
+ */
 const DEFAULT_WORKER_COUNT = 1;
 
+/**
+ * Options for starting the BullMQ jobs runtime.
+ */
 export interface JobsRuntimeOptions {
   redisUrl: string;
   prefix?: string;
@@ -18,6 +27,10 @@ export interface JobsRuntimeOptions {
   jobHandlerOverrides?: JobHandlerOverrides;
 }
 
+/**
+ * Handle returned by startJobsRuntime — provides access to the queue,
+ * workers, and a close function for graceful shutdown.
+ */
 export interface JobsRuntimeHandle {
   queue: Queue;
   workers: Worker[];
@@ -26,10 +39,18 @@ export interface JobsRuntimeHandle {
 
 type TSignalHandler = () => void;
 
+/**
+ * Removes a previously registered signal handler to prevent duplicate
+ * registrations on repeated start/stop cycles.
+ */
 const removeProcessListener = (event: "SIGTERM" | "SIGINT", handler: TSignalHandler): void => {
   process.removeListener(event, handler);
 };
 
+/**
+ * Validates that a number is a positive integer, throwing a descriptive
+ * error otherwise.
+ */
 const getPositiveInteger = (value: number, label: string): number => {
   if (!Number.isInteger(value) || value < 1) {
     throw new Error(`${label} must be a positive integer`);
@@ -38,6 +59,9 @@ const getPositiveInteger = (value: number, label: string): number => {
   return value;
 };
 
+/**
+ * Attaches error/failed/completed event listeners to a worker for logging.
+ */
 const registerWorkerLogging = (worker: Worker, workerNumber: number): void => {
   worker.on("error", (error) => {
     logger.error({ err: error, queueName: JOBS_QUEUE_NAME, workerNumber }, "BullMQ worker error");
@@ -71,6 +95,14 @@ const registerWorkerLogging = (worker: Worker, workerNumber: number): void => {
   });
 };
 
+/**
+ * Starts the BullMQ jobs runtime — creates a producer connection, a queue,
+ * and N worker processes that listen for jobs. Registers SIGTERM/SIGINT
+ * handlers for graceful shutdown.
+ *
+ * @param options — Runtime options including Redis URL, worker count, concurrency, and handler overrides
+ * @returns — A handle with the queue, workers array, and a close() function
+ */
 export const startJobsRuntime = async ({
   redisUrl,
   prefix = JOBS_PREFIX,

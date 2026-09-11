@@ -1,3 +1,8 @@
+/**
+ * Upgrade prompt card displayed when a user tries to access a paid feature.
+ * Shows a key icon, title/description, and primary/secondary action buttons.
+ * Tracks upgrade CTA clicks via PostHog when a feature name is provided.
+ */
 "use client";
 
 import { KeyIcon } from "lucide-react";

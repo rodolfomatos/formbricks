@@ -1,3 +1,4 @@
+/** File-upload widget for setting the survey background to a user-uploaded image. */
 import { FileInput } from "@/modules/ui/components/file-input";
 
 interface UploadImageSurveyBgProps {

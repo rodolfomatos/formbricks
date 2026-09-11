@@ -9,6 +9,9 @@ type TContactAttributeResult = {
   value: string;
 };
 
+/**
+ * Fetches a contact with attributes, scoped to workspace. Cached per request.
+ */
 export const getContact = reactCache(async (contactId: string, workspaceId: string) => {
   const contact = await prisma.contact.findUnique({
     where: { id: contactId, workspaceId },

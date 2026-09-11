@@ -1,3 +1,4 @@
+/** Date element — renders a date-picker survey question using the survey-ui DateElement with TTC tracking and locale-aware formatting. */
 import { useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { DateElement as SurveyUIDateElement } from "@formbricks/survey-ui";

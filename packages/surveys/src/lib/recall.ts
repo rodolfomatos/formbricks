@@ -1,3 +1,4 @@
+/** Recall — resolves `#recall:questionId` placeholders in survey text by substituting previously-answered response data with locale-aware formatting. */
 import { type TResponseData, type TResponseVariables } from "@formbricks/types/responses";
 import { type TSurveyElement } from "@formbricks/types/surveys/elements";
 import { formatDateWithOrdinal, isValidDateString } from "@/lib/date-time";

@@ -15,6 +15,10 @@ interface TemplatesOnboardingPageProps {
   }>;
 }
 
+/**
+ * Route: `/organizations/[organizationId]/workspaces/new/templates` (onboarding).
+ * Shows the Experience Management (XM) template library for creating the first survey.
+ */
 const Page = async (props: TemplatesOnboardingPageProps) => {
   const params = await props.params;
   const t = await getTranslate();

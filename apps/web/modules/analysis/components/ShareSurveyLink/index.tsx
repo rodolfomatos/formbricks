@@ -21,6 +21,7 @@ interface ShareSurveyLinkProps {
   isReadOnly: boolean;
 }
 
+/** Toolbar for sharing and previewing a survey. Includes language selection, copy-to-clipboard, and a preview button that supports single-use links. */
 export const ShareSurveyLink = ({
   survey,
   surveyUrl,

@@ -1,3 +1,7 @@
+/**
+ * An animated SVG loading spinner centered within its container.
+ * Accepts a className to control sizing (default: h-6 w-6).
+ */
 "use client";
 
 import { cn } from "@/lib/cn";

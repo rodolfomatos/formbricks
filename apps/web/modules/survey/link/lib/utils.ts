@@ -3,6 +3,7 @@ import { TSurveyBlock } from "@formbricks/types/surveys/blocks";
 import { TSurveyElement } from "@formbricks/types/surveys/elements";
 import { TSurvey } from "@formbricks/types/surveys/types";
 
+/** Detects whether the given text contains RTL (right-to-left) Unicode characters (Arabic, Hebrew, etc.). */
 export function isRTL(text: string): boolean {
   const rtlCharRegex = /[\u0591-\u07FF\uFB1D-\uFDFD\uFE70-\uFEFC]/;
   return rtlCharRegex.test(text);
@@ -18,6 +19,7 @@ const RTL_LANGUAGES = ["ar", "ar-SA", "ar-EG", "ar-AE", "ar-MA", "he", "fa", "ur
  * @param survey The survey to test
  * @param languageCode The language code to test (e.g., "ar", "ar-SA", "he")
  */
+/** Determines if the survey's language is RTL, using language codes first then falling back to content-based detection. */
 export function isRTLLanguage(survey: TJsWorkspaceStateSurvey, languageCode: string): boolean {
   if (survey.languages.length === 0) {
     if (survey.welcomeCard.enabled) {
@@ -52,6 +54,7 @@ export function isRTLLanguage(survey: TJsWorkspaceStateSurvey, languageCode: str
  * @param blocks The blocks array
  * @returns An array of TSurveyElement (pure elements without block-level properties)
  */
+/** Flattens the survey's block structure into a flat array of elements. */
 export const getElementsFromSurveyBlocks = (blocks: TSurveyBlock[]): TSurveyElement[] =>
   blocks.flatMap((block) => block.elements);
 
@@ -59,6 +62,7 @@ export const getElementsFromSurveyBlocks = (blocks: TSurveyBlock[]): TSurveyElem
  * Maps survey language codes to web app locale codes.
  * Falls back to "en-US" if the language is not available in web app locales.
  */
+/** Maps a survey language code to the corresponding web-app locale code (e.g. "de" → "de-DE"). Falls back to "en-US". */
 export const getWebAppLocale = (languageCode: string, survey: TSurvey): string => {
   // Map of common 2-letter language codes to web app locale codes
   const languageToLocaleMap: Record<string, string> = {

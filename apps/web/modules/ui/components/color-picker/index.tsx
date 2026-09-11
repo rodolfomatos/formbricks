@@ -1,3 +1,7 @@
+/**
+ * Color picker combining a hex text input with a popover color picker.
+ * Used throughout styling settings for choosing colors.
+ */
 "use client";
 
 import { HexColorInput } from "react-colorful";

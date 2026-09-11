@@ -1,3 +1,7 @@
+/**
+ * Factory that returns a column definition with header and cell checkboxes for multi-row
+ * selection in data tables. Handles "select all" on the current page and per-row toggle.
+ */
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";

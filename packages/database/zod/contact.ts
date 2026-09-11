@@ -1,3 +1,7 @@
+/**
+ * Zod schema for the Contact entity — a person who can receive and respond
+ * to surveys.
+ */
 import { z } from "zod";
 import type { Contact } from "../src/prisma";
 

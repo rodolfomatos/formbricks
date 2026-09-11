@@ -1,3 +1,7 @@
+/**
+ * Styled label component built on Radix Label primitive.
+ * Used in forms alongside FormField and FormControl for accessible labeling.
+ */
 "use client";
 
 import * as LabelPrimitive from "@radix-ui/react-label";

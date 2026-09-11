@@ -9,6 +9,10 @@ import { getTranslate } from "@/lingodotdev/server";
 import { authOptions } from "@/modules/auth/lib/authOptions";
 import { invalidateOrganizationBillingCache } from "@/modules/ee/billing/lib/organization-billing";
 
+/**
+ * Layout for the workspace creation onboarding flow.
+ * Authenticates the user, checks for owner/manager membership, and refreshes billing cache on cloud.
+ */
 const OnboardingLayout = async (props: {
   params: Promise<{ organizationId: string }>;
   children: React.ReactNode;

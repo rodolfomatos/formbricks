@@ -6,6 +6,13 @@ import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { deleteFile } from "@/modules/storage/service";
 import { parseStorageFileUrl } from "@/modules/storage/utils";
 
+/**
+ * Finds file upload responses for file-upload questions and deletes the associated storage files.
+ *
+ * @param responseData — The response data to scan for file URLs
+ * @param questions — The survey questions to identify file-upload types
+ * @param workspaceId — The workspace for storage access
+ */
 export const findAndDeleteUploadedFilesInResponse = async (
   responseData: Response["data"],
   questions: Survey["questions"],

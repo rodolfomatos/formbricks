@@ -1,3 +1,4 @@
+/** Contact attribute key schemas — defines the shape and data type (string, number, date) of custom contact fields. */
 import { z } from "zod";
 
 export const ZContactAttributeKeyType = z.enum(["default", "custom"]);

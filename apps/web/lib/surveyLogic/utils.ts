@@ -1,3 +1,11 @@
+/**
+ * Survey logic utilities for the client-side response engine.
+ *
+ * Writes to the condition tree (add, remove, duplicate, group, update),
+ * evaluates conditions against response data, and performs side-effect actions
+ * (jump to block, require answer, calculate variable). The condition tree is a
+ * recursive structure of TConditionGroup + TSingleCondition nodes.
+ */
 import { createId } from "@paralleldrive/cuid2";
 import { TJsWorkspaceStateSurvey } from "@formbricks/types/js";
 import { TResponseData, TResponseVariables } from "@formbricks/types/responses";
@@ -14,10 +22,15 @@ import { getElementsFromBlocks } from "@/modules/survey/lib/client-utils";
 
 type TCondition = TSingleCondition | TConditionGroup;
 
+/** Guards whether a condition node is a group (has children) vs a leaf. */
 export const isConditionGroup = (condition: TCondition): condition is TConditionGroup => {
   return (condition as TConditionGroup).connector !== undefined;
 };
 
+/**
+ * Deep-clones a logic rule, generating new IDs for every node (conditions, groups, actions).
+ * Used when duplicating a block that carries logic rules.
+ */
 export const duplicateLogicItem = (logicItem: TSurveyBlockLogic): TSurveyBlockLogic => {
   const duplicateConditionGroup = (group: TConditionGroup): TConditionGroup => {
     return {
@@ -55,6 +68,10 @@ export const duplicateLogicItem = (logicItem: TSurveyBlockLogic): TSurveyBlockLo
   };
 };
 
+/**
+ * Inserts a condition directly below the node identified by resourceId.
+ * Traverses nested groups recursively to find the target.
+ */
 export const addConditionBelow = (
   group: TConditionGroup,
   resourceId: string,
@@ -79,6 +96,7 @@ export const addConditionBelow = (
   }
 };
 
+/** Toggles a group's connector between "and" / "or". */
 export const toggleGroupConnector = (group: TConditionGroup, resourceId: string) => {
   if (group.id === resourceId) {
     group.connector = group.connector === "and" ? "or" : "and";
@@ -92,6 +110,12 @@ export const toggleGroupConnector = (group: TConditionGroup, resourceId: string)
   }
 };
 
+/**
+ * Removes a condition (leaf or group) from the tree by ID.
+ * Cleans up empty groups and flattens single-child groups afterwards.
+ *
+ * @returns — true if the resource was found and removed
+ */
 export const removeCondition = (group: TConditionGroup, resourceId: string): boolean => {
   for (let i = group.conditions.length - 1; i >= 0; i--) {
     const item = group.conditions[i];
@@ -132,10 +156,12 @@ const cleanupGroup = (group: TConditionGroup) => {
   }
 };
 
+/** Removes all empty groups and flattens single-child groups. Public alias for cleanupGroup. */
 export const deleteEmptyGroups = (group: TConditionGroup) => {
   cleanupGroup(group);
 };
 
+/** Clones a condition and inserts the copy directly below the original. */
 export const duplicateCondition = (group: TConditionGroup, resourceId: string) => {
   for (let i = 0; i < group.conditions.length; i++) {
     const item = group.conditions[i];
@@ -155,6 +181,7 @@ export const duplicateCondition = (group: TConditionGroup, resourceId: string) =
   }
 };
 
+/** Wraps a single condition in a new group. Used to introduce grouping during editing. */
 export const createGroupFromResource = (group: TConditionGroup, resourceId: string) => {
   for (let i = 0; i < group.conditions.length; i++) {
     const item = group.conditions[i];
@@ -176,6 +203,7 @@ export const createGroupFromResource = (group: TConditionGroup, resourceId: stri
   }
 };
 
+/** Partially updates a single condition node identified by resourceId. */
 export const updateCondition = (
   group: TConditionGroup,
   resourceId: string,
@@ -195,6 +223,10 @@ export const updateCondition = (
   }
 };
 
+/**
+ * Returns a new action skeleton when the user changes the action's objective.
+ * Each objective has a different shape (variableId for calculate, target for jumpToBlock, etc.).
+ */
 export const getUpdatedActionBody = (
   action: TSurveyBlockLogicAction,
   objective: TSurveyBlockLogicActionObjective
@@ -226,6 +258,12 @@ export const getUpdatedActionBody = (
   }
 };
 
+/**
+ * Evaluates a condition tree against response data and variable state.
+ * Groups use their connector ("and" / "or"); leaf conditions delegate to evaluateSingleCondition.
+ *
+ * @returns — whether the condition group evaluates to true
+ */
 export const evaluateLogic = (
   localSurvey: TJsWorkspaceStateSurvey,
   data: TResponseData,
@@ -623,6 +661,11 @@ const getRightOperandValue = (
   }
 };
 
+/**
+ * Applies a list of logic actions (jump, require answer, calculate) and returns
+ * the aggregated side effects. Multiple jump actions only set the first target
+ * (no conflicting jumps allowed).
+ */
 export const performActions = (
   survey: TJsWorkspaceStateSurvey,
   actions: TSurveyBlockLogicAction[] | TSurveyLogicAction[],

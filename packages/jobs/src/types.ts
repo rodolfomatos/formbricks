@@ -3,6 +3,10 @@ import { ZResponse } from "@formbricks/types/responses";
 import { ZTag } from "@formbricks/types/tags";
 import { ZUserLocale } from "@formbricks/types/user";
 
+/**
+ * Test/health-check job payload — a message to log, an optional failure flag,
+ * and arbitrary context for debugging.
+ */
 export const ZTestLogJobData = z.object({
   message: z.string().min(1),
   shouldFail: z.boolean().optional(),
@@ -11,6 +15,9 @@ export const ZTestLogJobData = z.object({
 
 export type TTestLogJobData = z.infer<typeof ZTestLogJobData>;
 
+/**
+ * Events that trigger a response-pipeline job.
+ */
 export const ZResponsePipelineEvent = z.enum(["responseFinished", "responseCreated", "responseUpdated"]);
 
 export type TResponsePipelineEvent = z.infer<typeof ZResponsePipelineEvent>;
@@ -26,6 +33,10 @@ const ZResponsePipelineJobResponse = ZResponse.extend({
   tags: z.array(ZResponsePipelineJobTag),
 });
 
+/**
+ * Response-pipeline job payload — includes the event type, full response data,
+ * workspace/survey IDs, and the respondent's locale for localised follow-up.
+ */
 export const ZResponsePipelineJobData = z.object({
   event: ZResponsePipelineEvent,
   response: ZResponsePipelineJobResponse,
@@ -38,6 +49,10 @@ export const ZResponsePipelineJobData = z.object({
 
 export type TResponsePipelineJobData = z.infer<typeof ZResponsePipelineJobData>;
 
+/**
+ * Survey-scheduling job payload — currently only carries a "global" scope
+ * marker, but structured as a Zod object for future extensibility.
+ */
 export const ZSurveySchedulingJobData = z.object({
   scope: z.literal("global"),
 });

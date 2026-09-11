@@ -1,3 +1,7 @@
+/**
+ * Server action that converts a HEIC image file to JPEG format.
+ * Returns the original file unchanged if it is not .heic.
+ */
 "use server";
 
 import { z } from "zod";

@@ -2414,6 +2414,7 @@
         "workspace": "工作区"
       },
       "enterprise": {
+        "ai_smart_tools": "AI 智能工具",
         "audit_logs": "审计日志",
         "coming_soon": "即将推出",
         "contacts_and_segments": "联系人管理 & 分段",

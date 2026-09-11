@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { isValidEmail } from "@/lib/utils/email";
 import { cn } from "@/modules/ui/lib/utils";
 
+/** Tag-style email input for the follow-up reply-to field. Supports adding emails via Space/Comma and removing them via Backspace or the x button. */
 interface FollowUpActionMultiEmailInputProps {
   emails: string[];
   setEmails: React.Dispatch<React.SetStateAction<string[]>>;

@@ -47,6 +47,7 @@ interface ManageTranslationsModalProps {
   aiUnavailableReason?: string;
 }
 
+/** Modal for managing translations for a single language. Shows all translatable strings with editing, sorting by missing, and AI-powered batch translation. */
 export const ManageTranslationsModal = ({
   open,
   setOpen,

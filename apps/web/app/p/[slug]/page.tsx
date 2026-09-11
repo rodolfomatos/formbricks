@@ -7,6 +7,10 @@ interface PrettyUrlPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
+/**
+ * Route: `/p/[slug]` (unauthenticated, self-hosted only). Resolves a pretty URL
+ * slug to a survey and redirects to the link survey page. Not found on cloud.
+ */
 export default async function PrettyUrlPage(props: PrettyUrlPageProps) {
   const { slug } = await props.params;
   const searchParams = await props.searchParams;

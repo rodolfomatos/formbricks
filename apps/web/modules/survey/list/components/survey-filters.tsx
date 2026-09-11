@@ -50,6 +50,7 @@ const getSortOptions = (t: TFunction): TSortOption[] => [
   },
 ];
 
+/** Filter bar with name search, status/type checkboxes, sort-by dropdown, and a clear-filters button. */
 export const SurveyFilters = ({
   surveyFilters,
   setSurveyFilters,

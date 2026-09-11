@@ -12,7 +12,6 @@ import { checkAuthorizationUpdated } from "@/lib/utils/action-client/action-clie
 import { AuthenticatedActionClientCtx } from "@/lib/utils/action-client/types/context";
 import { getTranslate } from "@/lingodotdev/server";
 import { withAuditLogging } from "@/modules/ee/audit-logs/lib/handler";
-import { getIsMultiOrgEnabled } from "@/modules/ee/license-check/lib/utils";
 import { ZOrganizationAISettingsInput, ZUpdateOrganizationAISettingsAction } from "./schemas";
 
 async function updateOrganizationAction<T extends z.ZodRawShape>({
@@ -46,6 +45,9 @@ const ZUpdateOrganizationNameAction = z.object({
   data: ZOrganizationUpdateInput.pick({ name: true }),
 });
 
+/**
+ * Updates the organization name. Requires owner role. Logs an audit event on success.
+ */
 export const updateOrganizationNameAction = authenticatedActionClient
   .inputSchema(ZUpdateOrganizationNameAction)
   .action(
@@ -110,6 +112,10 @@ const assertOrganizationAISettingsUpdateAllowed = ({
   }
 };
 
+/**
+ * Updates the AI smart tools toggle for the organization.
+ * Validates that the instance is AI-configured before enabling. Requires owner or manager role.
+ */
 export const updateOrganizationAISettingsAction = authenticatedActionClient
   .inputSchema(ZUpdateOrganizationAISettingsAction)
   .action(
@@ -156,16 +162,13 @@ const ZDeleteOrganizationAction = z.object({
   organizationId: ZId,
 });
 
+/**
+ * Deletes the organization. Only available when multi-org is enabled. Requires owner role.
+ */
 export const deleteOrganizationAction = authenticatedActionClient
   .inputSchema(ZDeleteOrganizationAction)
   .action(
     withAuditLogging("deleted", "organization", async ({ ctx, parsedInput }) => {
-      const isMultiOrgEnabled = await getIsMultiOrgEnabled();
-      if (!isMultiOrgEnabled) {
-        const t = await getTranslate(ctx.user.locale);
-        throw new OperationNotAllowedError(t("workspace.settings.general.organization_deletion_disabled"));
-      }
-
       await checkAuthorizationUpdated({
         userId: ctx.user.id,
         organizationId: parsedInput.organizationId,

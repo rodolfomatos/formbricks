@@ -13,6 +13,11 @@ import { hasPermission } from "@/modules/organization/settings/api-keys/lib/util
 import { resolveStorageUrlsInObject, validateFileUploads } from "@/modules/storage/utils";
 import { createResponseWithQuotaEvaluation, getResponses, getResponsesByWorkspaceIds } from "./lib/response";
 
+/**
+ * GET /api/v1/management/responses
+ * Returns responses, optionally filtered by surveyId. Supports `limit` and `skip` params.
+ * If no surveyId, returns responses for all accessible workspaces.
+ */
 export const GET = withV1ApiWrapper({
   handler: async ({ req, authentication }) => {
     if (!authentication || !("apiKeyId" in authentication)) {
@@ -83,6 +88,11 @@ const validateSurvey = async (responseInput: TResponseInput, workspaceId: string
   return { survey };
 };
 
+/**
+ * POST /api/v1/management/responses
+ * Creates a new response for a survey. Validates file uploads and response data,
+ * triggers pipeline events (responseCreated / responseFinished), and logs an audit event.
+ */
 export const POST = withV1ApiWrapper({
   handler: async ({ req, auditLog, authentication }) => {
     if (!authentication || !("apiKeyId" in authentication)) {

@@ -1,3 +1,4 @@
+/** Label — renders survey text content (headlines, descriptions, card labels) with CSP-safe HTML sanitisation and RTL support. */
 import { sanitize } from "isomorphic-dompurify";
 import * as React from "react";
 import { cn, stripInlineStyles } from "@/lib/utils";

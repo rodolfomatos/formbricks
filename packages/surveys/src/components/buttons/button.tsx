@@ -1,3 +1,4 @@
+/** Button — Preact survey button with primary and ghost variants, forwardRef support, and focus-visible ring styling. */
 import { type ButtonHTMLAttributes, type CSSProperties } from "preact";
 import { forwardRef } from "preact/compat";
 import { cn } from "@/lib/utils";

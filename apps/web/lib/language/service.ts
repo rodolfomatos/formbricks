@@ -1,3 +1,10 @@
+/**
+ * Service layer for Language management within a workspace.
+ *
+ * Languages are workspace-scoped and can be attached to surveys via
+ * SurveyLanguage join records. Deleting or updating a language cascades
+ * to clean up stale SurveyLanguage entries.
+ */
 import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
 import { Prisma } from "@formbricks/database/prisma";
@@ -23,6 +30,12 @@ const languageSelect = {
   updatedAt: true,
 };
 
+/**
+ * Retrieves a single language by ID.
+ *
+ * @param languageId — the language to fetch
+ * @returns — the language including its workspace ID
+ */
 export const getLanguage = async (languageId: string): Promise<TLanguage & { workspaceId: string }> => {
   try {
     validateInputs([languageId, ZId]);
@@ -46,6 +59,13 @@ export const getLanguage = async (languageId: string): Promise<TLanguage & { wor
   }
 };
 
+/**
+ * Creates a new language in a workspace after validating the workspace exists.
+ *
+ * @param workspaceId — the workspace to add the language to
+ * @param languageInput — language code and optional alias
+ * @returns — the created language
+ */
 export const createLanguage = async (
   workspaceId: string,
   languageInput: TLanguageInput
@@ -78,6 +98,12 @@ export const createLanguage = async (
   }
 };
 
+/**
+ * Finds all surveys that use a given language. Used to warn before deleting a language.
+ *
+ * @param languageId — the language to check
+ * @returns — names of surveys using this language
+ */
 export const getSurveysUsingGivenLanguage = reactCache(async (languageId: string): Promise<string[]> => {
   try {
     // Check if the language is used in any survey
@@ -106,6 +132,13 @@ export const getSurveysUsingGivenLanguage = reactCache(async (languageId: string
   }
 });
 
+/**
+ * Deletes a language and its associated SurveyLanguage join records.
+ *
+ * @param languageId — the language to delete
+ * @param workspaceId — the owning workspace for validation
+ * @returns — the deleted language
+ */
 export const deleteLanguage = async (languageId: string, workspaceId: string): Promise<TLanguage> => {
   try {
     validateInputs([languageId, ZId], [workspaceId, ZId]);
@@ -129,6 +162,14 @@ export const deleteLanguage = async (languageId: string, workspaceId: string): P
   }
 };
 
+/**
+ * Updates a language's code or alias.
+ *
+ * @param workspaceId — the owning workspace for validation
+ * @param languageId — the language to update
+ * @param languageInput — new values
+ * @returns — the updated language
+ */
 export const updateLanguage = async (
   workspaceId: string,
   languageId: string,

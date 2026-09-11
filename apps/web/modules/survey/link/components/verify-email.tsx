@@ -38,6 +38,7 @@ const ZVerifyEmailInput = z.object({
 });
 type TVerifyEmailInput = z.infer<typeof ZVerifyEmailInput>;
 
+/** Email verification screen for link surveys that require verified email before submission. Handles send, preview, and error states. */
 export const VerifyEmail = ({
   survey,
   isErrorComponent,

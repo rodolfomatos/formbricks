@@ -1,3 +1,7 @@
+/**
+ * Storybook stories for the LoadingSpinner component.
+ * Covers default, small, large, extra-large, color-variants, slow-animation, and custom-styles.
+ */
 import { Meta, StoryObj } from "@storybook/react-vite";
 import { LoadingSpinner } from "./index";
 

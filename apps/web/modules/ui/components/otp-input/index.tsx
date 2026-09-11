@@ -1,3 +1,8 @@
+/**
+ * One-time password input with individual digit boxes. Auto-focuses between inputs,
+ * supports paste, arrow-key navigation, and backspace-to-prev behavior.
+ * Each box accepts a single digit.
+ */
 import React, { useMemo } from "react";
 import { cn } from "@/lib/cn";
 import { Input } from "@/modules/ui/components/input";

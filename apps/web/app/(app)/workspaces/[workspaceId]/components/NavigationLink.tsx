@@ -15,6 +15,10 @@ interface NavigationLinkProps {
   disabledMessage?: string;
 }
 
+/**
+ * A sidebar navigation item that supports collapsed (icon-only with tooltip) and expanded (icon + label) modes.
+ * Disabled items render a popover explanation instead of a link.
+ */
 export const NavigationLink = ({
   href,
   isActive,

@@ -5,6 +5,13 @@ import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { TAuditAction, TAuditTarget } from "@/modules/ee/audit-logs/types/audit-log";
 import { ExtendedSchemas, HandlerFn, ParsedSchemas, apiWrapper } from "./api-wrapper";
 
+/**
+ * Higher-order API client that wraps a handler with authentication, validation, rate limiting, and audit logging.
+ * Handles both successful and error responses, queueing audit events on success.
+ *
+ * @param options — Configuration including request, schemas, handler, audit action/target
+ * @returns — The handler's response or an error response
+ */
 export const authenticatedApiClient = async <S extends ExtendedSchemas>({
   request,
   schemas,

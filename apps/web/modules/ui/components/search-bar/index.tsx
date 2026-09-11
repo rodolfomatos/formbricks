@@ -1,3 +1,6 @@
+/**
+ * A text input with a search icon, used for filtering lists by name/keyword.
+ */
 import { Search } from "lucide-react";
 import React from "react";
 import { cn } from "@/lib/cn";

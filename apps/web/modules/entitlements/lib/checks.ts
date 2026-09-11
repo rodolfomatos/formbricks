@@ -25,6 +25,15 @@ const TRIAL_RESTRICTED_ENTITLEMENT_KEYS = [
 const isTrialRestrictedEntitlement = (featureLookupKey: TEntitlementFeature): boolean =>
   (TRIAL_RESTRICTED_ENTITLEMENT_KEYS as readonly TEntitlementFeature[]).includes(featureLookupKey);
 
+/**
+ * Check whether an organisation is entitled to a given feature.
+ * On self-hosted instances the feature set is derived from the license;
+ * on Formbricks Cloud it comes from the Stripe subscription.
+ *
+ * @param organizationId — the organisation to check
+ * @param featureLookupKey — the feature key (e.g. "hide-branding")
+ * @returns — true if the feature is available
+ */
 export const hasOrganizationEntitlement = async (
   organizationId: string,
   featureLookupKey: string
@@ -38,6 +47,15 @@ export const hasOrganizationEntitlement = async (
   return context.features.includes(featureLookupKey);
 };
 
+/**
+ * Like hasOrganizationEntitlement but additionally verifies that the
+ * organisation's license supports the feature. Also blocks trial
+ * subscriptions from accessing trial-restricted features.
+ *
+ * @param organizationId — the organisation to check
+ * @param featureLookupKey — the feature key
+ * @returns — true only if the feature is entitled AND the license allows it
+ */
 export const hasOrganizationEntitlementWithLicenseGuard = async (
   organizationId: string,
   featureLookupKey: string
@@ -75,6 +93,13 @@ export const hasOrganizationEntitlementWithLicenseGuard = async (
   return !!context.licenseFeatures?.[mappedLicenseFeature];
 };
 
+/**
+ * Return the usage limits (workspaces, monthly responses) for an
+ * organisation, as determined by its subscription or license.
+ *
+ * @param organizationId — the organisation to look up
+ * @returns — { workspaces, monthlyResponses }
+ */
 export const getOrganizationEntitlementLimits = async (organizationId: string) => {
   const context = await getOrganizationEntitlementsContext(organizationId);
   return context.limits;

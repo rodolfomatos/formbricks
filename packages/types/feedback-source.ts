@@ -1,3 +1,4 @@
+/** Feedback source schemas — external survey data import (Formbricks surveys, CSV) with Hub field mapping. */
 import { z } from "zod";
 import { TSurveyElementTypeEnum } from "./surveys/constants";
 

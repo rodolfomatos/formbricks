@@ -10,8 +10,18 @@ import {
 } from "../shared";
 import type { AIEnvironment } from "../types";
 
+/**
+ * Provider label used in cache keys when AI_OPENAI_COMPATIBLE_PROVIDER_NAME
+ * is not set.
+ */
 const DEFAULT_PROVIDER_NAME = "openai-compatible";
 
+/**
+ * OpenAI-compatible provider adapter (works with any service exposing an
+ * OpenAI-compatible HTTP API). Requires AI_OPENAI_COMPATIBLE_BASE_URL;
+ * optionally supports custom headers, query params, API key, and structured
+ * output flag.
+ */
 export const openaiCompatibleProviderAdapter: AIProviderAdapter = {
   validate: (environment: AIEnvironment) => {
     const missingFields: string[] = [];

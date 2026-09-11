@@ -18,6 +18,13 @@ import { ZOrganizationIdSchema } from "@/modules/api/v2/organizations/[organizat
 import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { UNKNOWN_DATA } from "@/modules/ee/audit-logs/types/audit-log";
 
+/**
+ * Handles GET requests for `/api/v2/organizations/[organizationId]/teams/[teamId]`. Requires API key authentication. Returns the requested resource(s).
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export const GET = async (
   request: Request,
   props: { params: Promise<{ teamId: string; organizationId: string }> }
@@ -45,6 +52,13 @@ export const GET = async (
     },
   });
 
+/**
+ * Handles DELETE requests for `/api/v2/organizations/[organizationId]/teams/[teamId]`. Requires API key authentication. Deletes an existing resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param props — Route parameters including dynamic segments
+ * @returns — A Next.js Response with the operation result
+ */
 export const DELETE = async (
   request: Request,
   props: { params: Promise<{ teamId: string; organizationId: string }> }
@@ -97,6 +111,13 @@ export const DELETE = async (
     targetType: "team",
   });
 
+/**
+ * Handles PUT requests for `/api/v2/organizations/[organizationId]/teams/[teamId]`. Requires API key authentication. Updates an existing resource.
+ *
+ * @param request — The incoming Next.js Request object
+ * @param request — The incoming Next.js Request object with parsed body
+ * @returns — A Next.js Response with the operation result
+ */
 export const PUT = (
   request: Request,
   props: { params: Promise<{ teamId: string; organizationId: string }> }

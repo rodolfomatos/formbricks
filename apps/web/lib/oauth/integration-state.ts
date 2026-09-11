@@ -1,3 +1,10 @@
+/**
+ * Manages OAuth state tokens for third-party integrations (Google Sheets, Slack, Notion, Airtable).
+ *
+ * Each OAuth flow generates a random state token stored in Redis (SHA-256 hashed,
+ * single-use via a GET+DEL Lua script). The class also supports PKCE for extra
+ * security on integrations that require it. State tokens expire after 10 minutes.
+ */
 import "server-only";
 import crypto from "node:crypto";
 import { createCacheKey } from "@formbricks/cache";
@@ -15,6 +22,7 @@ const SAFE_OAUTH_CALLBACK_ERRORS = new Set([
   "temporarily_unavailable",
 ]);
 
+/** Supported OAuth providers that use this state-token mechanism. */
 export type TIntegrationOAuthProvider = "googleSheets" | "slack" | "notion" | "airtable";
 
 type TStoredIntegrationOAuthState = {
@@ -38,6 +46,7 @@ type TConsumeIntegrationOAuthStateInput = {
   state: string | null;
 };
 
+/** Thrown when an OAuth state token is missing, malformed, expired, or doesn't match the expected provider/user. */
 export class IntegrationOAuthStateError extends Error {
   constructor(message = "Invalid OAuth state") {
     super(message);
@@ -138,6 +147,13 @@ const consumeCachedIntegrationOAuthState = async (
   }
 };
 
+/**
+ * Generates and stores a fresh OAuth state token in Redis.
+ * The returned plaintext token goes into the authorisation URL; the stored
+ * hash is used later by `consumeIntegrationOAuthState`.
+ *
+ * @returns — the plaintext state token to include in the redirect URL
+ */
 export const createIntegrationOAuthState = async ({
   provider,
   userId,
@@ -169,6 +185,13 @@ export const createIntegrationOAuthState = async ({
   return state;
 };
 
+/**
+ * Validates and consumes a single-use OAuth state token from Redis.
+ * The GET+DEL Lua script ensures the token cannot be replayed. Checks that the
+ * stored provider and userId match the expected values.
+ *
+ * @returns — the stored OAuth state (includes provider, userId, workspaceId)
+ */
 export const consumeIntegrationOAuthState = async ({
   provider,
   userId,
@@ -195,6 +218,14 @@ export const consumeIntegrationOAuthState = async ({
   return storedState;
 };
 
+/**
+ * Maps OAuth callback error parameters to a safe, finite set of values.
+ * Unknown errors are mapped to "oauth_error" so the UI never displays an
+ * unsanitised provider error string.
+ *
+ * @param error — the error query parameter from the OAuth callback
+ * @returns — a safe error code, or null if no error
+ */
 export const getSafeOAuthCallbackError = (error: string | null): string | null => {
   if (!error) {
     return null;
@@ -203,6 +234,11 @@ export const getSafeOAuthCallbackError = (error: string | null): string | null =
   return SAFE_OAUTH_CALLBACK_ERRORS.has(error) ? error : "oauth_error";
 };
 
+/**
+ * Generates a PKCE code-verifier / code-challenge pair using S256.
+ *
+ * @returns — object with codeChallenge, codeChallengeMethod, and codeVerifier
+ */
 export const generatePkcePair = () => {
   const verifier = generateRandomToken();
   const challenge = toBase64Url(crypto.createHash("sha256").update(verifier).digest());

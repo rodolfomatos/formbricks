@@ -11,6 +11,11 @@ const getIntentSearchParam = (request: NextRequest): string | string[] | undefin
   return intentValues.length === 1 ? intentValues[0] : intentValues;
 };
 
+/**
+ * GET /auth/account-deletion/sso/complete
+ * Completes account deletion after SSO re-authentication. Verifies the intent
+ * token, deletes the user, and redirects to the post-deletion page.
+ */
 export const GET = async (request: NextRequest) => {
   const redirectPath = await completeAccountDeletionSsoIdentityConfirmationAndGetRedirectPath({
     intent: getIntentSearchParam(request),

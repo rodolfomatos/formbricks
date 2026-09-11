@@ -21,6 +21,10 @@ const selectActionClass = {
   workspaceId: true,
 } satisfies Prisma.ActionClassSelect;
 
+/**
+ * Fetches all action classes for the given workspace IDs. Cached per
+ * request via react cache.
+ */
 export const getActionClasses = reactCache(async (workspaceIds: string[]): Promise<TActionClass[]> => {
   validateInputs([workspaceIds, ZId.array()]);
 

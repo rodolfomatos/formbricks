@@ -1,3 +1,4 @@
+/** Logo upload card under styling settings — file upload with preview, alt text input, link URL, and delete button, backed by a file-to-S3 upload flow. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

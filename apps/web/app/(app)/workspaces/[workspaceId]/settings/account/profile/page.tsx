@@ -6,7 +6,6 @@ import { SettingsCard } from "@/app/(app)/workspaces/[workspaceId]/settings/comp
 import {
   DISABLE_ACCOUNT_DELETION_SSO_CONFIRMATION,
   EMAIL_VERIFICATION_DISABLED,
-  ENTERPRISE_LICENSE_REQUEST_FORM_URL,
   IS_FORMBRICKS_CLOUD,
   PASSWORD_RESET_DISABLED,
 } from "@/lib/constants";
@@ -14,19 +13,19 @@ import { getOrganizationsWhereUserIsSingleOwner } from "@/lib/organization/servi
 import { getUser } from "@/lib/user/service";
 import { getTranslate } from "@/lingodotdev/server";
 import { requiresPasswordConfirmationForAccountDeletion } from "@/modules/account/lib/account-deletion-auth";
-import { getIsMultiOrgEnabled, getIsTwoFactorAuthEnabled } from "@/modules/ee/license-check/lib/utils";
 import { IdBadge } from "@/modules/ui/components/id-badge";
 import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper";
 import { PageHeader } from "@/modules/ui/components/page-header";
-import { UpgradePrompt } from "@/modules/ui/components/upgrade-prompt";
 import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
 
+/**
+ * Route: `/workspaces/[workspaceId]/settings/account/profile` (authenticated).
+ * User profile settings: personal info, email change, language, password reset, 2FA, and account deletion.
+ */
 const Page = async (props: {
   params: Promise<{ workspaceId: string }>;
   searchParams: Promise<{ accountDeletionError?: string | string[] }>;
 }) => {
-  const isTwoFactorAuthEnabled = await getIsTwoFactorAuthEnabled();
-  const isMultiOrgEnabled = await getIsMultiOrgEnabled();
   const params = await props.params;
   const searchParams = await props.searchParams;
   const t = await getTranslate();
@@ -61,30 +60,7 @@ const Page = async (props: {
             <SettingsCard
               title={t("common.security")}
               description={t("workspace.settings.profile.security_description")}>
-              {!isTwoFactorAuthEnabled && !user.twoFactorEnabled ? (
-                <UpgradePrompt
-                  title={t("workspace.settings.profile.unlock_two_factor_authentication")}
-                  description={t("workspace.settings.profile.two_factor_authentication_description")}
-                  buttons={[
-                    {
-                      text: IS_FORMBRICKS_CLOUD
-                        ? t("common.upgrade_plan")
-                        : t("common.request_trial_license"),
-                      href: IS_FORMBRICKS_CLOUD
-                        ? `/workspaces/${params.workspaceId}/settings/organization/billing`
-                        : ENTERPRISE_LICENSE_REQUEST_FORM_URL,
-                    },
-                    {
-                      text: t("common.learn_more"),
-                      href: IS_FORMBRICKS_CLOUD
-                        ? `/workspaces/${params.workspaceId}/settings/organization/billing`
-                        : "https://formbricks.com/learn-more-self-hosting-license",
-                    },
-                  ]}
-                />
-              ) : (
-                <AccountSecurity user={user} />
-              )}
+              <AccountSecurity user={user} />
             </SettingsCard>
           )}
 
@@ -96,7 +72,7 @@ const Page = async (props: {
               IS_FORMBRICKS_CLOUD={IS_FORMBRICKS_CLOUD}
               user={user}
               organizationsWithSingleOwner={organizationsWithSingleOwner}
-              isMultiOrgEnabled={isMultiOrgEnabled}
+              isMultiOrgEnabled={true}
               accountDeletionError={searchParams.accountDeletionError}
               requiresPasswordConfirmation={requiresPasswordConfirmation}
               isSsoIdentityConfirmationDisabled={DISABLE_ACCOUNT_DELETION_SSO_CONFIRMATION}

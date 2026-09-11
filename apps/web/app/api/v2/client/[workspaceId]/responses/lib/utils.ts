@@ -6,12 +6,16 @@ import { TResponseInputV2 } from "@/app/api/v2/client/[workspaceId]/responses/ty
 import { responses } from "@/app/lib/api/response";
 import { ENCRYPTION_KEY } from "@/lib/constants";
 import { symmetricDecrypt } from "@/lib/crypto";
-import { getOrganizationIdFromWorkspaceId } from "@/lib/utils/helper";
 import { validateSurveySingleUseLinkParams } from "@/lib/utils/single-use-surveys";
-import { getIsSpamProtectionEnabled } from "@/modules/ee/license-check/lib/utils";
 
+/** Error code returned when reCAPTCHA verification fails. */
 export const RECAPTCHA_VERIFICATION_ERROR_CODE = "recaptcha_verification_failed";
 
+/**
+ * Validates survey-level constraints before a response is created: workspace
+ * match, survey status, single-use IDs, reCAPTCHA, and multi-responder
+ * settings.
+ */
 export const checkSurveyValidity = async (
   survey: TSurvey,
   workspaceId: string,
@@ -105,13 +109,6 @@ export const checkSurveyValidity = async (
 
     if (!billing) {
       return responses.notFoundResponse("Organization", null);
-    }
-
-    const organizationId = await getOrganizationIdFromWorkspaceId(workspaceId);
-    const isSpamProtectionEnabled = await getIsSpamProtectionEnabled(organizationId);
-
-    if (!isSpamProtectionEnabled) {
-      logger.error("Spam protection is not enabled for this organization");
     }
 
     const isPassed = await verifyRecaptchaToken(responseInput.recaptchaToken, survey.recaptcha.threshold);

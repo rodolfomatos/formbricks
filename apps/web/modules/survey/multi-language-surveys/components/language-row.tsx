@@ -15,6 +15,7 @@ interface LanguageRowProps {
   locale: TUserLocale;
 }
 
+/** Row in the language editor showing language select, identifier, alias input, and remove button. */
 export function LanguageRow({ language, isEditing, onLanguageChange, onDelete, locale }: LanguageRowProps) {
   const { t } = useTranslation();
   return (

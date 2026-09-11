@@ -11,6 +11,11 @@ import { PageContentWrapper } from "@/modules/ui/components/page-content-wrapper
 import { PageHeader } from "@/modules/ui/components/page-header";
 import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
 
+/**
+ * Route: `/workspaces/[workspaceId]/settings/workspace/integrations/slack` (authenticated).
+ * Slack integration configuration page. Shows the Slack wrapper with channel mapping.
+ * Redirects read-only members away.
+ */
 const Page = async (props: { params: Promise<{ workspaceId: string }> }) => {
   const params = await props.params;
   const isEnabled = !!(SLACK_CLIENT_ID && SLACK_CLIENT_SECRET);

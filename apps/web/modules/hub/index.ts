@@ -1,3 +1,6 @@
+/**
+ * Shared Hub client singleton. Null when HUB_API_KEY is not set.
+ */
 export { getHubClient } from "./hub-client";
 export {
   createFeedbackRecord,

@@ -11,11 +11,15 @@ const BUFFER_ENCODING = ENCRYPTION_KEY.length === 32 ? "latin1" : "hex";
 const IV_LENGTH = 16; // AES blocksize
 
 /**
+ * AES-256-GCM symmetric encryption of a plaintext string.
+ * Produces a colon-delimited "iv:ciphertext:authTag" payload that carries
+ * everything needed for decryption. Used wherever we need to protect sensitive
+ * data at rest (tokens, credentials).
  *
- * @param text Value to be encrypted
- * @param key Key used to encrypt value must be 32 bytes for AES256 encryption algorithm
+ * @param text — plaintext to encrypt
+ * @param key — secret key (must be 32 bytes)
  *
- * @returns Encrypted value using key
+ * @returns — "iv:encrypted:authTag" hex-encoded string
  */
 export const symmetricEncrypt = (text: string, key: string) => {
   const _key = Buffer.from(key, BUFFER_ENCODING);
@@ -76,6 +80,15 @@ const symmetricDecryptV2 = (text: string, key: string): string => {
  * @returns The decrypted plaintext.
  */
 
+/**
+ * Decrypts an encrypted payload, automatically detecting the encryption version.
+ * Supports V1 (legacy CBC — single colon) and V2 (GCM — two colons) formats
+ * so that secrets encrypted under the old scheme remain readable after upgrade.
+ *
+ * @param payload — "iv:encrypted[:tag]" string from `symmetricEncrypt`
+ * @param key — the secret key used during encryption
+ * @returns — decrypted plaintext
+ */
 export function symmetricDecrypt(payload: string, key: string): string {
   // If it's clearly V1 (only one “:”), skip straight to V1
   if (payload.split(":").length === 2) {
@@ -93,14 +106,25 @@ export function symmetricDecrypt(payload: string, key: string): string {
 }
 
 /**
- * General bcrypt hashing utility for secrets (passwords, API keys, etc.)
+ * One-way bcrypt hash for secrets (passwords, API keys).
+ * Chosen over SHA-2 because bcrypt includes a salt and adaptive cost factor.
+ *
+ * @param secret — the raw secret to hash
+ * @param cost — bcrypt cost factor (default 12)
+ * @returns — "$2b$..." hash string
  */
 export const hashSecret = async (secret: string, cost: number = 12): Promise<string> => {
   return await hash(secret, cost);
 };
 
 /**
- * General bcrypt verification utility for secrets (passwords, API keys, etc.)
+ * Constant-time comparison of a raw secret against a bcrypt hash.
+ * Returns `false` (instead of throwing) on malformed hashes so callers
+ * don't accidentally leak information through error paths.
+ *
+ * @param secret — the raw secret to verify
+ * @param hashedSecret — bcrypt hash to compare against
+ * @returns — true if the secret matches, false otherwise
  */
 export const verifySecret = async (secret: string, hashedSecret: string): Promise<boolean> => {
   try {
@@ -115,15 +139,24 @@ export const verifySecret = async (secret: string, hashedSecret: string): Promis
 };
 
 /**
- * SHA-256 hashing utility (deterministic, for legacy support)
+ * Deterministic SHA-256 hash (no salt, no cost factor).
+ * Used only for backward-compatible scenarios where the caller needs a
+ * repeatable digest (e.g. legacy API key derivation). Do NOT use for passwords.
+ *
+ * @param input — the string to hash
+ * @returns — hex-encoded SHA-256 digest
  */
 export const hashSha256 = (input: string): string => {
   return createHash("sha256").update(input).digest("hex");
 };
 
 /**
- * Parse a v2 API key format: fbk_{secret}
- * Returns null if the key doesn't match the expected format
+ * Parses an API key in the v2 "fbk_{secret}" format.
+ * Validates the prefix and character set to reject malformed keys early
+ * without making a database round-trip.
+ *
+ * @param key — the raw key string
+ * @returns — the extracted secret, or null if the format is invalid
  */
 export const parseApiKeyV2 = (key: string): { secret: string } | null => {
   // Check if it starts with fbk_
@@ -146,11 +179,11 @@ export const parseApiKeyV2 = (key: string): { secret: string } | null => {
 const WEBHOOK_SECRET_PREFIX = "whsec_";
 
 /**
- * Generate a Standard Webhooks compliant secret
- * Following: https://github.com/standard-webhooks/standard-webhooks/blob/main/spec/standard-webhooks.md
+ * Generates a Standard Webhooks-compliant shared secret.
+ * Produces 256 bits of entropy encoded as "whsec_{base64}" so webhook
+ * receivers can verify authenticity using the standard HMAC-SHA256 scheme.
  *
- * Format: whsec_ + base64(32 random bytes)
- * @returns A webhook secret in format "whsec_{base64_encoded_random_bytes}"
+ * @returns — "whsec_{base64}" secret string
  */
 export const generateWebhookSecret = (): string => {
   const secretBytes = randomBytes(32); // 256 bits of entropy
@@ -158,11 +191,11 @@ export const generateWebhookSecret = (): string => {
 };
 
 /**
- * Decode a Standard Webhooks secret to get the raw bytes
- * Strips the whsec_ prefix and base64 decodes the rest
+ * Decodes a Standard Webhooks secret back to raw bytes for HMAC computation.
+ * Accepts the secret with or without the "whsec_" prefix.
  *
- * @param secret The webhook secret (with or without whsec_ prefix)
- * @returns Buffer containing the raw secret bytes
+ * @param secret — the webhook secret string
+ * @returns — Buffer with the decoded secret bytes
  */
 export const getWebhookSecretBytes = (secret: string): Buffer => {
   const base64Part = secret.startsWith(WEBHOOK_SECRET_PREFIX)
@@ -172,14 +205,15 @@ export const getWebhookSecretBytes = (secret: string): Buffer => {
 };
 
 /**
- * Generate Standard Webhooks compliant signature
- * Following: https://github.com/standard-webhooks/standard-webhooks/blob/main/spec/standard-webhooks.md
+ * Computes the HMAC-SHA256 signature required by the Standard Webhooks spec.
+ * The signed content is "{id}.{timestamp}.{payload}" — the receiver recomputes
+ * this and compares it to the `webhook-signature` header.
  *
- * @param webhookId Unique message identifier
- * @param timestamp Unix timestamp in seconds
- * @param payload The request body as a string
- * @param secret The shared secret (whsec_ prefixed)
- * @returns The signature in format "v1,{base64_signature}"
+ * @param webhookId — unique message identifier from the webhook event
+ * @param timestamp — Unix timestamp (seconds) of the event
+ * @param payload — serialised request body
+ * @param secret — the shared secret (whsec_ prefix is stripped internally)
+ * @returns — "v1,{base64_signature}" header value
  */
 export const generateStandardWebhookSignature = (
   webhookId: string,

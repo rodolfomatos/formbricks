@@ -1,3 +1,4 @@
+/** Picture selection element — renders a grid of selectable images survey question using the survey-ui PictureSelect component with TTC tracking. */
 import { useState } from "preact/hooks";
 import { useTranslation } from "react-i18next";
 import { PictureSelect, type PictureSelectOption } from "@formbricks/survey-ui";

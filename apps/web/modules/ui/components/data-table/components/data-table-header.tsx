@@ -1,3 +1,7 @@
+/**
+ * Renders a single data-table header cell with drag-to-reorder, column settings dropdown,
+ * and a resize handle. The selection column is pinned sticky-left.
+ */
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Header, flexRender } from "@tanstack/react-table";

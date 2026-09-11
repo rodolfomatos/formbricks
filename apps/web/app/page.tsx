@@ -13,6 +13,11 @@ import { getUserWorkspaces } from "@/lib/workspace/service";
 import { authOptions } from "@/modules/auth/lib/authOptions";
 import { ClientLogout } from "@/modules/ui/components/client-logout";
 
+/**
+ * Route: `/` (root). Redirects unauthenticated users to login or setup.
+ * For authenticated users with organizations, redirects to the onboarding flow
+ * (fresh instance), the last-visited workspace, or the first available workspace.
+ */
 const Page = async () => {
   const session: Session | null = await getServerSession(authOptions);
   const isFreshInstance = await getIsFreshInstance();

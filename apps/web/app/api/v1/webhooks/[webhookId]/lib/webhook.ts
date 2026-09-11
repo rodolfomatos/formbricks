@@ -5,6 +5,9 @@ import { ZId } from "@formbricks/types/common";
 import { DatabaseError, ResourceNotFoundError } from "@formbricks/types/errors";
 import { validateInputs } from "@/lib/utils/validate";
 
+/**
+ * Deletes a webhook by ID, omitting the secret from the returned object.
+ */
 export const deleteWebhook = async (id: string): Promise<Omit<Webhook, "secret">> => {
   validateInputs([id, ZId]);
 
@@ -30,6 +33,9 @@ export const deleteWebhook = async (id: string): Promise<Omit<Webhook, "secret">
   }
 };
 
+/**
+ * Fetches a single webhook by ID, omitting the secret.
+ */
 export const getWebhook = async (id: string): Promise<Omit<Webhook, "secret"> | null> => {
   validateInputs([id, ZId]);
 

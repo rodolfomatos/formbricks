@@ -1,3 +1,7 @@
+/**
+ * Styled popover component built on Radix Popover primitive.
+ * Provides Root, Trigger, and Content (portal-based) components.
+ */
 "use client";
 
 import * as PopoverPrimitive from "@radix-ui/react-popover";

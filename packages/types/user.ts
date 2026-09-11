@@ -1,3 +1,4 @@
+/** User schemas — user profile, locale, notification settings, password policy, and CRUD inputs. */
 import { z } from "zod";
 
 export const ZUserLocale = z.enum([

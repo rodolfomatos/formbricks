@@ -1,3 +1,4 @@
+/** Logic engine — evaluates survey branching conditions (show/hide, skip, calculate, segment) against response data and variables to determine block flow. */
 import { type TJsWorkspaceStateSurvey } from "@formbricks/types/js";
 import { type TResponseData, type TResponseVariables } from "@formbricks/types/responses";
 import { type TActionCalculate, type TSurveyBlockLogicAction } from "@formbricks/types/surveys/blocks";

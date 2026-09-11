@@ -1,3 +1,4 @@
+/** Video URL utilities — detects YouTube/Vimeo/Loom URLs, extracts video IDs, and converts watch URLs to embed URLs for iframe rendering. */
 export const checkForYoutubeUrl = (url: string): boolean => {
   try {
     const youtubeUrl = new URL(url);

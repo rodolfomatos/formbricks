@@ -1,3 +1,10 @@
+/**
+ * Tag-on-response service — manages the many-to-many link between tags and responses.
+ *
+ * Deleting a tag from a response is idempotent; adding a duplicate tag silently
+ * succeeds (the unique constraint is caught and ignored) so the UI does not need
+ * to pre-check before calling add.
+ */
 import "server-only";
 import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
@@ -15,6 +22,13 @@ const selectTagsOnResponse = {
   },
 };
 
+/**
+ * Links a tag to a response. Silently returns success if the link already exists
+ * (unique constraint violation caught and ignored).
+ *
+ * @param responseId — the response
+ * @param tagId — the tag
+ */
 export const addTagToRespone = async (responseId: string, tagId: string): Promise<TTagsOnResponses> => {
   try {
     await prisma.tagsOnResponses.create({
@@ -48,6 +62,12 @@ export const addTagToRespone = async (responseId: string, tagId: string): Promis
   }
 };
 
+/**
+ * Removes a tag from a response. The link must exist; throws on missing row.
+ *
+ * @param responseId — the response
+ * @param tagId — the tag
+ */
 export const deleteTagOnResponse = async (responseId: string, tagId: string): Promise<TTagsOnResponses> => {
   try {
     await prisma.tagsOnResponses.delete({
@@ -72,6 +92,13 @@ export const deleteTagOnResponse = async (responseId: string, tagId: string): Pr
   }
 };
 
+/**
+ * Counts how many responses each tag is applied to within a workspace.
+ * Used by the tag management UI to show usage stats.
+ *
+ * @param workspaceId — the workspace
+ * @returns — array of { tagId, count }
+ */
 export const getTagsOnResponsesCount = reactCache(async (workspaceId: string): Promise<TTagsCount> => {
   validateInputs([workspaceId, ZId]);
 

@@ -1,3 +1,4 @@
+/** Survey block schemas — block-level grouping of elements with logic actions (jump, calculate) for survey flow control. */
 import { z } from "zod";
 import { ZId } from "../common";
 import { ZI18nString } from "../i18n";

@@ -1,3 +1,4 @@
+/** Action class schemas — define how user interactions (clicks, page views, etc.) are tracked and matched. */
 import { z } from "zod";
 import { ZId } from "./common";
 

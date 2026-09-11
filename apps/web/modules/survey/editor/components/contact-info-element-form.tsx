@@ -1,3 +1,4 @@
+/** Form editor for the Contact Info question element — headline, subheader, toggle-table of contact sub-fields (first/last name, email, phone, company), and validation rules. Automatically derives the top-level required flag from sub-field configs. */
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";

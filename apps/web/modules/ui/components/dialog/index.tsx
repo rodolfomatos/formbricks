@@ -1,3 +1,8 @@
+/**
+ * Compound dialog/modal component built on Radix Dialog.
+ * Provides Dialog, DialogTrigger, DialogContent (with width variants and close control),
+ * DialogHeader, DialogFooter, DialogBody, DialogTitle, and DialogDescription.
+ */
 "use client";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";

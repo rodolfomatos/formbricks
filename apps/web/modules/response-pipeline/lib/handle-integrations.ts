@@ -124,6 +124,20 @@ const processDataForIntegration = async (
   };
 };
 
+/**
+ * Route a response through all configured third-party integrations
+ * (Google Sheets, Slack, Airtable, Notion). Each integration is handled
+ * independently; failures are logged but do not block other integrations.
+ *
+ * @param integrations — the list of configured integrations for the workspace
+ * @param data — the response data pipeline payload
+ * @param survey — the survey metadata
+ *
+ * @example
+ * ```typescript
+ * await handleIntegrations(integrations, pipelineData, survey);
+ * ```
+ */
 export const handleIntegrations = async (
   integrations: TIntegration[],
   data: TIntegrationPipelineData,

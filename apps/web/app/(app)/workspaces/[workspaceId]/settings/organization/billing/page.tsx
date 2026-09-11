@@ -4,6 +4,10 @@ import { getBillingFallbackPath } from "@/lib/membership/navigation";
 import { PricingPage } from "@/modules/ee/billing/page";
 import { getWorkspaceAuth } from "@/modules/workspaces/lib/utils";
 
+/**
+ * Route: `/workspaces/[workspaceId]/settings/organization/billing` (authenticated, cloud only).
+ * Shows the pricing and billing management page. Redirects billing-role users away on self-hosted.
+ */
 const Page = async (props: Readonly<{ params: Promise<{ workspaceId: string }> }>) => {
   const params = await props.params;
   const { isBilling } = await getWorkspaceAuth(params.workspaceId);

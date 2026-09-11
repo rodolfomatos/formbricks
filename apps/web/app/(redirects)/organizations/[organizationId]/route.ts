@@ -8,6 +8,10 @@ import { getAccessFlags } from "@/lib/membership/utils";
 import { getUserWorkspaces } from "@/lib/workspace/service";
 import { authOptions } from "@/modules/auth/lib/authOptions";
 
+/**
+ * GET /organizations/[organizationId] — Redirects to the first accessible
+ * workspace in the organization, or the landing page if no workspaces exist.
+ */
 export const GET = async (_: Request, context: { params: Promise<{ organizationId: string }> }) => {
   const params = await context?.params;
   const organizationId = params?.organizationId;

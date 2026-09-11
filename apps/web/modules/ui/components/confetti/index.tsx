@@ -1,3 +1,7 @@
+/**
+ * Full-screen confetti animation that fires once (no recycling) on mount.
+ * Tracks window dimensions for responsive rendering. Used to celebrate completions.
+ */
 "use client";
 
 import { useEffect, useState } from "react";

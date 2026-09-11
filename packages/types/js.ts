@@ -1,3 +1,4 @@
+/** JS SDK state schemas — workspace and person state payloads sent to the client-side JS widget. */
 import { z } from "zod";
 import { ZActionClass } from "./action-classes";
 import { ZId } from "./common";

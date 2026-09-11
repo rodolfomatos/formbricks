@@ -1,3 +1,4 @@
+/** Form field — multi-field input group (address, name, email, phone) with per-field labels, placeholder, error states, and RTL support. */
 import * as React from "react";
 import { ElementError } from "@/components/general/element-error";
 import { ElementHeader } from "@/components/general/element-header";

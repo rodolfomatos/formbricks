@@ -1,5 +1,9 @@
 import "server-only";
 
+/**
+ * Maps feature names to their Stripe lookup keys so feature-access checks
+ * reference a single source of truth rather than inlined strings.
+ */
 export const CLOUD_STRIPE_FEATURE_LOOKUP_KEYS = {
   CUSTOM_REDIRECT_URL: "custom-redirect-url",
   CUSTOM_LINKS_IN_SURVEYS: "custom-links-in-surveys",

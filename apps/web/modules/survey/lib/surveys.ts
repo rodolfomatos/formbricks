@@ -6,6 +6,10 @@ import { ZId } from "@formbricks/types/common";
 import { DatabaseError, ResourceNotFoundError } from "@formbricks/types/errors";
 import { validateInputs } from "@/lib/utils/validate";
 
+/**
+ * Deletes a survey and its associated private segment in a transaction.
+ * Throws ResourceNotFoundError if the survey does not exist.
+ */
 export const deleteSurvey = async (surveyId: string) => {
   validateInputs([surveyId, ZId]);
 

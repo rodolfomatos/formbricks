@@ -1,3 +1,4 @@
+/** Chevron down icon — inline SVG arrow pointing downward, used in dropdown menus and scroll indicators. */
 interface ChevronDownIconProps {
   className?: string;
 }

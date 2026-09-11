@@ -1,3 +1,4 @@
+/** Utilities for extracting the userId parameter from link survey URL search params. */
 type TSearchParamValue = string | string[] | undefined;
 
 type TSearchParamsWithEntries = Pick<URLSearchParams, "entries">;
@@ -23,6 +24,7 @@ function* getSearchParamEntries(searchParams: TUserIdSearchParams): Generator<[s
   }
 }
 
+/** Extracts the `userId` value (case-insensitive) from search params. Ignores empty strings. */
 export const getUserIdFromSearchParams = (searchParams: TUserIdSearchParams): string | undefined => {
   for (const [key, value] of getSearchParamEntries(searchParams)) {
     if (key.toLowerCase() === "userid") {
@@ -33,6 +35,7 @@ export const getUserIdFromSearchParams = (searchParams: TUserIdSearchParams): st
   return undefined;
 };
 
+/** Returns true when a non-empty userId value is present in the search params. */
 export const hasUserIdSearchParam = (searchParams: TUserIdSearchParams): boolean => {
   return getUserIdFromSearchParams(searchParams) !== undefined;
 };

@@ -5,6 +5,10 @@ interface NoScriptWarningProps {
   locale: TUserLocale;
 }
 
+/**
+ * Renders a full-screen warning inside a <noscript> tag when JavaScript is
+ * disabled. Appears only in the root layout.
+ */
 export const NoScriptWarning = async ({ locale }: NoScriptWarningProps) => {
   const t = await getTranslate(locale);
 

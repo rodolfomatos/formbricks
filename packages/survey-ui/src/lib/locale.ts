@@ -1,3 +1,4 @@
+/** Date-fns locale resolver — maps survey language codes (e.g. "en", "de", "zh-Hans") to date-fns locale objects for date picker rendering. */
 import { type Locale } from "date-fns";
 import { ar, de, enUS, es, fr, hi, it, ja, nl, pt, ptBR, ro, ru, uz, zhCN, zhTW } from "date-fns/locale";
 

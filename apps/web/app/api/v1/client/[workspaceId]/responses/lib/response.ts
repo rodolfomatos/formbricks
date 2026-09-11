@@ -26,6 +26,7 @@ import { getOrganizationIdFromWorkspaceId } from "@/lib/utils/helper";
 import { validateInputs } from "@/lib/utils/validate";
 import { getContactByUserId } from "./contact";
 
+/** Prisma select for responses including contact, tags, and all data fields. */
 export const responseSelection = {
   id: true,
   createdAt: true,
@@ -64,12 +65,20 @@ export const responseSelection = {
   },
 } satisfies Prisma.ResponseSelect;
 
+/**
+ * Creates a client response via the shared module, evaluating quotas
+ * afterward.
+ */
 export const createResponseWithQuotaEvaluation = async (
   responseInput: TResponseInput
 ): Promise<TResponseWithQuotaFull> => {
   return await createClientResponseWithQuotaEvaluation(responseInput, createResponse);
 };
 
+/**
+ * Creates a response record within a transaction, resolving the contact
+ * and handling single-use ID conflicts.
+ */
 export const createResponse = async (
   responseInput: TResponseInput,
   tx: Prisma.TransactionClient

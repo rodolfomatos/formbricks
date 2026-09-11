@@ -1,3 +1,4 @@
+/** Badge that displays the current auto-save state: "Auto-save on", "Progress saved" (briefly), or "Auto-save disabled" with a tooltip explaining why. */
 "use client";
 
 import { useEffect, useMemo, useState } from "react";

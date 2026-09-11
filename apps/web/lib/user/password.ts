@@ -1,3 +1,8 @@
+/**
+ * User password verification — retrieves authentication data and verifies
+ * passwords for the profile / settings flow. Not used during sign-in (that
+ * path goes through NextAuth credentials provider directly).
+ */
 import "server-only";
 import { cache as reactCache } from "react";
 import { prisma } from "@formbricks/database";
@@ -5,6 +10,12 @@ import { User } from "@formbricks/database/prisma";
 import { InvalidInputError, ResourceNotFoundError } from "@formbricks/types/errors";
 import { verifyPassword } from "@/modules/auth/lib/utils";
 
+/**
+ * Retrieves user authentication credentials needed for password verification.
+ * Only exposes email, password hash, and identity provider info.
+ *
+ * @param userId — the user
+ */
 export const getUserAuthenticationData = reactCache(
   async (
     userId: string
@@ -29,6 +40,14 @@ export const getUserAuthenticationData = reactCache(
   }
 );
 
+/**
+ * Verifies a user's password against the stored hash.
+ * Throws InvalidInputError if the user has no password set (SSO-only account).
+ *
+ * @param userId — the user
+ * @param password — the plaintext password to verify
+ * @returns — whether the password matches
+ */
 export const verifyUserPassword = async (userId: string, password: string): Promise<boolean> => {
   const user = await getUserAuthenticationData(userId);
 

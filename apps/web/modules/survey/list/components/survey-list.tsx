@@ -57,6 +57,7 @@ type NewSurveyMenuProps = {
   aiUnavailableReason?: TAIUnavailableReason;
 };
 
+/** Dropdown with options to create a survey via AI, from a template, or from scratch. */
 const NewSurveyMenu = ({ workspace, language, isAIAvailable, aiUnavailableReason }: NewSurveyMenuProps) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -135,6 +136,7 @@ const NewSurveyMenu = ({ workspace, language, isAIAvailable, aiUnavailableReason
   );
 };
 
+/** Main survey overview page: filters, infinite-scroll list of survey cards, and empty/loading/error states. Handles filter persistence in localStorage. */
 export const SurveysList = ({
   workspace,
   publicDomain,

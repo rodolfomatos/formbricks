@@ -17,6 +17,13 @@ import { ApiErrorResponseV2 } from "@/modules/api/v2/types/api-error";
 import { ApiResponseWithMeta } from "@/modules/api/v2/types/api-success";
 import { evaluateResponseQuotas } from "@/modules/ee/quotas/lib/evaluation-service";
 
+/**
+ * Lists responses across workspaces with filtering and pagination.
+ *
+ * @param workspaceIds — The workspaces to scope the query to
+ * @param params — Filter and pagination parameters
+ * @returns — Paginated list of responses
+ */
 export const getResponses = async (
   workspaceIds: string[],
   params: TGetResponsesFilter
@@ -48,6 +55,15 @@ export const getResponses = async (
   }
 };
 
+/**
+ * Creates a new response, linking it to a contact if a userId is provided.
+ * Optionally runs inside a Prisma transaction.
+ *
+ * @param workspaceId — The workspace the response belongs to
+ * @param responseInput — The response data
+ * @param tx — Optional Prisma transaction client
+ * @returns — The created response
+ */
 export const createResponse = async (
   workspaceId: string,
   responseInput: TResponseInput,
@@ -153,6 +169,14 @@ export const createResponse = async (
   }
 };
 
+/**
+ * Creates a response within a transaction and immediately evaluates response quotas.
+ * If a quota is full, the response is marked as finished.
+ *
+ * @param workspaceId — The workspace the response belongs to
+ * @param responseInput — The response data
+ * @returns — The created response, potentially modified by quota logic
+ */
 export const createResponseWithQuotaEvaluation = async (
   workspaceId: string,
   responseInput: TResponseInput

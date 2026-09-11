@@ -1,3 +1,8 @@
+/**
+ * A generic delete confirmation dialog with customizable title, message, and action buttons.
+ * Supports loading states for both delete and save operations. Optionally accepts children
+ * (e.g. additional checkboxes) to render in the dialog body.
+ */
 "use client";
 
 import { CircleAlert, TrashIcon } from "lucide-react";
