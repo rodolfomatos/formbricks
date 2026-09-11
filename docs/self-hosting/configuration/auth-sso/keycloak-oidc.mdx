@@ -4,14 +4,14 @@ description: "Configure Keycloak as an OpenID Connect (OIDC) provider for secure
 icon: "key-skeleton-left-right"
 ---
 
-<Note>Keycloak OIDC is part of the Formbricks [Enterprise Edition](/self-hosting/advanced/license)</Note>
+<Note>Keycloak OIDC is available in this AGPL fork without a license key (upstream: [Enterprise Edition](/self-hosting/advanced/license))</Note>
 
 Integrating Keycloak with your Formbricks instance allows users to log in using their existing Keycloak credentials via OpenID Connect. This guide walks you through setting up a Keycloak OIDC client and configuring Formbricks to use it, including automatic user provisioning into a default team.
 
 ### Requirements
 
 - A running Keycloak instance with a configured realm and users.
-- A self-hosted Formbricks instance with a valid [Enterprise license](/self-hosting/advanced/license).
+- A self-hosted Formbricks instance (this AGPL fork — no license key required; upstream: [Enterprise license](/self-hosting/advanced/license)).
 - The Formbricks callback URI: `{WEBAPP_URL}/api/auth/callback/openid`
 
 ## Setting up Keycloak OIDC
@@ -123,7 +123,7 @@ AUTH_SSO_DEFAULT_TEAM_ID=your-team-id-here
 4. The Team ID is displayed in the modal.
 
 <Note>
-  The Teams feature requires the **Role-Based Access Control (RBAC)** add-on on your Enterprise license. If you don't see the Teams section in Organization Settings, contact [Formbricks support](mailto:support@formbricks.com) to enable it.
+  The Teams feature is available in this AGPL fork without any license add-on. If you don't see the Teams section in Organization Settings, contact your instance administrator.
 </Note>
 
 ### How It Works
@@ -171,13 +171,13 @@ AUTH_SSO_DEFAULT_TEAM_ID=your-team-id-here
   <Accordion title="Users see 'No membership found' after login">
     Formbricks determines the organization automatically from the `AUTH_SSO_DEFAULT_TEAM_ID` — you do not need to set a separate organization ID. If this error appears:
     - Verify the team specified in `AUTH_SSO_DEFAULT_TEAM_ID` exists and belongs to the correct organization.
-    - Confirm your Enterprise license includes the RBAC feature (required for Teams).
-    - Ensure the organization has an active billing plan that supports access control.
+    - Confirm the team has been granted the appropriate role in the AGPL fork (no license required — Teams is always available).
+    - Ensure the team access is enabled in Organization Settings.
   </Accordion>
 
   <Accordion title="OIDC login button does not appear">
     - Confirm that `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, and `OIDC_ISSUER` are all set.
-    - Ensure your Formbricks instance has a valid Enterprise license.
+    - Ensure your Formbricks instance is running (this AGPL fork requires no license key).
     - Restart the Formbricks container after adding the environment variables.
   </Accordion>
 
