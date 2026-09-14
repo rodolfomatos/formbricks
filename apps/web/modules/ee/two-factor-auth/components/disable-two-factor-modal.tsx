@@ -37,15 +37,15 @@ export function DisableTwoFactorModal({ open, setOpen }: Readonly<DisableTwoFact
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("disable_two_factor_auth")}</DialogTitle>
-          <DialogDescription>{t("disable_two_factor_auth_description")}</DialogDescription>
+          <DialogTitle>{t("common.disable_two_factor_auth")}</DialogTitle>
+          <DialogDescription>{t("common.disable_two_factor_auth_description")}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button variant="secondary" onClick={() => setOpen(false)}>
-            {t("cancel")}
+            {t("common.cancel")}
           </Button>
           <Button variant="destructive" onClick={handleDisable} loading={isLoading}>
-            {t("disable")}
+            {t("common.disable")}
           </Button>
         </DialogFooter>
       </DialogContent>

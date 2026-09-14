@@ -126,6 +126,8 @@ checksums:
     common/ask: 24150ae04c60dcd8688d93a8a3a2d238
     common/attributes: 86d0ae6fea0fbb119722ed3841f8385a
     common/back: f541015a827e37cb3b1234e56bc2aa3c
+    common/backup_codes: 91bc298b2a370ad975677a160abb65fd
+    common/backup_codes_warning: e768cacac5f2c6c526d41c1daae9aa95
     common/billing: b01dbdd049ebbd4a349fa64d6ce65a3b
     common/booked: 77603a7aca80b8b333023c5cf39fec4d
     common/bottom_left: af9c28e07d6a12af1f18bce2f580d93d
@@ -190,6 +192,8 @@ checksums:
     common/delete_what: 718ddfcc1dec7f3e8b67856fba838267
     common/description: e17686a22ffad04cc7bb70524ed4478b
     common/disable: 81b754fd7962e0bd9b6ba87f3972e7fc
+    common/disable_two_factor_auth: c09f0976133a1e83969971554f57c5c6
+    common/disable_two_factor_auth_description: 92403e3f3656c879f865661037d8b9c2
     common/disabled: 0889a3dfd914a7ef638611796b17bf72
     common/disallow: 01c8ed3ce545ed836d3ccffc562c8a0c
     common/discard: de83a114a79d086e372c43dbfe9f47b4
@@ -208,7 +212,10 @@ checksums:
     common/elements: 8cb054d952b341e5965284860d532bc7
     common/email: e7f34943a0c2fb849db1839ff6ef5cb5
     common/enable: 463972a7a95f50f3105d09b92508f2cd
+    common/enable_two_factor_auth: e6b0e9ebe6342f9f7e9b938bcea8b24a
     common/ending_card: 16d30d3a36472159da8c2dbd374dfe22
+    common/enter_secret_manually: b94d138422f75b20503c1c1c4075184c
+    common/enter_the_code_from_your_authenticator_app: df0f8fdc16ac3de0bc521568ae669007
     common/enter_url: 468c2276d0f2cb971ff5a47a20fa4b97
     common/enterprise_license: e81bf506f47968870c7bd07245648a0d
     common/error: 3c95bcb32c2104b99a46f5b3dd015248
@@ -252,6 +259,7 @@ checksums:
     common/inactive_surveys: 324b8e1844739cdc2a3bc71aef143a76
     common/integration: 40d02f65c4356003e0e90ffb944907d2
     common/integrations: 0ccce343287704cd90150c32e2fcad36
+    common/invalid_code: 89616a2e0f203b0c54dec673009c9837
     common/invalid_date_with_value: f7f9dbe99f25f1724367ee57572b52bf
     common/invalid_file_name: 8243c91b898110fb15ebb24aa6a7d313
     common/invalid_file_type: f0c83e7d61dbad8250abb59869af4b9e
@@ -377,9 +385,11 @@ checksums:
     common/sales: 38758eb50094cd8190a71fe67be4d647
     common/save: f7a2929f33bc420195e59ac5a8bcd454
     common/save_as_draft: b1b38812110113627d141db981fb1b12
+    common/save_backup_codes: a984089c7d61c9f386eaec554afffa7d
     common/save_changes: 53dd9f4f0a4accc822fa5c1f2f6d118a
     common/save_without_scheduling: c6595873d611e6d1786fb15281158467
     common/saving: 27ad05746d65e2f3f17d327eb181725d
+    common/scan_qr_code: 685c169c38a1011e8730045d9dc77713
     common/scheduled: 1283929a2810dcf6110765f387dc118e
     common/search: 49dd6c21604b5e8d4153ff1aff2177e1
     common/search_charts: 51c3934f12f050fb2476d62da335a65c
@@ -447,6 +457,8 @@ checksums:
     common/trial_one_day_remaining: 2d64d39fca9589c4865357817bcc24d5
     common/trial_plan_badge: b7928bd1938c56199e7d8aada43e587e
     common/try_again: 33dd8820e743e35a66e6977f69e9d3b5
+    common/two_factor_auth: bc68ddd9c3c82225ef641f097e0940db
+    common/two_factor_auth_description: 48a84629f9796e3b8ae844782d0a7747
     common/type: f04471a7ddac844b9ad145eb9911ef75
     common/undo: 6fa10b811e2894dcdd73718f66c1b481
     common/update: 079fc039262fd31b10532929685c2d1b
@@ -464,6 +476,8 @@ checksums:
     common/variable_ids: 44bf93b70703b7699fa9f21bc6c8eed4
     common/variables: ffd3eec5497af36d7b4e4185bad1313a
     common/verified_email: d4a9e5e47d622c6ef2fede44233076c7
+    common/verify: 6ad4aad279b2411ee9bf24a43e37ae03
+    common/verify_code: aa03a00f863ed892d6ab7f7b5f4ba7ef
     common/video: 8050c90e4289b105a0780f0fdda6ff66
     common/view: 36a9b5e3dc153c036d320460d72a03c3
     common/warning: 6618da2c7e5e93bb4ea0e16d29ab8c4c

@@ -11,7 +11,7 @@ export function TwoFactorBackup({ codes }: TwoFactorBackupProps) {
 
   return (
     <div className="space-y-4 p-4">
-      <p className="text-sm text-slate-500">{t("backup_codes_warning")}</p>
+      <p className="text-sm text-slate-500">{t("common.backup_codes_warning")}</p>
       <div className="rounded-lg bg-slate-50 p-4 font-mono text-sm space-y-1">
         {codes.map((code) => (
           <div key={code} className="tracking-wider">

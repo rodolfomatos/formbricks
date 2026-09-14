@@ -19,16 +19,16 @@ export function TwoFactor({ isTwoFactorEnabled }: TwoFactorProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-medium">{t("two_factor_auth")}</h3>
-          <p className="text-sm text-slate-500">{t("two_factor_auth_description")}</p>
+          <h3 className="text-lg font-medium">{t("common.two_factor_auth")}</h3>
+          <p className="text-sm text-slate-500">{t("common.two_factor_auth_description")}</p>
         </div>
         {isTwoFactorEnabled ? (
           <Button variant="destructive" onClick={() => setDisableModalOpen(true)}>
-            {t("disable")}
+            {t("common.disable")}
           </Button>
         ) : (
           <Button variant="primary" onClick={() => setEnableModalOpen(true)}>
-            {t("enable")}
+            {t("common.enable")}
           </Button>
         )}
       </div>

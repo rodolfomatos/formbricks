@@ -84,7 +84,7 @@ current_ticket: ""
 | T041 | Correct T037-verify.md fabricated record (M-2 BLOCKER) | BLOCKER | Peer review M-2 | ✅ FIXED — record corrected, real assertion documented |
 | T042 | Remove UpgradePrompt/PendingDowngradeBanner consumers + paywall copy (M-3) | MAJOR | Peer review M-3 | ✅ FIXED (2026-09-14) — UpgradePrompt 0 consumers outside stub; workspace-limit-modal deleted; targeting-locked-card deleted; orphan locale keys removed + i18n.lock regenerated; grep-verified |
 | T043 | Restore ModalButton export dropped by UpgradePrompt stub (M-4) | MAJOR | Peer review M-4 | ✅ FIXED (2026-09-14) — ModalButton interface+export restored for ABI compatibility; consumers no longer exist (T042) |
-| T044 | Fix 2FA enable wizard (13 missing i18n keys, placeholder QR) (M-5) | MAJOR | Peer review M-5 | ⬜ TODO |
+| T044 | Fix 2FA enable wizard (13 missing i18n keys, placeholder QR) (M-5) | MAJOR | Peer review M-5 | ✅ FIXED (2026-09-14) — real QR (otpauth) via qr-code-styling + secret fallback; all t() calls namespaced common.; 14 keys added to en-US.json; eslint clean |
 | T045 | Correct SAML SSO docs to implemented env-var flow (M-6) | MAJOR | Peer review M-6 | ⬜ TODO |
 
 ---
