@@ -8,92 +8,121 @@ description: "Configure SAML Single Sign-On (SSO) for secure enterprise authenti
 
 ## Overview
 
-Formbricks supports SAML Single Sign-On (SSO) to enable secure, centralized authentication. With SAML, organizations can integrate their existing Identity Provider (IdP) infrastructure for streamlined access management. Formbricks internally uses BoxyHQ's SAML Jackson to manage SAML connections. SAML Jackson is a service provided by BoxyHQ that manages SAML connection details and validates assertions. It is part of the Formbricks server.
-
-To learn more about SAML Jackson, please refer to the [BoxyHQ SAML Jackson documentation](https://boxyhq.com/docs/jackson/deploy).
+Formbricks supports SAML 2.0 Single Sign-On (SSO) to enable secure, centralized authentication. Organizations can integrate their existing Identity Provider (IdP) infrastructure for streamlined access management. This implementation uses native Node.js modules only (`node:crypto`, `node:zlib`) — no external SAML service dependencies.
 
 ## How SAML works in Formbricks
 
-SAML (Security Assertion Markup Language) is an XML-based standard for exchanging authentication and authorization data between an Identity Provider (IdP) and Formbricks. Here's how the integration works with BoxyHQ Jackson embedded into the flow:
+SAML (Security Assertion Markup Language) is an XML-based standard for exchanging authentication and authorization data between an Identity Provider (IdP) and Formbricks (the Service Provider). Here's how the integration works:
 
-1. **Login Initiation:**  
-   The user clicks `Continue with SAML SSO` on Formbricks.
+1. **Login Initiation**  
+   The user clicks `Continue with SAML SSO` on the Formbricks login page. This calls `signIn("saml")` which redirects to `/api/auth/saml/login`.
 
-2. **Configuration Retrieval via BoxyHQ:**  
-   Formbricks requests the SAML connection details from BoxyHQ Jackson. BoxyHQ securely stores and manages the IdP configuration, including endpoints, certificates, and other metadata.
+2. **AuthnRequest Generation**  
+   Formbricks generates a SAML AuthnRequest XML, DEFLATE-compresses it, base64-encodes it, and redirects the browser to the IdP's SSO endpoint via HTTP-Redirect binding with the `SAMLRequest` query parameter. The `RelayState` carries the user's intended callback URL.
 
-3. **Redirection:**  
-   With the configuration details from BoxyHQ, Formbricks redirects the user to the IdP’s login page (e.g., Okta).
+3. **Authentication at IdP**  
+   The user authenticates directly with the IdP (e.g., Okta, Azure AD, Keycloak).
 
-4. **Authentication:**  
-   The user authenticates directly with the IdP.
+4. **SAML Response**  
+   Upon successful authentication, the IdP sends a signed SAML Response back to Formbricks via the user's browser using HTTP-POST binding to the Assertion Consumer Service (ACS) endpoint at `/api/auth/saml/callback`.
 
-5. **SAML Response:**  
-   Upon successful authentication, the IdP sends a signed SAML response back to Formbricks via the user’s browser.
+5. **Assertion Validation**  
+   Formbricks parses and validates the SAML Response:
+   - Verifies the signature using the configured IdP certificate (`SAML_IDP_CERT`)
+   - Validates the audience (`SAML_AUDIENCE`, defaults to `https://saml.formbricks.com`)
+   - Extracts user attributes (email, name) from the assertion
 
-6. **Validation via BoxyHQ:**  
-   BoxyHQ Jackson validates the SAML assertion—verifying the signature and extracting user details—before sending the validated data back to Formbricks.
+6. **User Provisioning / Linking**  
+   - If an Account link exists for the SAML provider + email → link and sign in
+   - Else if a legacy User-level identity record exists → link and sign in  
+   - Else if a user with the same email exists → link SAML identity and sign in
+   - Else create new user + organization + default workspace, then sign in
 
-7. **Access Granted:**  
-   Formbricks logs the user in using the verified information.
+7. **Session Creation**  
+   Formbricks creates a NextAuth database session, sets the session cookie, and redirects the user to the app.
 
 ## SAML Auth Flow Sequence Diagram
-
-Below is a sequence diagram illustrating the complete SAML authentication flow with BoxyHQ Jackson integrated:
 
 ```mermaid
 sequenceDiagram
     participant U as User
     participant FB as Formbricks (SP)
-    participant BHQ as BoxyHQ Jackson
-    participant OK as Okta (IdP)
+    participant OK as IdP (e.g., Okta)
 
-    Note over FB,BHQ: (Setup phase, done beforehand)<br/>1. Admin configures SAML metadata in Formbricks<br/>2. BoxyHQ stores & manages SAML connection details
-
-    U->>FB: Clicks “Continue with SAML SSO"
-    FB->>BHQ: Request SAML connection details
-    BHQ->>FB: Returns SAML configuration (IdP info)
-    FB->>OK: Redirect user to Okta (SAML Auth Request)
-    OK->>U: Prompts user for credentials
+    U->>FB: Clicks "Continue with SAML SSO"
+    FB->>FB: Generates SAML AuthnRequest (DEFLATE+base64)
+    FB->>OK: Redirects to IdP SSO endpoint (HTTP-Redirect)
+    OK->>U: Prompts for credentials
     U->>OK: Submits credentials
-    OK->>FB: Sends SAML Assertion (Callback URL)
-    FB->>BHQ: Validates assertion & extracts user info
-    BHQ->>FB: Returns validated user data
-    FB->>U: Logs user into Formbricks
-
+    OK->>FB: POSTs SAML Response to ACS URL (HTTP-POST)
+    FB->>FB: Validates signature + audience, extracts attributes
+    FB->>FB: Links or provisions user, creates session
+    FB->>U: Sets session cookie, redirects to app
 ```
+
+## Configuration
+
+SAML SSO is enabled when **both** of the following environment variables are set:
+
+- `SAML_IDP_SSO_URL` — The IdP's Single Sign-On endpoint URL (e.g., `https://your-org.okta.com/app/.../sso/saml`)
+- `SAML_IDP_CERT` — The IdP's X.509 signing certificate in PEM format (used to validate SAML assertions)
+
+Optional environment variables:
+
+- `SAML_IDP_ENTITY_ID` — The IdP's Entity ID (defaults to `SAML_IDP_SSO_URL` if not set)
+- `SAML_IDP_METADATA_URL` — Optional URL to fetch IdP metadata dynamically (alternative to manual SSO URL + cert)
+
+<Note>
+`SAML_DATABASE_URL`, `connection.xml`, and BoxyHQ/Jackson references in older documentation are legacy artifacts and **not used** in this AGPL fork. They can be safely ignored.
+</Note>
 
 ## Setting Up SAML SSO
 
-To configure SAML SSO in Formbricks, follow these steps:
+Follow these steps to configure SAML SSO in Formbricks:
 
 <Steps>
-  <Step title="Database Setup">
-    Configure a dedicated database for SAML by setting the `SAML_DATABASE_URL` environment variable in your `docker-compose.yml` file (e.g., `postgres://postgres:postgres@postgres:5432/formbricks-saml`). If you're using a self-signed certificate for Postgres, include the `sslmode=disable` parameter.
-  </Step>
-  
-  <Step title="IdP Application">
-    Create a SAML application in your IdP by following your provider's instructions([SAML Setup](/development/guides/auth-and-provision/setup-saml-with-identity-providers))
-  </Step>
-
-  <Step title="User Provisioning">
-    Provision users in your IdP and configure access to the IdP SAML app for all your users (who need access to Formbricks).
-  </Step>
-    
-  <Step title="Metadata">
-    Keep the XML metadata from your IdP handy for the next step.
+  <Step title="Configure IdP Application">
+    Create a SAML application in your Identity Provider (Okta, Azure AD, Keycloak, etc.) following your provider's instructions. Note the following values:
+    - **SSO URL** (or Single Sign-On URL) → `SAML_IDP_SSO_URL`
+    - **Signing Certificate** (X.509 PEM) → `SAML_IDP_CERT`
+    - **Entity ID** (optional) → `SAML_IDP_ENTITY_ID`
+    - **ACS URL** (Assertion Consumer Service) → `{WEBAPP_URL}/api/auth/saml/callback` (e.g., `https://formbricks.example.com/api/auth/saml/callback`)
+    - **Audience / SP Entity ID** → `https://saml.formbricks.com` (fixed)
+    - **NameID Format** → `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress`
+    - **Attribute Mappings** (email required, name optional):
+      - Email: `urn:oid:0.9.2342.19200300.100.1.3`, `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`, `mail`, `email`
+      - Name: `urn:oid:2.5.4.42`, `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name`, `displayName`, `cn`
   </Step>
 
-  <Step title="Metadata Setup">
-    Create a file called `connection.xml` in your self-hosted Formbricks instance's `formbricks/saml-connection` (use `formbricks/apps/web/saml-connection` for development) directory and paste the XML metadata from your IdP into it. Please create the directory if it doesn't exist. Your metadata file should start with a tag like this: `<?xml version="1.0" encoding="UTF-8"?><...>` or `<md:EntityDescriptor entityID="...">`. Please remove any extra text from the metadata.
+  <Step title="Set Environment Variables">
+    Add the required variables to your environment (`.env` or Docker environment):
+    ```bash
+    # Required
+    SAML_IDP_SSO_URL=https://your-idp.com/sso/saml
+    SAML_IDP_CERT="-----BEGIN CERTIFICATE-----\nMII...\n-----END CERTIFICATE-----"
+    # Optional
+    SAML_IDP_ENTITY_ID=https://your-idp.com/entity
+    # Alternative to SSO_URL+CERT: fetch metadata dynamically
+    # SAML_IDP_METADATA_URL=https://your-idp.com/metadata
+    ```
   </Step>
 
   <Step title="Restart Formbricks">
-    Restart Formbricks to apply the changes. You can do this by running `docker compose down` and then `docker compose up -d`.
+    Restart the Formbricks containers to apply the changes:
+    ```bash
+    docker compose down && docker compose up -d
+    ```
   </Step>
 </Steps>
 
 <Note>
-  We don't support multiple SAML connections yet. You can only have one SAML connection at a time. If you
-  change the `connection.xml` file, your existing SAML connection will be overwritten.
+Only a single SAML connection is supported at a time. To change providers, update the environment variables and restart.
 </Note>
+
+## Troubleshooting
+
+- **"SAML SSO is not configured"** — `SAML_IDP_SSO_URL` is missing or empty.
+- **"Missing SAML Response"** — IdP did not POST a SAMLResponse to the ACS endpoint. Verify ACS URL in IdP matches `{WEBAPP_URL}/api/auth/saml/callback`.
+- **Signature validation failed** — `SAML_IDP_CERT` does not match the IdP's signing certificate. Ensure the certificate is in PEM format (includes `-----BEGIN CERTIFICATE-----`).
+- **Audience validation failed** — The SAML assertion's AudienceRestriction does not match `https://saml.formbricks.com`. Verify the IdP's Audience / SP Entity ID configuration.
+- **User not provisioned** — Check logs for "SAML callback failed". Ensure the IdP sends an email attribute in the assertion.
