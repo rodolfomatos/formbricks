@@ -34,7 +34,6 @@ interface SurveyEditorProps {
   responseCount: number;
   membershipRole?: OrganizationRole;
   colors: string[];
-  isUserTargetingAllowed?: boolean;
   isSpamProtectionAllowed?: boolean;
   isFormbricksCloud: boolean;
   isUnsplashConfigured: boolean;
@@ -44,7 +43,6 @@ interface SurveyEditorProps {
   workspacePermission: TTeamPermission | null;
   mailFrom: string;
   workspaceLanguages: Language[];
-  isSurveyFollowUpsAllowed: boolean;
   userEmail: string;
   teamMemberDetails: TFollowUpEmailToUser[];
   isStorageConfigured: boolean;
@@ -64,7 +62,6 @@ export const SurveyEditor = ({
   responseCount,
   membershipRole,
   colors,
-  isUserTargetingAllowed = false,
   isSpamProtectionAllowed = false,
   isFormbricksCloud,
   isUnsplashConfigured,
@@ -73,7 +70,6 @@ export const SurveyEditor = ({
   locale,
   workspacePermission,
   mailFrom,
-  isSurveyFollowUpsAllowed = false,
   userEmail,
   teamMemberDetails,
   isStorageConfigured,
@@ -261,7 +257,6 @@ export const SurveyEditor = ({
               segments={segments}
               responseCount={responseCount}
               membershipRole={membershipRole}
-              isUserTargetingAllowed={isUserTargetingAllowed}
               isSpamProtectionAllowed={isSpamProtectionAllowed}
               workspacePermission={workspacePermission}
               isFormbricksCloud={isFormbricksCloud}
@@ -279,12 +274,9 @@ export const SurveyEditor = ({
               setLocalSurvey={setLocalSurveyNonNull}
               selectedLanguageCode={selectedLanguageCode}
               mailFrom={mailFrom}
-              isSurveyFollowUpsAllowed={isSurveyFollowUpsAllowed}
-              isFormbricksCloud={isFormbricksCloud}
               userEmail={userEmail}
               teamMemberDetails={teamMemberDetails}
               locale={locale}
-              enterpriseLicenseRequestFormUrl={enterpriseLicenseRequestFormUrl}
             />
           )}
         </main>

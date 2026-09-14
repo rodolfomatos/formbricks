@@ -449,7 +449,6 @@ checksums:
     common/try_again: 33dd8820e743e35a66e6977f69e9d3b5
     common/type: f04471a7ddac844b9ad145eb9911ef75
     common/undo: 6fa10b811e2894dcdd73718f66c1b481
-    common/unlock_more_workspaces_with_a_higher_plan: fe1590075b855bb4306c9388b65143b0
     common/update: 079fc039262fd31b10532929685c2d1b
     common/updated: 8aa8ff2dc2977ca4b269e80a513100b4
     common/updated_at: 8fdb85248e591254973403755dcc3724
@@ -487,7 +486,6 @@ checksums:
     common/yes: ec580fd11a45779b039466f1e35eed2a
     common/you_are_downgraded_to_the_community_edition: e3ae56502ff787109cae0997519f628e
     common/you_are_not_authorized_to_perform_this_action: 1b3255ab740582ddff016a399f8bf302
-    common/you_have_reached_your_limit_of_workspace_limit: 506a6ee315d9754da7ea26929bc40f52
     common/you_have_reached_your_monthly_response_limit_of_count: d1e427dbc5ce704bd6b9e188d8407e07
     common/you_will_be_downgraded_to_the_community_edition_on_date: bff35b54c13e2c205dc4c19056261cc0
     common/your_license_has_expired_please_renew: 3f21ae4a7deab351b143b407ece58254
@@ -2083,6 +2081,7 @@ checksums:
     workspace/look/advanced_styling_section_options: a92819a15bc8c3eb44bdd82a5075c9e2
     workspace/look/app_survey_placement: f09cddac6bbb77d4694df223c6edf6b6
     workspace/look/app_survey_placement_settings_description: d81bcff7a866a2f83ff76936dbad4770
+    workspace/look/branding_updated_successfully: baee11283a8716dabb7e46f4e0b647ff
     workspace/look/email_customization: ae399f381183a4fe0ffd41ab496b5d8f
     workspace/look/email_customization_description: 5ccaf1769b2c39d7e87f3a08d056a374
     workspace/look/enable_custom_styling: 4774d8fb009c27044aa0191ebcccdcc2
@@ -2315,6 +2314,7 @@ checksums:
     workspace/settings/domain/survey_name: 169f24df0e2f42254c5458f32eb7bf00
     workspace/settings/domain/title: 2c3a2951a31218e8e73f07cda69ed5ff
     workspace/settings/domain/workspace: b63ef0e99ee6f7fef6cbe4971ca6cf0f
+    workspace/settings/enterprise/ai_smart_tools: 805c999606441578b146ef1c3b5780e8
     workspace/settings/enterprise/audit_logs: c7efb33d09676938d07651774b067bf6
     workspace/settings/enterprise/coming_soon: ee2b0671e00972773210c5be5a9ccb89
     workspace/settings/enterprise/contacts_and_segments: 5795d9e89c0c10e1ddbbc6fc65b8d90f
@@ -2334,7 +2334,6 @@ checksums:
     workspace/settings/enterprise/license_features_table_unlimited: e1a92523172cd1bdde5550689840e42d
     workspace/settings/enterprise/license_features_table_value: 34b0eaa85808b15cbc4be94c64d0146b
     workspace/settings/enterprise/license_instance_mismatch_description: 00f47e33ff54fca52ce9b125cd77fda5
-    workspace/settings/enterprise/license_invalid_description: b500c22ab17893fdf9532d2bd94aa526
     workspace/settings/enterprise/license_status: f6f85c59074ca2455321bd5288d94be8
     workspace/settings/enterprise/license_status_active: 3e1ec025c4a50830bbb9ad57a176630a
     workspace/settings/enterprise/license_status_description: 828e4527f606471cd8cf58b55ff824f6
@@ -2351,7 +2350,6 @@ checksums:
     workspace/settings/enterprise/recheck_license: b913b64f89df184b5059710f4a0b26fa
     workspace/settings/enterprise/recheck_license_failed: dd410acbb8887625cf194189f832dd7c
     workspace/settings/enterprise/recheck_license_instance_mismatch: 655cd1cce2f25b100439d8725c1e72f2
-    workspace/settings/enterprise/recheck_license_invalid: 58f41bc208692b7d53b975dfcf9f4ad8
     workspace/settings/enterprise/recheck_license_success: 700ddd805be904a415f614de3df1da78
     workspace/settings/enterprise/recheck_license_unreachable: 0ca81bd89595a9da24bc94dcef132175
     workspace/settings/enterprise/rechecking: 68dacda4ccacfc808c5105e99dad4b71

@@ -55,9 +55,7 @@ import {
   DropdownMenuTrigger,
 } from "@/modules/ui/components/dropdown-menu";
 import { GoBackButton } from "@/modules/ui/components/go-back-button";
-import { ModalButton } from "@/modules/ui/components/upgrade-prompt";
 import { CreateWorkspaceModal } from "@/modules/workspaces/components/create-workspace-modal";
-import { WorkspaceLimitModal } from "@/modules/workspaces/components/workspace-limit-modal";
 import { getLatestStableFbReleaseAction } from "@/modules/workspaces/settings/(setup)/app-connection/actions";
 import packageJson from "../../../../../package.json";
 
@@ -69,7 +67,6 @@ interface NavigationProps {
   isDevelopment: boolean;
   membershipRole?: TOrganizationRole;
   publicDomain: string;
-  organizationWorkspacesLimit: number;
   isLicenseActive: boolean;
   isAccessControlAllowed: boolean;
   responseCount: number;
@@ -90,7 +87,6 @@ export const MainNavigation = ({
   isFormbricksCloud,
   isDevelopment,
   publicDomain,
-  organizationWorkspacesLimit,
   isLicenseActive,
   isAccessControlAllowed,
   responseCount,
@@ -235,7 +231,6 @@ export const MainNavigation = ({
   const [workspaceLoadError, setWorkspaceLoadError] = useState<string | null>(null);
   const [organizationLoadError, setOrganizationLoadError] = useState<string | null>(null);
   const [openCreateWorkspaceModal, setOpenCreateWorkspaceModal] = useState(false);
-  const [openWorkspaceLimitModal, setOpenWorkspaceLimitModal] = useState(false);
 
   const renderSwitcherError = (error: string, onRetry: () => void, retryLabel: string) => (
     <div className="px-2 py-4">
@@ -393,40 +388,7 @@ export const MainNavigation = ({
       return;
     }
 
-    if (workspaces.length >= organizationWorkspacesLimit) {
-      setOpenWorkspaceLimitModal(true);
-      return;
-    }
-
     setOpenCreateWorkspaceModal(true);
-  };
-
-  const workspaceLimitModalButtons = (): [ModalButton, ModalButton] => {
-    if (isFormbricksCloud) {
-      return [
-        {
-          text: t("workspace.settings.billing.upgrade"),
-          href: `/workspaces/${workspace.id}/settings/organization/billing`,
-        },
-        {
-          text: t("common.cancel"),
-          onClick: () => setOpenWorkspaceLimitModal(false),
-        },
-      ];
-    }
-
-    return [
-      {
-        text: t("workspace.settings.billing.upgrade"),
-        href: isLicenseActive
-          ? `/workspaces/${workspace.id}/settings/organization/enterprise`
-          : "https://formbricks.com/upgrade-self-hosted-license",
-      },
-      {
-        text: t("common.cancel"),
-        onClick: () => setOpenWorkspaceLimitModal(false),
-      },
-    ];
   };
 
   const handleSettingsWorkspaceChange = useCallback(
@@ -846,14 +808,6 @@ export const MainNavigation = ({
             </div>
           </div>
         </aside>
-      )}
-      {openWorkspaceLimitModal && (
-        <WorkspaceLimitModal
-          open={openWorkspaceLimitModal}
-          setOpen={setOpenWorkspaceLimitModal}
-          buttons={workspaceLimitModalButtons()}
-          workspaceLimit={organizationWorkspacesLimit}
-        />
       )}
       {openCreateWorkspaceModal && (
         <CreateWorkspaceModal

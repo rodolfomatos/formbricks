@@ -7,9 +7,6 @@ import { useWorkspaceContext } from "@/app/(app)/workspaces/[workspaceId]/contex
 interface TopControlBarProps {
   currentOrganizationId: string;
   isMultiOrgEnabled: boolean;
-  organizationWorkspacesLimit: number;
-  isFormbricksCloud: boolean;
-  isLicenseActive: boolean;
   isOwnerOrManager: boolean;
   isAccessControlAllowed: boolean;
   membershipRole?: TOrganizationRole;
@@ -22,9 +19,6 @@ interface TopControlBarProps {
 export const TopControlBar = ({
   currentOrganizationId,
   isMultiOrgEnabled,
-  organizationWorkspacesLimit,
-  isFormbricksCloud,
-  isLicenseActive,
   isOwnerOrManager,
   isAccessControlAllowed,
   membershipRole,
@@ -40,9 +34,6 @@ export const TopControlBar = ({
         currentWorkspaceId={workspace.id}
         currentOrganizationId={currentOrganizationId}
         isMultiOrgEnabled={isMultiOrgEnabled}
-        organizationWorkspacesLimit={organizationWorkspacesLimit}
-        isFormbricksCloud={isFormbricksCloud}
-        isLicenseActive={isLicenseActive}
         isOwnerOrManager={isOwnerOrManager}
         isMembershipPending={isMembershipPending}
         isAccessControlAllowed={isAccessControlAllowed}

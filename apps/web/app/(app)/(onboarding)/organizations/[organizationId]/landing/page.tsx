@@ -1,7 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { LandingSidebar } from "@/app/(app)/(onboarding)/organizations/[organizationId]/landing/components/landing-sidebar";
 import { WorkspaceAndOrgSwitch } from "@/app/(app)/workspaces/[workspaceId]/components/workspace-and-org-switch";
-import { IS_FORMBRICKS_CLOUD } from "@/lib/constants";
 import { getMembershipByUserIdOrganizationId } from "@/lib/membership/service";
 import { getUser } from "@/lib/user/service";
 import { getTranslate } from "@/lingodotdev/server";
@@ -40,9 +39,6 @@ const Page = async (props: { params: Promise<{ organizationId: string }> }) => {
               currentOrganizationId={organization.id}
               currentOrganizationName={organization.name}
               isMultiOrgEnabled={true}
-              organizationWorkspacesLimit={0}
-              isFormbricksCloud={IS_FORMBRICKS_CLOUD}
-              isLicenseActive={false}
               isOwnerOrManager={false}
               isAccessControlAllowed={false}
               isMembershipPending={isMembershipPending}

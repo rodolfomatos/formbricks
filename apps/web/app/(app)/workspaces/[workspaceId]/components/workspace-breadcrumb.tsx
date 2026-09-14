@@ -18,18 +18,13 @@ import {
   DropdownMenuTrigger,
 } from "@/modules/ui/components/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/modules/ui/components/popover";
-import { ModalButton } from "@/modules/ui/components/upgrade-prompt";
 import { CreateWorkspaceModal } from "@/modules/workspaces/components/create-workspace-modal";
-import { WorkspaceLimitModal } from "@/modules/workspaces/components/workspace-limit-modal";
 import { useWorkspace } from "../context/workspace-context";
 
 interface WorkspaceBreadcrumbProps {
   currentWorkspaceId: string;
   currentWorkspaceName?: string; // Optional: pass directly if context not available
   isOwnerOrManager: boolean;
-  organizationWorkspacesLimit: number;
-  isFormbricksCloud: boolean;
-  isLicenseActive: boolean;
   currentOrganizationId: string;
   isAccessControlAllowed: boolean;
   isEnvironmentBreadcrumbVisible: boolean;
@@ -44,9 +39,6 @@ export const WorkspaceBreadcrumb = ({
   currentWorkspaceId,
   currentWorkspaceName,
   isOwnerOrManager,
-  organizationWorkspacesLimit,
-  isFormbricksCloud,
-  isLicenseActive,
   currentOrganizationId,
   isAccessControlAllowed,
   isEnvironmentBreadcrumbVisible,
@@ -55,7 +47,6 @@ export const WorkspaceBreadcrumb = ({
   const { t } = useTranslation();
   const [isWorkspaceDropdownOpen, setIsWorkspaceDropdownOpen] = useState(false);
   const [openCreateWorkspaceModal, setOpenCreateWorkspaceModal] = useState(false);
-  const [openLimitModal, setOpenLimitModal] = useState(false);
   const router = useRouter();
   const [isLoadingWorkspaces, setIsLoadingWorkspaces] = useState(false);
   const [workspaces, setWorkspaces] = useState<{ id: string; name: string }[]>([]);
@@ -112,10 +103,6 @@ export const WorkspaceBreadcrumb = ({
   };
 
   const handleAddWorkspace = () => {
-    if (workspaces.length >= organizationWorkspacesLimit) {
-      setOpenLimitModal(true);
-      return;
-    }
     setOpenCreateWorkspaceModal(true);
   };
 
@@ -123,34 +110,6 @@ export const WorkspaceBreadcrumb = ({
     startTransition(() => {
       router.push(href);
     });
-  };
-
-  const getLimitModalButtons = (): [ModalButton, ModalButton] => {
-    if (isFormbricksCloud) {
-      return [
-        {
-          text: t("workspace.settings.billing.upgrade"),
-          href: `${workspaceBasePath}/settings/organization/billing`,
-        },
-        {
-          text: t("common.cancel"),
-          onClick: () => setOpenLimitModal(false),
-        },
-      ];
-    }
-
-    return [
-      {
-        text: t("workspace.settings.billing.upgrade"),
-        href: isLicenseActive
-          ? `${workspaceBasePath}/settings/organization/enterprise`
-          : "https://formbricks.com/upgrade-self-hosted-license",
-      },
-      {
-        text: t("common.cancel"),
-        onClick: () => setOpenLimitModal(false),
-      },
-    ];
   };
 
   return (
@@ -247,14 +206,6 @@ export const WorkspaceBreadcrumb = ({
         </DropdownMenuContent>
       </DropdownMenu>
       {/* Modals */}
-      {openLimitModal && (
-        <WorkspaceLimitModal
-          open={openLimitModal}
-          setOpen={setOpenLimitModal}
-          buttons={getLimitModalButtons()}
-          workspaceLimit={organizationWorkspacesLimit}
-        />
-      )}
       {openCreateWorkspaceModal && (
         <CreateWorkspaceModal
           open={openCreateWorkspaceModal}

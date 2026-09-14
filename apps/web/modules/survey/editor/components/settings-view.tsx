@@ -13,7 +13,6 @@ import { HowToSendCard } from "@/modules/survey/editor/components/how-to-send-ca
 import { RecontactOptionsCard } from "@/modules/survey/editor/components/recontact-options-card";
 import { ResponseOptionsCard } from "@/modules/survey/editor/components/response-options-card";
 import { SurveyPlacementCard } from "@/modules/survey/editor/components/survey-placement-card";
-import { TargetingLockedCard } from "@/modules/survey/editor/components/targeting-locked-card";
 import { WhenToSendCard } from "@/modules/survey/editor/components/when-to-send-card";
 
 interface SettingsViewProps {
@@ -24,7 +23,6 @@ interface SettingsViewProps {
   segments: TSegment[];
   responseCount: number;
   membershipRole?: OrganizationRole;
-  isUserTargetingAllowed?: boolean;
   isSpamProtectionAllowed: boolean;
   workspacePermission: TTeamPermission | null;
   isFormbricksCloud: boolean;
@@ -43,7 +41,6 @@ export const SettingsView = ({
   segments,
   responseCount,
   membershipRole,
-  isUserTargetingAllowed = false,
   isSpamProtectionAllowed,
   isQuotasAllowed,
   workspacePermission,
@@ -64,27 +61,17 @@ export const SettingsView = ({
       />
 
       {localSurvey.type === "app" ? (
-        <div>
-          {isUserTargetingAllowed ? (
-            <div className="relative">
-              <div className="blur-none">
-                <TargetingCard
-                  key={localSurvey.segment?.id}
-                  localSurvey={localSurvey}
-                  setLocalSurvey={setLocalSurvey}
-                  contactAttributeKeys={contactAttributeKeys}
-                  segments={segments}
-                  initialSegment={segments.find((segment) => segment.id === localSurvey.segment?.id)}
-                />
-              </div>
-            </div>
-          ) : (
-            <TargetingLockedCard
-              isFormbricksCloud={isFormbricksCloud}
-              workspaceId={localSurvey.workspaceId}
-              enterpriseLicenseRequestFormUrl={enterpriseLicenseRequestFormUrl}
+        <div className="relative">
+          <div className="blur-none">
+            <TargetingCard
+              key={localSurvey.segment?.id}
+              localSurvey={localSurvey}
+              setLocalSurvey={setLocalSurvey}
+              contactAttributeKeys={contactAttributeKeys}
+              segments={segments}
+              initialSegment={segments.find((segment) => segment.id === localSurvey.segment?.id)}
             />
-          )}
+          </div>
         </div>
       ) : null}
 

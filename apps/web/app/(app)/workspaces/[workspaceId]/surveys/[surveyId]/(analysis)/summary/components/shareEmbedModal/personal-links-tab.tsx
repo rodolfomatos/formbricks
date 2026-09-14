@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { TSegment } from "@formbricks/types/segment";
-import { useWorkspace } from "@/app/(app)/workspaces/[workspaceId]/context/workspace-context";
 import { DocumentationLinks } from "@/app/(app)/workspaces/[workspaceId]/surveys/[surveyId]/(analysis)/summary/components/shareEmbedModal/documentation-links";
 import { getFormattedErrorMessage } from "@/lib/utils/helper";
 import { Button } from "@/modules/ui/components/button";
@@ -26,15 +25,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/modules/ui/components/select";
-import { UpgradePrompt } from "@/modules/ui/components/upgrade-prompt";
 import { generatePersonalLinksAction } from "../../actions";
 
 interface PersonalLinksTabProps {
   surveyId: string;
   segments: TSegment[];
-  isContactsEnabled: boolean;
-  isFormbricksCloud: boolean;
-  enterpriseLicenseRequestFormUrl: string;
 }
 
 interface PersonalLinksFormData {
@@ -69,15 +64,8 @@ const RestrictedDatePicker = ({
   );
 };
 
-export const PersonalLinksTab = ({
-  segments,
-  surveyId,
-  isContactsEnabled,
-  isFormbricksCloud,
-  enterpriseLicenseRequestFormUrl,
-}: PersonalLinksTabProps) => {
+export const PersonalLinksTab = ({ segments, surveyId }: PersonalLinksTabProps) => {
   const { t } = useTranslation();
-  const { workspace } = useWorkspace();
 
   const form = useForm<PersonalLinksFormData>({
     defaultValues: {
@@ -158,30 +146,6 @@ export const PersonalLinksTab = ({
   const buttonText = isGenerating
     ? t("workspace.surveys.share.personal_links.generating_links")
     : t("workspace.surveys.share.personal_links.generate_and_download_links");
-
-  if (!isContactsEnabled) {
-    return (
-      <UpgradePrompt
-        title={t("workspace.surveys.share.personal_links.upgrade_prompt_title")}
-        description={t("workspace.surveys.share.personal_links.upgrade_prompt_description")}
-        feature="personal_links"
-        buttons={[
-          {
-            text: isFormbricksCloud ? t("common.upgrade_plan") : t("common.request_trial_license"),
-            href: isFormbricksCloud
-              ? `/workspaces/${workspace?.id}/settings/organization/billing`
-              : enterpriseLicenseRequestFormUrl,
-          },
-          {
-            text: t("common.learn_more"),
-            href: isFormbricksCloud
-              ? `/workspaces/${workspace?.id}/settings/organization/billing`
-              : "https://formbricks.com/learn-more-self-hosting-license",
-          },
-        ]}
-      />
-    );
-  }
 
   return (
     <div className="flex h-full flex-col justify-between gap-y-4">

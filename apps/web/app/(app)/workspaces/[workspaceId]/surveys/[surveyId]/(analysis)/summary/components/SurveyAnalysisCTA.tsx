@@ -29,10 +29,8 @@ interface SurveyAnalysisCTAProps {
   publicDomain: string;
   responseCount: number;
   segments: TSegment[];
-  isContactsEnabled: boolean;
   isFormbricksCloud: boolean;
   isStorageConfigured: boolean;
-  enterpriseLicenseRequestFormUrl: string;
   aiUnavailableReason: TAIUnavailableReason | null;
 }
 
@@ -47,10 +45,8 @@ export const SurveyAnalysisCTA = ({
   publicDomain,
   responseCount,
   segments,
-  isContactsEnabled,
   isFormbricksCloud,
   isStorageConfigured,
-  enterpriseLicenseRequestFormUrl,
   aiUnavailableReason,
 }: SurveyAnalysisCTAProps) => {
   const { t } = useTranslation();
@@ -284,12 +280,10 @@ export const SurveyAnalysisCTA = ({
           user={user}
           modalView={modalState.start ? "start" : "share"}
           segments={segments}
-          isContactsEnabled={isContactsEnabled}
           isFormbricksCloud={isFormbricksCloud}
           isReadOnly={isReadOnly}
           isStorageConfigured={isStorageConfigured}
           workspaceCustomScripts={workspace.customHeadScripts}
-          enterpriseLicenseRequestFormUrl={enterpriseLicenseRequestFormUrl}
         />
       )}
       <SuccessMessage />

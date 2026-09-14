@@ -6,10 +6,10 @@
  * no license and no downgrade path, so a "your license will expire" warning is dead
  * and misleading UI.
  *
- * Neutering approach (same as T033 UpgradePrompt / T026 telemetry): the component
- * keeps its full prop signature so WorkspaceLayout.tsx compiles unchanged, but the
- * render is a no-op conditional that always resolves to null — the fork never
- * produces isPendingDowngrade=true.
+ * Neutering approach (same as T026 telemetry, and the T033 modal-neutralizing stub):
+ * the component keeps its full prop signature so WorkspaceLayout.tsx compiles
+ * unchanged, but the render is a no-op conditional that always resolves to null —
+ * the fork never produces isPendingDowngrade=true.
  */
 "use client";
 

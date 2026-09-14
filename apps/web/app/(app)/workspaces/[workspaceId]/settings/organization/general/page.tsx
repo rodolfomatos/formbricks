@@ -8,11 +8,7 @@ import {
 } from "@/lib/constants";
 import { getUser } from "@/lib/user/service";
 import { getTranslate } from "@/lingodotdev/server";
-import {
-  getIsAISmartToolsEnabled,
-  getIsMultiOrgEnabled,
-  getWhiteLabelPermission,
-} from "@/modules/ee/license-check/lib/utils";
+import { getIsMultiOrgEnabled, getWhiteLabelPermission } from "@/modules/ee/license-check/lib/utils";
 import { EmailCustomizationSettings } from "@/modules/ee/whitelabel/email-customization/components/email-customization-settings";
 import { Alert, AlertDescription } from "@/modules/ui/components/alert";
 import { IdBadge } from "@/modules/ui/components/id-badge";
@@ -44,10 +40,9 @@ const Page = async (props: Readonly<{ params: Promise<{ workspaceId: string }> }
 
   const user = session?.user?.id ? await getUser(session.user.id) : null;
 
-  const [isMultiOrgEnabled, hasWhiteLabelPermission, hasAIPermission] = await Promise.all([
+  const [isMultiOrgEnabled, hasWhiteLabelPermission] = await Promise.all([
     getIsMultiOrgEnabled(),
     getWhiteLabelPermission(organization.id),
-    getIsAISmartToolsEnabled(organization.id),
   ]);
 
   const isDeleteDisabled = !isOwner || !isMultiOrgEnabled;
@@ -78,9 +73,6 @@ const Page = async (props: Readonly<{ params: Promise<{ workspaceId: string }> }
           organization={organization}
           membershipRole={currentUserMembership?.role}
           isInstanceAIConfigured={isInstanceAIConfigured()}
-          hasAIPermission={hasAIPermission}
-          isFormbricksCloud={IS_FORMBRICKS_CLOUD}
-          enterpriseLicenseRequestFormUrl={ENTERPRISE_LICENSE_REQUEST_FORM_URL}
         />
       </SettingsCard>
       <EmailCustomizationSettings

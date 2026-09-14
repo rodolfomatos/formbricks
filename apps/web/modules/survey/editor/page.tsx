@@ -13,7 +13,6 @@ import { getTranslate } from "@/lingodotdev/server";
 import { getContactAttributeKeys } from "@/modules/ee/contacts/lib/contact-attribute-keys";
 import { getSegments } from "@/modules/ee/contacts/segments/lib/segments";
 import {
-  getIsContactsEnabled,
   getIsQuotasEnabled,
   getIsSpamProtectionEnabled,
 } from "@/modules/ee/license-check/lib/utils";
@@ -21,7 +20,6 @@ import { getQuotas } from "@/modules/ee/quotas/lib/quotas";
 import { getTeamMemberDetails } from "@/modules/survey/editor/lib/team";
 import { getUserEmail } from "@/modules/survey/editor/lib/user";
 import { getWorkspaceLanguages } from "@/modules/survey/editor/lib/workspace";
-import { getSurveyFollowUpsPermission } from "@/modules/survey/follow-ups/lib/utils";
 import { getActionClasses } from "@/modules/survey/lib/action-class";
 import { getExternalUrlsPermission } from "@/modules/survey/lib/permission";
 import { getResponseCountBySurveyId } from "@/modules/survey/lib/response";
@@ -80,17 +78,13 @@ export const SurveyEditorPage = async (props: {
   ]);
 
   const [
-    isSurveyFollowUpsAllowed,
     isSpamProtectionAllowed,
     isQuotasAllowed,
     isExternalUrlsAllowed,
-    isUserTargetingAllowed,
   ] = await Promise.all([
-    getSurveyFollowUpsPermission(workspaceWithTeamIds.organizationId),
     getIsSpamProtectionEnabled(workspaceWithTeamIds.organizationId),
     getIsQuotasEnabled(workspaceWithTeamIds.organizationId),
     getExternalUrlsPermission(workspaceWithTeamIds.organizationId),
-    getIsContactsEnabled(workspaceWithTeamIds.organizationId),
   ]);
 
   const quotas = isQuotasAllowed && survey ? await getQuotas(survey.id) : [];
@@ -124,7 +118,6 @@ export const SurveyEditorPage = async (props: {
       workspacePermission={workspacePermission}
       colors={SURVEY_BG_COLORS}
       segments={segments}
-      isUserTargetingAllowed={isUserTargetingAllowed}
       isSpamProtectionAllowed={isSpamProtectionAllowed}
       workspaceLanguages={workspaceLanguages}
       isFormbricksCloud={IS_FORMBRICKS_CLOUD}
@@ -132,7 +125,6 @@ export const SurveyEditorPage = async (props: {
       isCxMode={isCxMode}
       locale={locale ?? DEFAULT_LOCALE}
       mailFrom={MAIL_FROM ?? "hola@formbricks.com"}
-      isSurveyFollowUpsAllowed={isSurveyFollowUpsAllowed}
       userEmail={userEmail}
       teamMemberDetails={teamMemberDetails}
       isStorageConfigured={IS_STORAGE_CONFIGURED}

@@ -6,25 +6,20 @@ import { useTranslation } from "react-i18next";
 import { TSurveyFollowUp } from "@formbricks/types/surveys/follow-up";
 import { TSurvey } from "@formbricks/types/surveys/types";
 import { TUserLocale } from "@formbricks/types/user";
-import { useWorkspace } from "@/app/(app)/workspaces/[workspaceId]/context/workspace-context";
 import { TFollowUpEmailToUser } from "@/modules/survey/editor/types/survey-follow-up";
 import { FollowUpItem } from "@/modules/survey/follow-ups/components/follow-up-item";
 import { FollowUpModal } from "@/modules/survey/follow-ups/components/follow-up-modal";
 import { Button } from "@/modules/ui/components/button";
-import { UpgradePrompt } from "@/modules/ui/components/upgrade-prompt";
 
-/** Main view for managing survey follow-up email actions. Shows an upgrade prompt when follow-ups are not allowed on the plan, or lists existing follow-ups with an add-new button. */
+/** Main view for managing survey follow-up email actions. Lists existing follow-ups with an add-new button. */
 interface FollowUpsViewProps {
   localSurvey: TSurvey;
   setLocalSurvey: React.Dispatch<React.SetStateAction<TSurvey>>;
   selectedLanguageCode: string;
   mailFrom: string;
-  isSurveyFollowUpsAllowed: boolean;
-  isFormbricksCloud: boolean;
   userEmail: string;
   teamMemberDetails: TFollowUpEmailToUser[];
   locale: TUserLocale;
-  enterpriseLicenseRequestFormUrl: string;
 }
 
 export const FollowUpsView = ({
@@ -32,45 +27,14 @@ export const FollowUpsView = ({
   setLocalSurvey,
   selectedLanguageCode,
   mailFrom,
-  isSurveyFollowUpsAllowed,
-  isFormbricksCloud,
   userEmail,
   teamMemberDetails,
   locale,
-  enterpriseLicenseRequestFormUrl,
 }: FollowUpsViewProps) => {
-  const { workspace } = useWorkspace();
-  const workspaceBasePath = `/workspaces/${workspace?.id}`;
   const { t } = useTranslation();
   const [addFollowUpModalOpen, setAddFollowUpModalOpen] = useState(false);
 
   const surveyFollowUps: TSurveyFollowUp[] = localSurvey.followUps.filter((f) => !f.deleted);
-
-  if (!isSurveyFollowUpsAllowed) {
-    return (
-      <div className="mt-12 flex items-center justify-center p-5">
-        <UpgradePrompt
-          title={t("workspace.surveys.edit.follow_ups_empty_heading")}
-          description={t("workspace.surveys.edit.follow_ups_empty_description")}
-          feature="follow_ups"
-          buttons={[
-            {
-              text: isFormbricksCloud
-                ? t("workspace.settings.billing.upgrade")
-                : t("common.request_trial_license"),
-              href: isFormbricksCloud
-                ? `${workspaceBasePath}/settings/organization/billing`
-                : enterpriseLicenseRequestFormUrl,
-            },
-            {
-              text: t("common.learn_more"),
-              href: "https://formbricks.com/docs/xm-and-surveys/surveys/general-features/email-followups",
-            },
-          ]}
-        />
-      </div>
-    );
-  }
 
   return (
     <div className="mt-12 space-y-4 p-5">

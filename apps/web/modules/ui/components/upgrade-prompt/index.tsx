@@ -8,8 +8,18 @@
  * Neutering approach (same as the T026 telemetry stub): the component keeps its full
  * prop signature so all existing callers compile unchanged, but renders nothing.
  * The `buttons` and `feature` props are intentionally ignored.
+ *
+ * `ModalButton` is re-exported for ABI compatibility: upstream consumers import the
+ * type from this module to type the `buttons` prop tuple. Keep it exported even
+ * though the component renders nothing.
  */
 "use client";
+
+export interface ModalButton {
+  text: string;
+  href?: string;
+  onClick?: () => void;
+}
 
 interface UpgradePromptProps {
   title: string;

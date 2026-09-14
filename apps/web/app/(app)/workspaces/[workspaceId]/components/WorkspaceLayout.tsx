@@ -41,7 +41,6 @@ export const WorkspaceLayout = async ({ layoutData, children }: WorkspaceLayoutP
 
   const { features, lastChecked, isPendingDowngrade, active, status } = license;
   const isMultiOrgEnabled = features?.isMultiOrgEnabled ?? false;
-  const organizationWorkspacesLimit = Infinity;
   const newTrialBannerVariant = await getPostHogFeatureFlag(user.id, "a-b_navigation_rich-trial-banner");
   const isOwnerOrManager = isOwner || isManager;
 
@@ -73,7 +72,6 @@ export const WorkspaceLayout = async ({ layoutData, children }: WorkspaceLayoutP
           isDevelopment={IS_DEVELOPMENT}
           membershipRole={membership.role}
           publicDomain={publicDomain}
-          organizationWorkspacesLimit={organizationWorkspacesLimit}
           isLicenseActive={active}
           isAccessControlAllowed={isAccessControlAllowed}
           responseCount={responseCount}
@@ -83,9 +81,6 @@ export const WorkspaceLayout = async ({ layoutData, children }: WorkspaceLayoutP
           <TopControlBar
             currentOrganizationId={organization.id}
             isMultiOrgEnabled={isMultiOrgEnabled}
-            organizationWorkspacesLimit={organizationWorkspacesLimit}
-            isFormbricksCloud={IS_FORMBRICKS_CLOUD}
-            isLicenseActive={active}
             isOwnerOrManager={isOwnerOrManager}
             isAccessControlAllowed={isAccessControlAllowed}
             membershipRole={membership.role}

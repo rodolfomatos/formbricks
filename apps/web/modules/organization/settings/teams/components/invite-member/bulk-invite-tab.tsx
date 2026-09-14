@@ -12,7 +12,6 @@ import { ZInvitees } from "@/modules/organization/settings/teams/types/invites";
 import { Alert, AlertDescription } from "@/modules/ui/components/alert";
 import { Button } from "@/modules/ui/components/button";
 import { Uploader } from "@/modules/ui/components/file-input/components/uploader";
-import { ModalButton, UpgradePrompt } from "@/modules/ui/components/upgrade-prompt";
 
 interface BulkInviteTabProps {
   setOpen: (v: boolean) => void;
@@ -24,7 +23,7 @@ interface BulkInviteTabProps {
   enterpriseLicenseRequestFormUrl: string;
 }
 
-/** Tab for bulk-inviting members via CSV file upload. Shows an upgrade prompt if bulk invite is not allowed on the current plan. */
+/** Tab for bulk-inviting members via CSV file upload. Bulk invite is always available. */
 export const BulkInviteTab = ({
   setOpen,
   onSubmit,
@@ -105,30 +104,6 @@ export const BulkInviteTab = ({
 
     onFileInputChange(files);
   };
-
-  if (!isBulkInviteAllowed) {
-    const upgradeButtons: [ModalButton, ModalButton] = [
-      {
-        text: isFormbricksCloud ? t("common.upgrade_plan") : t("common.request_trial_license"),
-        href: isFormbricksCloud
-          ? `${workspaceBasePath}/settings/organization/billing`
-          : enterpriseLicenseRequestFormUrl,
-      },
-      {
-        text: t("common.learn_more"),
-        href: "https://formbricks.com/docs/self-hosting/license",
-      },
-    ];
-
-    return (
-      <UpgradePrompt
-        title={t("workspace.settings.teams.bulk_invite_scale_only_title")}
-        description={t("workspace.settings.teams.bulk_invite_scale_only_description")}
-        buttons={upgradeButtons}
-        feature="bulk-invite"
-      />
-    );
-  }
 
   return (
     <>
