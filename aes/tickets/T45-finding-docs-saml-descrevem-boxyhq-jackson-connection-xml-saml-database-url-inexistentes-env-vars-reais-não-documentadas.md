@@ -35,3 +35,11 @@ This ticket is **done** when the closure condition above is verifiably met.
 - Updated `docs/self-hosting/configuration/environment-variables.mdx`: replaced `SAML_DATABASE_URL` row with `SAML_IDP_SSO_URL`, `SAML_IDP_CERT`, `SAML_IDP_ENTITY_ID`, `SAML_IDP_METADATA_URL`
 - Updated `docker/.env.example` and `.env.example`: removed legacy `SAML_DATABASE_URL` comment; added `SAML_IDP_SSO_URL`, `SAML_IDP_CERT`, `SAML_IDP_ENTITY_ID`, `SAML_IDP_METADATA_URL` examples
 - Verified: grep shows no jackson/boxyhq/SAML_DATABASE_URL/connection.xml in saml-sso.mdx; new env vars present in both env files and env-vars doc
+
+## Acceptance Criteria
+
+- [x] saml-sso.mdx has no jackson/boxyhq/SAML_DATABASE_URL/connection.xml references
+- [x] environment-variables.mdx has SAML_IDP_SSO_URL, SAML_IDP_CERT, SAML_IDP_ENTITY_ID, SAML_IDP_METADATA_URL
+- [x] docker/.env.example has SAML_IDP_SSO_URL, SAML_IDP_CERT, SAML_IDP_ENTITY_ID, SAML_IDP_METADATA_URL
+- [x] .env.example has SAML_IDP_SSO_URL, SAML_IDP_CERT, SAML_IDP_ENTITY_ID, SAML_IDP_METADATA_URL
+- [x] SAML_DATABASE_URL removed from both env files and env-vars doc

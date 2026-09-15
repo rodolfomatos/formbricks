@@ -41,3 +41,12 @@ This ticket is **done** when the closure condition above is verifiably met.
   `invalid_code`, `save_backup_codes`, `scan_qr_code`, `two_factor_auth`, `two_factor_auth_description`,
   `verify`, `verify_code`.
 - Verified: `grep -c '"scan_qr_code"' locales/en-US.json` = 1; eslint clean on all four components.
+
+## Acceptance Criteria
+
+- [x] enable-two-factor-modal renders QR code via qr-code-styling (otpauth URI)
+- [x] TOTP secret shown as fallback for manual entry
+- [x] qr_code_placeholder removed from component
+- [x] scan_qr_code key present in en-US.json (grep -c = 1)
+- [x] All 14 missing common.* keys added to en-US.json
+- [x] All t() calls in 2FA components prefixed with common. (eslint clean)
