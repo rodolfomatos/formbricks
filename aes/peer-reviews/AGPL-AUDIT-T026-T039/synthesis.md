@@ -97,3 +97,19 @@ echo "DONE — register output in aes/peer-reviews/AGPL-AUDIT-T026-T039/human-va
 
 **Executor requirement:** human ≠ candidate author. Output must be archived at
 `aes/peer-reviews/AGPL-AUDIT-T026-T039/human-validation.log`. Until executed, verdict is REJECT per protocol §6.
+
+---
+
+## Addendum (2026-09-15) — script correction + moderator pre-check
+
+The pre-registered script above has **4 scoping defects** (wrong grep targets, not wrong closures), corrected in a sibling artifact:
+
+- **DEFECT 1** (check 1, M-1): the whole-repo `grep ENTERPRISE_LICENSE_KEY` counts `aes/` meta-artifacts that legitimately quote the variable (59 self-references, all under `aes/`). M-1 scoped the defect to real code/config/CI files. → corrected: exclude `aes/`.
+- **DEFECT 2** (check 2, M-1 e2e): `! grep "…\|exit 1"` over-broad — `exit 1` at e2e.yml:163 is the app health-check retry loop, unrelated to licensing. → corrected: assert ENTERPRISE_LICENSE_KEY absent from e2e.yml.
+- **DEFECT 3** (check 3, M-2): `! grep "toBe(true)" T037-verify.md` fails by design — the corrected record *cites* the fabricated assertion to document the correction. → corrected: assert real assertion documented AND `telemetry.test.ts` contains zero `toBe(true)`.
+- **DEFECT 4** (check 5, M-5): `grep "otpauth://" enable-two-factor-modal.tsx` greps the wrong file; URI is built in `actions.ts:22` (`authenticator.keyuri`) and consumed as `result.qrCode`. → corrected: assert keyuri + QRCodeStyling render + secret fallback + `scan_qr_code` i18n key.
+
+Corrected script: `human-validation-fixed.sh` (sha256 `d97791df785e7b0a58ba4d27510b34efed7f25bb5ef3ee80feaf212a9dc6840b`).
+Moderator pre-check (2026-09-15, author-executed, archived in `human-validation-precheck.log`): **18 passed, 0 failed** across check clusters M-1..M-6.
+
+**Verdict remains REJECT** — formal human validation (human ≠ author) not yet archived.
