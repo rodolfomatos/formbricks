@@ -108,6 +108,7 @@ current_ticket: ""
 | PR | Grep targets must point at the file that actually builds the artifact — `otpauth://` lives in actions.ts:22, not the consuming modal; wrong-file checks false-negative (M-5/M-10) | 2026-09-15 |
 | PR | A corrected anti-fabrication record quotes the fabricated assertion; a validator that greps the record (not the artifact) for the fake string fails by design — check the ARTIFACT (M-2/M-7) | 2026-09-15 |
 | PR | Review closure is incomplete until ALL findings (incl. MINORs) are ticketized and human-validated; verdict computed from findings, not from BLOCKER-only focus (T046-T050) | 2026-09-15 |
+| AUDIT | A .gitignore entry added to keep a stale path out can silently swallow legitimately rewritten files — saml-sso/lib/* and whitelabel/actions.ts were never tracked while their importers were, so a fresh clone would NOT compile; git ls-files vs on-disk diff catches it | 2026-09-15 |
 
 ## Legend
 - **T001-T017**: Sprint-01 — Complete EE to AGPL rewrite + bugfixes

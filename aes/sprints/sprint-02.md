@@ -35,10 +35,13 @@ Fix remaining production bugs, complete the full codebase audit, and clean up al
 *Filled at end of sprint.*
 
 ### What went well
-*(pending)*
+- AGPL audit T026-T050 closed with zero open findings and an archived, independently-executed human validation (18/18, `human-validation.log` 2026-09-15).
+- All four M-* classes handled: defused (T026-T029), rewritten (T044, T049), documented (T045, T050), margin (T046-T048).
 
 ### What went wrong
-*(pending)*
+- `git ls-files vs on-disk` check was NOT part of verification: `saml-sso/lib/*` and `whitelabel/actions.ts` went untracked under `.gitignore:73 modules/` while their importers were committed — latent clone-break. Missed in the original 107-untracked sweep (T030) because the counts masked it.
+- Reviewer-pre-registered greps (M-5/M-8/M-9) encoded assumptions about implementation idiom, producing false fails that had to be separated from real defects.
 
 ### What to change next sprint
-*(pending)*
+- Add a "no tracked file imports an untracked path" gate to Verify (diff `git ls-files` against on-disk under `apps/web/modules/`).
+- When adding a .gitignore exclusion, verify it does not also exclude legitimately tracked-file importers; prefer scoped paths over bare directory rules.
