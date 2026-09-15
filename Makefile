@@ -1,13 +1,16 @@
 SHELL := /bin/bash
-.PHONY: help build docker-build docker-up docker-down logs clean-disk clean-docker clean-pnpm clean-all rebuild lint test dev
+COMPOSE := docker compose -f docker/docker-compose.yml --env-file docker/.env
+.PHONY: help dev build build-docker docker-build docker-up docker-down docker-logs docker-restart docker-restart-web docker-recreate-web patch db-up db-down db-migrate db-studio lint test typecheck clean-disk clean-docker clean-pnpm clean-all status logs-web logs-web-follow exec aes-init aes-plan aes-learn image-build image-build-nocache image-save image-load secrets-edit verify redis-cleanup crypto-key i18n
 
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-# ── Build ──────────────────────────────────────────────────────────────────
+# ── Dev servers ────────────────────────────────────────────────────────────
 
 dev: ## Start dev servers (all packages)
 	pnpm dev
+
+# ── Build ──────────────────────────────────────────────────────────────────
 
 build: ## Build web app (requires env vars set)
 	cd apps/web && npx next build
@@ -27,24 +30,33 @@ build-docker: ## Build inside Docker (isolated, no host env needed)
 			pnpm build --filter=@formbricks/database && \
 			pnpm build --filter=@formbricks/web'
 
+docker-build: ## Build the app image via docker compose (BuildKit secrets handled by read-secrets.sh)
+	$(COMPOSE) build formbricks
+
+docker-build-nocache: ## Rebuild the app image without docker cache
+	$(COMPOSE) build --no-cache formbricks
+
 # ── Docker Compose ─────────────────────────────────────────────────────────
 
 docker-up: ## Start all services
-	docker compose -f docker/docker-compose.yml --env-file docker/.env up -d
+	$(COMPOSE) up -d
 
 docker-down: ## Stop all services
-	docker compose -f docker/docker-compose.yml down
+	$(COMPOSE) down
 
 docker-logs: ## Tail logs from running services
-	docker compose -f docker/docker-compose.yml logs -f
+	$(COMPOSE) logs -f
 
 docker-restart: docker-down docker-up ## Restart all services
 
 docker-restart-web: ## Restart only the web container
-	docker compose -f docker/docker-compose.yml restart formbricks
+	$(COMPOSE) restart formbricks
 
 docker-recreate-web: ## Recreate web container from current image
-	docker compose -f docker/docker-compose.yml up -d --force-recreate formbricks
+	$(COMPOSE) up -d --force-recreate formbricks
+
+docker-config: ## Validate compose file syntax
+	$(COMPOSE) config >/dev/null && echo "compose config OK"
 
 # ── Hot-patch (no rebuild needed) ──────────────────────────────────────────
 
@@ -54,9 +66,18 @@ patch: ## Copy source changes into running container (dev workflow)
 
 # ── Database ───────────────────────────────────────────────────────────────
 
+db-up: ## Start database + redis backing services
+	docker compose -f docker-compose.dev.yml up -d postgres redis 2>/dev/null || $(COMPOSE) up -d postgres redis
+
+db-down: ## Stop database + redis backing services
+	docker compose -f docker-compose.dev.yml down 2>/dev/null || $(COMPOSE) down
+
 db-migrate: ## Run Prisma migrations
 	docker exec docker-formbricks-1 /home/nextjs/start.sh --skip-migrations 2>/dev/null; \
 	docker exec docker-formbricks-1 npx prisma migrate deploy
+
+apply-migrations: ## Run migrations via database package script
+	@cd packages/database && node dist/scripts/apply-migrations.js
 
 db-studio: ## Open Prisma Studio (requires DB tunnel)
 	npx prisma studio
@@ -71,6 +92,24 @@ test: ## Run unit tests
 
 typecheck: ## Run TypeScript check
 	pnpm typecheck
+
+i18n: ## Generate missing translations
+	pnpm i18n
+
+# ── Verify gate ────────────────────────────────────────────────────────────
+
+verify: ## Run ticketed-AC verification gate (usage: make verify TICKET=T021)
+	@if [ -z "$(TICKET)" ]; then bash scripts/verify-implementation.sh; else bash scripts/verify-implementation.sh $(TICKET); fi
+
+# ── Redis ──────────────────────────────────────────────────────────────────
+
+redis-cleanup: ## Trim Redis AOF persistence files (T023)
+	docker/redis-aof-cleanup.sh
+
+# ── Crypto helpers ─────────────────────────────────────────────────────────
+
+crypto-key: ## Generate an ENCRYPTION_KEY
+	node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 # ── Disk / Docker Cleanup ──────────────────────────────────────────────────
 
@@ -145,5 +184,3 @@ image-load: ## Load image from tarball (usage: make image-load FILE=formbricks-f
 secrets-edit: ## Edit docker/.env file (contains secrets)
 	@echo "Edit docker/.env for secrets; nano or vim available"
 	@ls -la docker/.env
-
-.PHONY: help dev build build-docker docker-up docker-down docker-logs docker-restart docker-restart-web docker-recreate-web patch db-migrate db-studio lint test typecheck clean-disk clean-docker clean-pnpm clean-all status logs-web logs-web-follow exec aes-init aes-plan aes-learn image-build image-build-nocache image-save image-load secrets-edit
