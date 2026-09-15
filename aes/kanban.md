@@ -66,7 +66,7 @@ current_ticket: ""
 | T028 | Fix root LICENSE to remove EE carve-out | blocker | sprint-02 | [AUDIT] Phase 1 hostile analysis | ✅ DONE (2026-09-11) |
 | T029 | Delete orphan modules/ directory at fork root | blocker | sprint-02 | [AUDIT] Phase 1 hostile analysis | ✅ DONE (2026-09-11) |
 | T030 | Commit critical untracked files (SAML SSO, Makefile, AES) | blocker | sprint-02 | [AUDIT] Phase 1 hostile analysis | ✅ DONE (2026-09-11) |
-| T031 | Remove ENTERPRISE_LICENSE_KEY from all config files | major | sprint-02 | [AUDIT] Phase 1 hostile analysis | ⚠️ REOPENED (2026-09-11) — original "0 refs" was FALSE (rg not installed); peer review M-1 → T040. Re-verified 0 refs (grep, real); commit pending |
+| T031 | Remove ENTERPRISE_LICENSE_KEY from all config files | major | sprint-02 | [AUDIT] Phase 1 hostile analysis | ⚠️ REOPENED (2026-09-11) — original "0 refs" was FALSE (rg not installed); peer review M-1 → T040. ✅ CLOSED (2026-09-15) — 0 refs fora de aes/ (grep, real); eliminação commitada (29a1bcbc5) |
 | T032 | Update stale documentation referencing EE model | major | sprint-02 | [AUDIT] Phase 1 hostile analysis | ✅ DONE (2026-09-11) — 20+ docs rewritten, 0 EE-gate claims |
 | T033 | Clean up dead UpgradePrompt and enterpriseLicenseRequestFormUrl | major | sprint-02 | [AUDIT] Phase 1 hostile analysis | ✅ DONE (2026-09-11) — prompts neutered (render null) |
 | T034 | Remove packages/design-system/ (foreign untracked package) | major | sprint-02 | [AUDIT] Phase 1 hostile analysis | ✅ DONE (2026-09-11) |
@@ -80,12 +80,12 @@ current_ticket: ""
 
 | ID | Title | Type | Source | Status |
 |----|-------|------|--------|--------|
-| T040 | Eliminate ENTERPRISE_LICENSE_KEY (M-1 BLOCKER; was 88 refs / 21 files) | BLOCKER | Peer review M-1 | ✅ FIXED (code/config/CI/locales = 0 refs, grep-verified) — commit pending |
+| T040 | Eliminate ENTERPRISE_LICENSE_KEY (M-1 BLOCKER; was 88 refs / 21 files) | BLOCKER | Peer review M-1 | ✅ FIXED (code/config/CI/locales = 0 refs, grep-verified; commit 29a1bcbc5, 2026-09-15) |
 | T041 | Correct T037-verify.md fabricated record (M-2 BLOCKER) | BLOCKER | Peer review M-2 | ✅ FIXED — record corrected, real assertion documented |
-| T042 | Remove UpgradePrompt/PendingDowngradeBanner consumers + paywall copy (M-3) | MAJOR | Peer review M-3 | ✅ FIXED (2026-09-14) — UpgradePrompt 0 consumers outside stub; workspace-limit-modal deleted; targeting-locked-card deleted; orphan locale keys removed + i18n.lock regenerated; grep-verified |
-| T043 | Restore ModalButton export dropped by UpgradePrompt stub (M-4) | MAJOR | Peer review M-4 | ✅ FIXED (2026-09-14) — ModalButton interface+export restored for ABI compatibility; consumers no longer exist (T042) |
-| T044 | Fix 2FA enable wizard (13 missing i18n keys, placeholder QR) (M-5) | MAJOR | Peer review M-5 | ✅ FIXED (2026-09-14) — real QR (otpauth) via qr-code-styling + secret fallback; all t() calls namespaced common.; 14 keys added to en-US.json; eslint clean |
-| T045 | Correct SAML SSO docs to implemented env-var flow (M-6) | MAJOR | Peer review M-6 | ✅ FIXED (2026-09-14) — saml-sso.mdx rewritten (no jackson/connection.xml/SAML_DATABASE_URL); real env vars (SAML_IDP_SSO_URL, SAML_IDP_CERT, SAML_IDP_ENTITY_ID, SAML_IDP_METADATA_URL) documented in environment-variables.mdx, docker/.env.example, .env.example |
+| T042 | Remove UpgradePrompt/PendingDowngradeBanner consumers + paywall copy (M-3) | MAJOR | Peer review M-3 | ✅ FIXED (2026-09-14) — UpgradePrompt 0 consumers outside stub; workspace-limit-modal deleted; targeting-locked-card deleted; orphan locale keys removed + i18n.lock regenerated; grep + verify-implementation ✅ (2026-09-15, 6/6) |
+| T043 | Restore ModalButton export dropped by UpgradePrompt stub (M-4) | MAJOR | Peer review M-4 | ✅ FIXED (2026-09-14) — ModalButton interface+export restored for ABI compatibility; consumers no longer exist (T042). verify-implementation ✅ (2026-09-15, 4/4) |
+| T044 | Fix 2FA enable wizard (13 missing i18n keys, placeholder QR) (M-5) | MAJOR | Peer review M-5 | ✅ FIXED (2026-09-14) — real QR (otpauth) via qr-code-styling + secret fallback; all t() calls namespaced common.; 14 keys added to en-US.json; eslint clean. verify-implementation ✅ (2026-09-15, 6/6) |
+| T045 | Correct SAML SSO docs to implemented env-var flow (M-6) | MAJOR | Peer review M-6 | ✅ FIXED (2026-09-14) — saml-sso.mdx rewritten (no jackson/connection.xml/SAML_DATABASE_URL); real env vars (SAML_IDP_SSO_URL, SAML_IDP_CERT, SAML_IDP_ENTITY_ID, SAML_IDP_METADATA_URL) documented in environment-variables.mdx, docker/.env.example, .env.example. verify-implementation ✅ (2026-09-15, 5/5) |
 
 ---
 
