@@ -17,19 +17,31 @@ Fix remaining production bugs, complete the full codebase audit, and clean up al
 | T023 | Redis AOF "No space left on device" — disk cleanup | high | backlog |
 | T024 | Fix Prisma `getWorkspacePermissionByUserId` null/undefined args | medium | backlog |
 | T025 | AES Verify phase: add "check full container logs" gate for hot-patch deploys | low | backlog |
-| T026 | Kill telemetry phone-home to ee.formbricks.com | blocker | pending |
-| T027 | Remove docker/.env from git tracking (secrets exposure) | blocker | pending |
-| T028 | Fix root LICENSE to remove EE carve-out | blocker | pending |
-| T029 | Delete orphan modules/ directory at fork root | blocker | pending |
-| T030 | Commit critical untracked files (SAML SSO, Makefile, AES) | blocker | pending |
-| T031 | Remove ENTERPRISE_LICENSE_KEY from all config files | major | pending |
-| T032 | Update stale documentation referencing EE model | major | pending |
-| T033 | Clean up dead UpgradePrompt and enterpriseLicenseRequestFormUrl | major | pending |
-| T034 | Remove packages/design-system/ (foreign untracked package) | major | pending |
-| T035 | Fix AES sprint state and create T021-T025 ticket files | major | pending |
-| T037 | Update telemetry.test.ts to match neutered stubs | minor | pending |
-| T038 | Remove PendingDowngradeBanner dead code | minor | pending |
-| T039 | Clean up stale EE locale strings | minor | pending |
+| T051 | Verify gate: detect tracked-file imports referencing untracked paths (clone-break prevention) | high | backlog |
+| T026 | Kill telemetry phone-home to ee.formbricks.com | blocker | done |
+| T027 | Remove docker/.env from git tracking (false positive) | blocker | done |
+| T028 | Fix root LICENSE to remove EE carve-out | blocker | done |
+| T029 | Delete orphan modules/ directory at fork root | blocker | done |
+| T030 | Commit critical untracked files (SAML SSO, Makefile, AES) | blocker | done |
+| T031 | Eliminate ENTERPRISE_LICENSE_KEY across config/CI/locales | major | done |
+| T032 | Update stale documentation referencing EE model | major | done |
+| T033 | Clean up dead UpgradePrompt and enterpriseLicenseRequestFormUrl | major | done |
+| T034 | Remove packages/design-system/ (foreign untracked package) | major | done |
+| T035 | Fix AES sprint state and create T021-T025 ticket files | major | done |
+| T037 | Update telemetry.test.ts to match neutered stubs | minor | done |
+| T038 | Remove PendingDowngradeBanner dead code | minor | done |
+| T039 | Clean up stale EE locale strings | minor | done |
+| T040 | Eliminate ENTERPRISE_LICENSE_KEY (peer review M-1) | BLOCKER | done |
+| T041 | Correct T037 fabricated verification record (M-2) | BLOCKER | done |
+| T042 | Remove UpgradePrompt/PendingDowngradeBanner consumers (M-3) | MAJOR | done |
+| T043 | Restore ModalButton export (M-4) | MAJOR | done |
+| T044 | Fix 2FA enable wizard (M-5) | MAJOR | done |
+| T045 | Correct SAML SSO docs (M-6) | MAJOR | done |
+| T046 | Remove formbricks.com literal from telemetry comment (M-7) | MINOR | done |
+| T047 | Arrow stubs → block body (M-8) | MINOR | done |
+| T048 | Relative imports → @/modules alias (M-9) | MINOR | done |
+| T049 | SAML AuthnRequest redirect fix (M-10) | MINOR | done |
+| T050 | 2FA docs corrected to match implementation (M-11) | MINOR | done |
 
 ## Retrospective
 *Filled at end of sprint.*

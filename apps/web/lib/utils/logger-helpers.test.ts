@@ -36,9 +36,6 @@ vi.mock("@/lib/constants", () => ({
 vi.mock("@/lib/utils/client-ip", () => ({
   getClientIpFromHeaders: vi.fn().mockResolvedValue("127.0.0.1"),
 }));
-vi.mock("@/modules/ee/audit-logs/lib/service", () => ({
-  logAuditEvent: vi.fn().mockResolvedValue(undefined),
-}));
 
 // Cache mock is handled in beforeEach above
 

@@ -50,6 +50,67 @@ echo "  File: $(basename "$NAME_FILE")"
 echo "══════════════════════════════════════════════════"
 echo ""
 
+# ── GATE-UNTRACKED: tracked imports must reference tracked files ─────────────
+# Global regression gate (T051). Prevents the clone-break defect found during
+# the AGPL audit: a tracked source file importing a @/modules/ path whose
+# target was never committed (e.g. a .gitignore rule swallowing new files under
+# apps/web/modules/ while its importers were tracked) makes a fresh clone fail.
+GATE_TMP_IMPORTS=$(mktemp)
+GATE_TMP_UNTRACKED=$(mktemp)
+GATE_PAT="@/modules/[^\"']*"
+
+git -C "$SCRIPT_DIR" ls-files apps/web |
+  while IFS= read -r src; do
+    [ -z "$src" ] && continue
+    case "$src" in
+      apps/web/*.ts|apps/web/*.tsx|apps/web/*.mts|apps/web/*.cts) ;;
+      *) continue ;;
+    esac
+    grep -oE "$GATE_PAT" "$SCRIPT_DIR/$src" 2>/dev/null || true
+  done | sort -u > "$GATE_TMP_IMPORTS"
+
+: > "$GATE_TMP_UNTRACKED"
+while IFS= read -r imp; do
+  [ -z "$imp" ] && continue
+  target="${imp#@/}"
+  cand=""
+  if [ -f "$SCRIPT_DIR/apps/web/$target" ]; then
+    cand="apps/web/$target"
+  else
+    for ext in ts tsx mts cts; do
+      if [ -f "$SCRIPT_DIR/apps/web/$target.$ext" ]; then
+        cand="apps/web/$target.$ext"
+        break
+      fi
+    done
+    if [ -z "$cand" ] && [ -f "$SCRIPT_DIR/apps/web/$target/index.ts" ]; then
+      cand="apps/web/$target/index.ts"
+    elif [ -z "$cand" ] && [ -f "$SCRIPT_DIR/apps/web/$target/index.tsx" ]; then
+      cand="apps/web/$target/index.tsx"
+    fi
+  fi
+  if [ -z "$cand" ]; then
+    printf "MISSING-ON-DISK    | %s\n" "$imp"
+  elif ! git -C "$SCRIPT_DIR" ls-files --error-unmatch "$cand" >/dev/null 2>&1; then
+    printf "UNTRACKED          | %s  (resolved %s)\n" "$imp" "$cand"
+  fi
+done < "$GATE_TMP_IMPORTS" > "$GATE_TMP_UNTRACKED"
+
+GATE_UNTRACKED_LINES=0
+while IFS= read -r _line; do
+  GATE_UNTRACKED_LINES=$((GATE_UNTRACKED_LINES + 1))
+done < "$GATE_TMP_UNTRACKED"
+
+if [ "$GATE_UNTRACKED_LINES" -gt 0 ]; then
+  fail "GATE-UNTRACKED: $GATE_UNTRACKED_LINES tracked import(s) reference a non-tracked path:"
+  cat "$GATE_TMP_UNTRACKED" | sed 's/^/    /'
+  rm -f "$GATE_TMP_IMPORTS" "$GATE_TMP_UNTRACKED"
+  exit 1
+else
+  pass "GATE-UNTRACKED: no tracked import references an untracked modules/ path"
+fi
+rm -f "$GATE_TMP_IMPORTS" "$GATE_TMP_UNTRACKED"
+
 # ── Extract acceptance criteria ───────────────────────────────────────────────
 # Lines matching "- [ ] " or "- [x] " after "Acceptance Criteria" section
 IN_SECTION=0
