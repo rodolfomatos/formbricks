@@ -3,7 +3,7 @@ import { prisma } from "@formbricks/database";
 import { Prisma } from "@formbricks/database/prisma";
 import { PrismaErrorType } from "@formbricks/database/types/error";
 import { TTag } from "@formbricks/types/tags";
-import { TagError } from "../../modules/workspaces/settings/types/tag";
+import { TagError } from "@/modules/workspaces/settings/types/tag";
 import { createTag, getTag, getTagsByWorkspaceId } from "./service";
 
 vi.mock("server-only", () => ({}));

@@ -11,7 +11,7 @@ import {
 } from "@/lib/constants";
 import { I18nProvider } from "@/lingodotdev/client";
 import { getLocale } from "@/lingodotdev/language";
-import "../modules/ui/globals.css";
+import "@/modules/ui/globals.css";
 
 export const metadata: Metadata = {
   title: {

@@ -15,4 +15,6 @@
 
 import { PendingDowngradeBannerProps } from "./types";
 
-export const PendingDowngradeBanner = (_props: PendingDowngradeBannerProps) => null;
+export const PendingDowngradeBanner = (_props: PendingDowngradeBannerProps) => {
+  return null;
+};

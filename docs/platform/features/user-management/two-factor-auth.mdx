@@ -26,18 +26,15 @@ Users can enable 2FA from their profile settings:
 2. In the **Security** section, toggle the **Two-factor authentication** switch
 3. Follow the setup wizard:
 
-   **Step 1: Confirm Password**
-   - Enter your current password to verify your identity
-
-   **Step 2: Scan QR Code**
+   **Step 1: Scan QR Code**
    - Use your authenticator app to scan the displayed QR code
    - Alternatively, manually enter the provided secret key into your authenticator app
 
-   **Step 3: Verify Setup**
+   **Step 2: Verify Setup**
    - Enter the 6-digit code from your authenticator app to confirm the setup
 
-   **Step 4: Save Backup Codes**
-   - **Important**: Save the 10 backup codes in a secure location
+   **Step 3: Save Backup Codes**
+   - **Important**: Save the 8 backup codes in a secure location
    - These codes can be used to access your account if you lose access to your authenticator device
    - Each backup code can only be used once
 
@@ -52,7 +49,7 @@ Once 2FA is enabled, the login process requires an additional step:
 1. Enter your email and password as usual
 2. When prompted, enter either:
    - A 6-digit code from your authenticator app, or
-   - One of your backup codes (use format: xxxxx-xxxxx or just the 10-character code)
+   - One of your backup codes (a 10-character lowercase code)
 
 ## Managing Two-factor authentication
 
@@ -62,9 +59,7 @@ To disable two-factor authentication:
 
 1. Go to **Profile Settings > Security**
 2. Toggle off the **Two-factor authentication** switch
-3. Confirm by entering either:
-   - Your password and a TOTP code from your authenticator app, or
-   - Your password and a backup code
+3. Confirm in the dialog
 
 <Info>
 When 2FA is disabled, all associated backup codes are permanently deleted for security reasons.

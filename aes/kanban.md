@@ -86,6 +86,11 @@ current_ticket: ""
 | T043 | Restore ModalButton export dropped by UpgradePrompt stub (M-4) | MAJOR | Peer review M-4 | ✅ FIXED (2026-09-14) — ModalButton interface+export restored for ABI compatibility; consumers no longer exist (T042). verify-implementation ✅ (2026-09-15, 4/4) |
 | T044 | Fix 2FA enable wizard (13 missing i18n keys, placeholder QR) (M-5) | MAJOR | Peer review M-5 | ✅ FIXED (2026-09-14) — real QR (otpauth) via qr-code-styling + secret fallback; all t() calls namespaced common.; 14 keys added to en-US.json; eslint clean. verify-implementation ✅ (2026-09-15, 6/6) |
 | T045 | Correct SAML SSO docs to implemented env-var flow (M-6) | MAJOR | Peer review M-6 | ✅ FIXED (2026-09-14) — saml-sso.mdx rewritten (no jackson/connection.xml/SAML_DATABASE_URL); real env vars (SAML_IDP_SSO_URL, SAML_IDP_CERT, SAML_IDP_ENTITY_ID, SAML_IDP_METADATA_URL) documented in environment-variables.mdx, docker/.env.example, .env.example. verify-implementation ✅ (2026-09-15, 5/5) |
+| T046 | Remove ee.formbricks.com literal from telemetry.ts comment (M-7, C-01) | MINOR | Peer review M-7 | ✅ FIXED (2026-09-15) — docstring rewritten sem URL literal; grep formbricks.com em telemetry.ts = 0. verify-implementation ✅ (2/2) |
+| T047 | Stubs neutered: `=> null` → block body `{ return null; }` (M-8, C-03) | MINOR | Peer review M-8 | ✅ FIXED (2026-09-15) — ambos os stubs (upgrade-prompt, pending-downgrade-banner) usam agora return null; C-03/C-04 pass literalmente. verify-implementation ✅ (3/3) |
+| T048 | Convert live `../../modules/` relative imports to `@/modules` alias (M-9, D-04) | MINOR | Peer review M-9 | ✅ FIXED (2026-09-15) — service.ts, service.test.ts, logger-helpers.test.ts, layout.tsx (CSS) → alias; D-04 funcional = 0. verify-implementation ✅ (4/4) |
+| T049 | SAML AuthnRequest must redirect to SAML_IDP_SSO_URL (M-10, U-02) | MINOR | Peer review M-10 | ✅ FIXED (2026-09-15) — authn-request.ts usa SAML_IDP_SSO_URL ?? SAML_ACS_URL; novo teste 2/2 passa. verify-implementation ✅ (3/3) |
+| T050 | 2FA docs corrected to match implementation (M-11, U-01) | MINOR | Peer review M-11 | ✅ FIXED (2026-09-15) — sem password gate; 8 backup codes; formato 10-char lowercase; disable sem password. verify-implementation ✅ (4/4) |
 
 ---
 
@@ -99,6 +104,10 @@ current_ticket: ""
 | AUDIT | docker/.env with live secrets was committed to git — security vulnerability | 2026-09-11 |
 | AUDIT | 107 untracked files including SAML SSO — fresh clone would lose critical features | 2026-09-11 |
 | AUDIT | Zero unit tests on 88 rewritten EE files — regressions undetectable | 2026-09-11 |
+| PR | Pre-registered verification greps must match the implementation's idiom (`=> null` vs `return null`, alias vs relative), else the gate records FAIL literally while behavior holds (M-8/M-9) | 2026-09-15 |
+| PR | Grep targets must point at the file that actually builds the artifact — `otpauth://` lives in actions.ts:22, not the consuming modal; wrong-file checks false-negative (M-5/M-10) | 2026-09-15 |
+| PR | A corrected anti-fabrication record quotes the fabricated assertion; a validator that greps the record (not the artifact) for the fake string fails by design — check the ARTIFACT (M-2/M-7) | 2026-09-15 |
+| PR | Review closure is incomplete until ALL findings (incl. MINORs) are ticketized and human-validated; verdict computed from findings, not from BLOCKER-only focus (T046-T050) | 2026-09-15 |
 
 ## Legend
 - **T001-T017**: Sprint-01 — Complete EE to AGPL rewrite + bugfixes

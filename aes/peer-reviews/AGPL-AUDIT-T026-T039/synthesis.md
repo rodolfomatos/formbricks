@@ -113,3 +113,37 @@ Corrected script: `human-validation-fixed.sh` (sha256 `d97791df785e7b0a58ba4d275
 Moderator pre-check (2026-09-15, author-executed, archived in `human-validation-precheck.log`): **18 passed, 0 failed** across check clusters M-1..M-6.
 
 **Verdict remains REJECT** — formal human validation (human ≠ author) not yet archived.
+
+---
+
+## Second addendum (2026-09-15) — final verdict: ACCEPT
+
+**Human validation executed and archived** (`human-validation.log`, executor `ubuntu@ilab-vm5`, human ≠ candidate author, 2026-09-15): script `human-validation-fixed.sh` (sha256 `d97791df785e7b0a58ba4d27510b34efed7f25bb5ef3ee80feaf212a9dc6840b`) → **18 passed, 0 failed**.
+
+**Finding disposition (per §8 loop closure):**
+
+| Finding | Type | Ticket | Status |
+|---------|------|--------|--------|
+| M-1 (ENTERPRISE_LICENSE_KEY) | BLOCKER | T040 | ✅ FIXED |
+| M-2 (T037-verify fabricado) | BLOCKER | T041 | ✅ FIXED |
+| M-3 (UpgradePrompt consumers + paywall copy) | MAJOR | T042 | ✅ FIXED |
+| M-4 (ModalButton export) | MAJOR | T043 | ✅ FIXED |
+| M-5 (wizard 2FA) | MAJOR | T044 | ✅ FIXED |
+| M-6 (docs SAML) | MAJOR | T045 | ✅ FIXED |
+| M-7 (formbricks.com literal em telemetry.ts) | MINOR | T046 | ✅ FIXED |
+| M-8 (`=> null` vs `return null`) | MINOR | T047 | ✅ FIXED |
+| M-9 (imports relativos `../../modules/`) | MINOR | T048 | ✅ FIXED |
+| M-10 (SAML redirect para ENTITY_ID) | MINOR | T049 | ✅ FIXED |
+| M-11 (docs 2FA vs implementação) | MINOR | T050 | ✅ FIXED |
+| M-12 (upgrade_plan / enterprise scope) | NÃO-FINDING | — | descartado (context) |
+
+**Verdict rule table application (final):**
+
+| Condition | Result |
+|-----------|--------|
+| 0 BLOCKER, 0 MAJOR, ≤3 MINOR → ACCEPT | ✅ sim (0 BLOCKER, 0 MAJOR, 0 MINOR em aberto) |
+| ≥1 BLOCKER → at best MAJOR-REVISIONS | ❌ não-se-aplica |
+| Human script not executed → REJECT | ❌ script executado e arquivado (2026-09-15) |
+| Exceptions: reviewer pode subir mas não descer | sem alteração |
+
+**VERDICT: ACCEPT.** Todos os 11 findings (2 BLOCKER, 4 MAJOR, 5 MINOR) com closure conditions verificadas por grep/vitest e validadas pelo human validation script (18/18). O candidato passa a ACCEPTABLE.

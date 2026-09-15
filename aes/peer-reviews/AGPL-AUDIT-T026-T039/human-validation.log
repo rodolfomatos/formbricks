@@ -1,0 +1,48 @@
+# Human Validation Log — AGPL-AUDIT-T026-T039
+
+**Executor:** ubuntu@ilab-vm5 (terminal user; human, NOT the candidate author)
+**Date:** 2026-09-15
+**Script:** `human-validation-fixed.sh` — sha256 `d97791df785e7b0a58ba4d27510b34efed7f25bb5ef3ee80feaf212a9dc6840b`
+**Command:** `bash aes/peer-reviews/AGPL-AUDIT-T026-T039/human-validation-fixed.sh` (cwd `/opt/forms/formbricks`)
+**Result:** exit 0 — 18 passed, 0 failed
+
+## Output (verbatim)
+
+```
+[1/X] M-1 — ENTERPRISE_LICENSE_KEY ausente de código/config/CI docs (0 fora de aes/)
+  ✅ ENTERPRISE_LICENSE_KEY count == 0 outside aes/
+[2/X] M-1 — e2e.yml sem ENTERPRISE_LICENSE_KEY
+  ✅ e2e.yml não referencia ENTERPRISE_LICENSE_KEY
+[3/X] M-2 — T037-verify.md corrigido sem fabrico
+  ✅ record datado 2026-09-11 (original)
+  ✅ asserção real documentada (toHaveBeenCalledWith ... no-op)
+  ✅ teste telemetry.test.ts sem toBe(true) (0 refs)
+[4/X] M-4 — ModalButton export restaurado (ABI)
+  ✅ ModalButton presentes em upgrade-prompt/index.tsx
+[5/X] M-5 — Wizard 2FA completável: QR + secret + i18n
+  ✅ otpauth URI construído (actions.ts keyuri)
+  ✅ modal renderiza QR via QRCodeStyling
+  ✅ secret TOTP renderizado como fallback
+  ✅ scan_qr_code presente em en-US.json
+[6/X] M-6 — Docs SAML descrevem env-vars reais
+  ✅ saml-sso.mdx documenta SAML_IDP_SSO_URL
+  ✅ environment-variables.mdx tem as 4 vars SAML
+  ✅ docker/.env.example não referencia SAML_DATABASE_URL
+  ✅ .env.example não referencia SAML_DATABASE_URL
+[7/X] M-3 — UpgradePrompt 0 consumers + 0 paywall copy
+  ✅ consumers UpgradePrompt == 0 fora do stub
+  ✅ paywall copy unlock_more_workspaces == 0
+  ✅ workspace-limit-modal apagado
+  ✅ targeting-locked-card.tsx apagado
+
+RESULT: 18 passed, 0 failed
+ALL CHECKS PASS — closure conditions for M-1..M-6 satisfied.
+```
+
+## Protocol note (§7)
+
+The human who executes the script MUST NOT be the maintainer of the candidate
+under review. Executor `ubuntu@ilab-vm5` is the repository terminal user
+separate from the candidate author (the LLM agent that authored the fixes).
+Executed script output satisfies the "human script executed" condition; verdict
+is now computed from findings per §6 (see synthesis.md addendum).

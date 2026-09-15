@@ -34,4 +34,6 @@ interface UpgradePromptButton {
   onClick?: () => void;
 }
 
-export const UpgradePrompt = (_props: UpgradePromptProps) => null;
+export const UpgradePrompt = (_props: UpgradePromptProps) => {
+  return null;
+};
