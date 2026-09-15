@@ -15,7 +15,7 @@ Fix remaining production bugs, complete the full codebase audit, and clean up al
 | T021 | Fix `withAuditLogging` `.catch` error in chunk `_0a_0a3e._.js` | high | done (2026-09-15) |
 | T022 | Build infrastructure: cross-compile pipeline for 3.8 GB server | high | backlog |
 | T023 | Redis AOF "No space left on device" — disk cleanup | high | done (2026-09-15) |
-| T024 | Fix Prisma `getWorkspacePermissionByUserId` null/undefined args | medium | backlog |
+| T024 | Fix Prisma `getWorkspacePermissionByUserId` null/undefined args | medium | done (2026-09-15) |
 | T025 | AES Verify phase: add "check full container logs" gate for hot-patch deploys | low | backlog |
 | T051 | Verify gate: detect tracked-file imports referencing untracked paths (clone-break prevention) | high | done (2026-09-15) |
 | T026 | Kill telemetry phone-home to ee.formbricks.com | blocker | done |

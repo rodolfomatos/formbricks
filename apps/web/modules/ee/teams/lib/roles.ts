@@ -6,7 +6,8 @@ import type { TTeamRole } from "../team-list/types/team";
 import type { TTeamPermission } from "../workspace-teams/types/team";
 
 export const getTeamRoleByTeamIdUserId = cache(
-  async (userId: string, teamId: string): Promise<TTeamRole | null> => {
+  async (teamId: string, userId: string): Promise<TTeamRole | null> => {
+    if (!teamId || !userId) return null;
     const teamUser = await prisma.teamUser.findUnique({
       where: {
         teamId_userId: {

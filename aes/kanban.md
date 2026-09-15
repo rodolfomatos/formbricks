@@ -14,7 +14,7 @@ current_ticket: ""
 | T021 | Fix `withAuditLogging` `.catch` error in chunk `_0a_0a3e._.js` | high | sprint-02 | ✅ DONE (2026-09-15) — root cause: rewrite broke queueAuditEvent contract (single event object vs (request, event)); callers passed event → request.headers crash; source fix in handler.ts |
 | T022 | Build infrastructure: cross-compile pipeline for 3.8 GB server | high | sprint-02 | [PLANNED] — infra limitation |
 | T023 | Redis AOF "No space left on device" — disk cleanup | high | sprint-02 | ✅ DONE (2026-09-15) — root cause: valkey-server `--appendonly yes` + noeviction with no maxmemory/rewrite bounds → unbounded AOF on 3.8 GB server. Fix: bounded config (everysec, auto-rewrite 100%/64mb, maxmemory 512mb volatile-lru) in docker/docker-compose.yml + migrate-to-v4.sh + redis-aof-cleanup.sh + README |
-| T024 | Fix Prisma `getWorkspacePermissionByUserId` null/undefined args | medium | sprint-02 | [DISCOVERED] Pre-existing — docker logs |
+| T024 | Fix Prisma `getWorkspacePermissionByUserId` null/undefined args | medium | sprint-02 | ✅ DONE (2026-09-15) — guard was already in place from rewrite; ALSO fixed real contract break: `getTeamRoleByTeamIdUserId` arg order was inverted by rewrite (teamId,userId)→(userId,teamId) while caller + tests kept old order. Restored order + guard; roles.test.ts 6/6; middleware 16/16. verify ✅ (4/4) |
 | T025 | AES Verify phase: add "check full container logs" gate for hot-patch deploys | low | sprint-02 | [META] T017 learn phase |
 
 ## In Progress
@@ -105,6 +105,7 @@ current_ticket: ""
 | AUDIT | Phone-home to ee.formbricks.com was live in production — telemetry.ts:276 never disabled | 2026-09-11 |
 | AUDIT | docker/.env with live secrets was committed to git — security vulnerability | 2026-09-11 |
 | T023 | AOF is a write-ahead log: without maxmemory or auto-rewrite bounds it grows unboundedly on small servers → disk exhaustion. Fix with --appendfsync everysec + auto-aof-rewrite (100%/64mb) + --maxmemory 512mb volatile-lru (evict only TTL'd cache keys, never block writes) | 2026-09-15 |
+| T024 | Argument ORDER is part of a function's public contract. The rewrite flipped `getTeamRoleByTeamIdUserId` to (userId, teamId) but the caller and test kept (teamId, userId) — tsc is blind to it, mocks mask it, only the real prisma lookup breaks. Restore signature to caller contract + lock with a unit test on raw args | 2026-09-15 |
 | AUDIT | 107 untracked files including SAML SSO — fresh clone would lose critical features | 2026-09-11 |
 | AUDIT | Zero unit tests on 88 rewritten EE files — regressions undetectable | 2026-09-11 |
 | PR | Pre-registered verification greps must match the implementation's idiom (`=> null` vs `return null`, alias vs relative), else the gate records FAIL literally while behavior holds (M-8/M-9) | 2026-09-15 |
