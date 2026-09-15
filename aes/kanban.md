@@ -13,7 +13,7 @@ current_ticket: ""
 |----|-------|----------|--------|--------|
 | T021 | Fix `withAuditLogging` `.catch` error in chunk `_0a_0a3e._.js` | high | sprint-02 | ✅ DONE (2026-09-15) — root cause: rewrite broke queueAuditEvent contract (single event object vs (request, event)); callers passed event → request.headers crash; source fix in handler.ts |
 | T022 | Build infrastructure: cross-compile pipeline for 3.8 GB server | high | sprint-02 | [PLANNED] — infra limitation |
-| T023 | Redis AOF "No space left on device" — disk cleanup | high | sprint-02 | [DISCOVERED] Pre-existing — docker logs |
+| T023 | Redis AOF "No space left on device" — disk cleanup | high | sprint-02 | ✅ DONE (2026-09-15) — root cause: valkey-server `--appendonly yes` + noeviction with no maxmemory/rewrite bounds → unbounded AOF on 3.8 GB server. Fix: bounded config (everysec, auto-rewrite 100%/64mb, maxmemory 512mb volatile-lru) in docker/docker-compose.yml + migrate-to-v4.sh + redis-aof-cleanup.sh + README |
 | T024 | Fix Prisma `getWorkspacePermissionByUserId` null/undefined args | medium | sprint-02 | [DISCOVERED] Pre-existing — docker logs |
 | T025 | AES Verify phase: add "check full container logs" gate for hot-patch deploys | low | sprint-02 | [META] T017 learn phase |
 
@@ -91,6 +91,7 @@ current_ticket: ""
 | T048 | Convert live `../../modules/` relative imports to `@/modules` alias (M-9, D-04) | MINOR | Peer review M-9 | ✅ FIXED (2026-09-15) — service.ts, service.test.ts, logger-helpers.test.ts, layout.tsx (CSS) → alias; D-04 funcional = 0. verify-implementation ✅ (4/4) |
 | T049 | SAML AuthnRequest must redirect to SAML_IDP_SSO_URL (M-10, U-02) | MINOR | Peer review M-10 | ✅ FIXED (2026-09-15) — authn-request.ts usa SAML_IDP_SSO_URL ?? SAML_ACS_URL; novo teste 2/2 passa. verify-implementation ✅ (3/3) |
 | T050 | 2FA docs corrected to match implementation (M-11, U-01) | MINOR | Peer review M-11 | ✅ FIXED (2026-09-15) — sem password gate; 8 backup codes; formato 10-char lowercase; disable sem password. verify-implementation ✅ (4/4) |
+| T051 | Verify gate: detect tracked-file imports referencing untracked paths (clone-break prevention) | HIGH | Sprint-01 peer review (M-12) | ✅ FIXED (2026-09-15) — GATE-UNTRACKED in verify-implementation.sh: `git ls-files apps/web` + case extension filter (pathspec `-- '*.ts'` matched ALL files under apps/web, 2342 vs 1414 real); fake-positive found & fixed (dead vi.mock to renamed service.ts); gate validated positive (exit 0) and negative (probe → exit 1). verify-implementation ✅ (4/4) |
 
 ---
 
@@ -103,6 +104,7 @@ current_ticket: ""
 | T017 | Full `docker logs` check must be a Verify gate for hot-patch deploys | 2026-07-01 |
 | AUDIT | Phone-home to ee.formbricks.com was live in production — telemetry.ts:276 never disabled | 2026-09-11 |
 | AUDIT | docker/.env with live secrets was committed to git — security vulnerability | 2026-09-11 |
+| T023 | AOF is a write-ahead log: without maxmemory or auto-rewrite bounds it grows unboundedly on small servers → disk exhaustion. Fix with --appendfsync everysec + auto-aof-rewrite (100%/64mb) + --maxmemory 512mb volatile-lru (evict only TTL'd cache keys, never block writes) | 2026-09-15 |
 | AUDIT | 107 untracked files including SAML SSO — fresh clone would lose critical features | 2026-09-11 |
 | AUDIT | Zero unit tests on 88 rewritten EE files — regressions undetectable | 2026-09-11 |
 | PR | Pre-registered verification greps must match the implementation's idiom (`=> null` vs `return null`, alias vs relative), else the gate records FAIL literally while behavior holds (M-8/M-9) | 2026-09-15 |
