@@ -11,7 +11,7 @@ current_ticket: ""
 
 | ID | Title | Priority | Sprint | Source |
 |----|-------|----------|--------|--------|
-| T021 | Fix `withAuditLogging` `.catch` error in chunk `_0a_0a3e._.js` | high | sprint-02 | [DISCOVERED] T017 verify — log analysis |
+| T021 | Fix `withAuditLogging` `.catch` error in chunk `_0a_0a3e._.js` | high | sprint-02 | ✅ DONE (2026-09-15) — root cause: rewrite broke queueAuditEvent contract (single event object vs (request, event)); callers passed event → request.headers crash; source fix in handler.ts |
 | T022 | Build infrastructure: cross-compile pipeline for 3.8 GB server | high | sprint-02 | [PLANNED] — infra limitation |
 | T023 | Redis AOF "No space left on device" — disk cleanup | high | sprint-02 | [DISCOVERED] Pre-existing — docker logs |
 | T024 | Fix Prisma `getWorkspacePermissionByUserId` null/undefined args | medium | sprint-02 | [DISCOVERED] Pre-existing — docker logs |
@@ -98,6 +98,7 @@ current_ticket: ""
 | Ticket | Lesson | Date |
 |--------|--------|------|
 | T017 | Hot-patching compiled chunks works across restarts; but `withAuditLogging` exists in multiple chunks — fix only one is not enough | 2026-07-01 |
+| T021 | Rewriting a function's public signature while callers keep the old contract is a runtime time-bomb: `queueAuditEvent` was changed from (event) to (request, event), every caller passed one object, and `request.headers.get()` crashed → `.catch` errors in compiled chunks. Fix the SOURCE contract, not each chunk | 2026-09-15 |
 | T017 | Turbopack's `a.i()` module registry is global across chunks, enabling cross-chunk injection | 2026-07-01 |
 | T017 | Full `docker logs` check must be a Verify gate for hot-patch deploys | 2026-07-01 |
 | AUDIT | Phone-home to ee.formbricks.com was live in production — telemetry.ts:276 never disabled | 2026-09-11 |

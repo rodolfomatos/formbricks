@@ -12,7 +12,7 @@ Fix remaining production bugs, complete the full codebase audit, and clean up al
 ## Tickets
 | ID | Title | Priority | Status |
 |----|-------|----------|--------|
-| T021 | Fix `withAuditLogging` `.catch` error in chunk `_0a_0a3e._.js` | high | backlog |
+| T021 | Fix `withAuditLogging` `.catch` error in chunk `_0a_0a3e._.js` | high | done (2026-09-15) |
 | T022 | Build infrastructure: cross-compile pipeline for 3.8 GB server | high | backlog |
 | T023 | Redis AOF "No space left on device" — disk cleanup | high | backlog |
 | T024 | Fix Prisma `getWorkspacePermissionByUserId` null/undefined args | medium | backlog |
@@ -53,7 +53,9 @@ Fix remaining production bugs, complete the full codebase audit, and clean up al
 ### What went wrong
 - `git ls-files vs on-disk` check was NOT part of verification: `saml-sso/lib/*` and `whitelabel/actions.ts` went untracked under `.gitignore:73 modules/` while their importers were committed — latent clone-break. Missed in the original 107-untracked sweep (T030) because the counts masked it.
 - Reviewer-pre-registered greps (M-5/M-8/M-9) encoded assumptions about implementation idiom, producing false fails that had to be separated from real defects.
+- T021's `.catch` errors in compiled chunks were initially attacked via fragile chunk hot-patches (T017): the real defect was the AGPL rewrite changing `queueAuditEvent`'s public signature from `(event)` to `(request, event)` while all 7 call sites kept passing a single event object. Root fix landed in `handler.ts` (single-event contract restored, `userType: "api"` → `apiKeyId`, oldObject/newObject/eventId/apiUrl persisted); CRC: with-api-logging, v3 api-wrapper, storage audit-logs, logger-helpers suites — 0 regressions vs pre-existing env failures.
 
 ### What to change next sprint
-- Add a "no tracked file imports an untracked path" gate to Verify (diff `git ls-files` against on-disk under `apps/web/modules/`).
+- Add a "no tracked file imports an untracked path" gate to Verify (diff `git ls-files` against on-disk under `apps/web/modules/`). *(done — GATE-UNTRACKED, T051)*
 - When adding a .gitignore exclusion, verify it does not also exclude legitimately tracked-file importers; prefer scoped paths over bare directory rules.
+- When rewriting a module, keep its exported function signatures contract-compatible with existing call sites — signature drift is invisible to `tsc --skipLibCheck` with ignoreBuildErrors and only surfaces as runtime errors in production chunks.

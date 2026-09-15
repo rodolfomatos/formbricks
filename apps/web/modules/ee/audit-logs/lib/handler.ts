@@ -1,44 +1,40 @@
 import { prisma } from "@formbricks/database";
 import { logger } from "@formbricks/logger";
-import type { TAuditAction, TAuditStatus, TAuditTarget } from "../types/audit-log";
+import type { TAuditStatus } from "../types/audit-log";
 import { UNKNOWN_DATA } from "../types/audit-log";
 
-interface AuditEventBase {
-  organizationId: string;
-  action: TAuditAction;
-  target: TAuditTarget;
+export type TAuditEventInput = {
+  action: string;
+  targetType: string;
+  userId?: string;
+  userType?: "user" | "api" | "system";
   targetId?: string;
-  description?: string;
-  metadata?: Record<string, unknown>;
-}
+  organizationId: string;
+  status?: TAuditStatus;
+  oldObject?: Record<string, unknown>;
+  newObject?: Record<string, unknown>;
+  eventId?: string;
+  apiUrl?: string;
+};
 
-interface AuditEventWithUser extends AuditEventBase {
-  userId: string;
-}
-
-interface AuditEventWithApiKey extends AuditEventBase {
-  apiKeyId: string;
-}
-
-type AuditEvent = AuditEventWithUser | AuditEventWithApiKey;
-
-async function createAuditLogEntry(event: AuditEvent, status: TAuditStatus = "success"): Promise<void> {
-  const { organizationId, action, target, targetId, description, metadata } = event;
+async function createAuditLogEntry(event: TAuditEventInput): Promise<void> {
+  const { action, targetType, userId, userType, targetId, organizationId, status, oldObject, newObject } =
+    event;
 
   const data: Record<string, unknown> = {
     organizationId,
     action,
-    target,
+    target: targetType,
     targetId: targetId ?? UNKNOWN_DATA,
-    description: description ?? null,
-    status,
-    metadata: metadata ?? undefined,
+    description: oldObject || newObject ? JSON.stringify({ oldObject, newObject }) : null,
+    status: status ?? "success",
+    metadata: event.eventId || event.apiUrl ? { eventId: event.eventId, apiUrl: event.apiUrl } : undefined,
   };
 
-  if ("userId" in event) {
-    data.userId = event.userId;
-  } else if ("apiKeyId" in event) {
-    data.apiKeyId = event.apiKeyId;
+  if (userType === "api" && userId) {
+    data.apiKeyId = userId;
+  } else if (userId) {
+    data.userId = userId;
   }
 
   try {
@@ -48,28 +44,19 @@ async function createAuditLogEntry(event: AuditEvent, status: TAuditStatus = "su
   }
 }
 
-export async function queueAuditEvent(request: Request, event: AuditEventBase): Promise<void> {
-  const userId = request.headers.get("x-user-id") ?? undefined;
-  const apiKeyId = request.headers.get("x-api-key-id") ?? undefined;
-
-  const fullEvent: AuditEvent = userId
-    ? { ...event, userId, organizationId: event.organizationId }
-    : apiKeyId
-      ? { ...event, apiKeyId, organizationId: event.organizationId }
-      : { ...event, userId: UNKNOWN_DATA, organizationId: event.organizationId };
-
-  await createAuditLogEntry(fullEvent);
+export async function queueAuditEvent(event: TAuditEventInput): Promise<void> {
+  await createAuditLogEntry(event);
 }
 
-export async function queueAuditEventBackground(request: Request, event: AuditEventBase): Promise<void> {
-  await queueAuditEvent(request, event);
+export async function queueAuditEventBackground(event: TAuditEventInput): Promise<void> {
+  await queueAuditEvent(event);
 }
 
 export async function queueAuditEventWithoutRequest(
-  event: AuditEvent,
-  status: TAuditStatus = "success"
+  event: TAuditEventInput,
+  status?: TAuditStatus
 ): Promise<void> {
-  await createAuditLogEntry(event, status);
+  await createAuditLogEntry({ ...event, status: status ?? event.status });
 }
 
 export function withAuditLogging<TArgs extends unknown[], TResult>(
@@ -88,8 +75,9 @@ export function withAuditLogging<TArgs extends unknown[], TResult>(
         const userId = (auditCtx?.userId as string) ?? UNKNOWN_DATA;
         await createAuditLogEntry({
           organizationId,
-          action: actionLabel as TAuditAction,
-          target: target as TAuditTarget,
+          action: actionLabel,
+          targetType: target,
+          userType: "user",
           userId,
         });
       }
