@@ -164,15 +164,20 @@ export const LoginForm = ({
       }
 
       if (signInResponse?.error) {
-        toast.error(signInResponse.error);
+        const errorMsg = signInResponse.error;
+        setFormError(errorMsg);
+        toast.error(errorMsg);
         return;
       }
 
       if (!signInResponse?.error) {
+        setFormError(null);
         router.push(resolvedCallbackPath || "/");
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : String(error));
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      setFormError(errorMsg);
+      toast.error(errorMsg);
     }
   };
 
@@ -180,12 +185,33 @@ export const LoginForm = ({
   const [totpLogin, setTotpLogin] = useState(false);
   const [totpBackup, setTotpBackup] = useState(false);
   const [lastLoggedInWith, setLastLoggedInWith] = useState("");
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       setLastLoggedInWith(localStorage.getItem(FORMBRICKS_LOGGED_IN_WITH_LS) || "");
     }
   }, []);
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter" && !event.shiftKey && !event.nativeEvent.isComposing) {
+      if (totpLogin || totpBackup) {
+        // Let form handle Enter in 2FA fields
+        return;
+      }
+      event.preventDefault();
+      form.handleSubmit(onSubmit)();
+    }
+    if (event.key === "Escape") {
+      if (totpLogin) {
+        setTotpLogin(false);
+      } else if (totpBackup) {
+        setTotpBackup(false);
+      } else if (showLogin) {
+        setShowLogin(false);
+      }
+    }
+  };
 
   const formLabel = useMemo(() => {
     if (totpBackup) {
@@ -256,7 +282,12 @@ export const LoginForm = ({
             </div>
           )}
 
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+          <form onSubmit={form.handleSubmit(onSubmit)} onKeyDown={handleKeyDown} className="space-y-2">
+            {formError && (
+              <div aria-live="polite" className="mb-2 text-sm text-red-600 dark:text-red-400" role="alert">
+                {formError}
+              </div>
+            )}
             {TwoFactorComponent}
             {(showLogin || !OIDC_ONLY) && (
               <div className={cn(totpLogin && "hidden", "space-y-2")}>
@@ -274,7 +305,7 @@ export const LoginForm = ({
                             autoComplete="email"
                             required
                             value={field.value}
-                            onChange={(email) => field.onChange(email)}
+                            onChange={(e) => { field.onChange(e.target.value); setFormError(null); }}
                             placeholder="work@email.com"
                             className="block w-full rounded-md border-slate-300 shadow-sm focus:border-brand-dark focus:ring-brand-dark sm:text-sm"
                           />
