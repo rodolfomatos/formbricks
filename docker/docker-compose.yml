@@ -342,6 +342,7 @@ services:
         condition: service_healthy
     ports:
       - 3000:3000
+      - 9464:9464
     volumes:
       - ./saml-connection:/home/nextjs/apps/web/saml-connection
     labels:
