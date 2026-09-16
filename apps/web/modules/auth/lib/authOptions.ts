@@ -6,6 +6,7 @@ import { logger } from "@formbricks/logger";
 import type { TUser } from "@formbricks/types/user";
 import {
   CONTROL_HASH,
+  EMAIL_AUTH_ENABLED,
   EMAIL_VERIFICATION_DISABLED,
   ENCRYPTION_KEY,
   SESSION_MAX_AGE,
@@ -195,29 +196,31 @@ const handleEnterpriseSsoSignIn = async ({
 export const authOptions: NextAuthOptions = {
   adapter: getNextAuthAdapter(prisma),
   providers: [
-    CredentialsProvider({
-      id: "credentials",
-      // The name to display on the sign in form (e.g. "Sign in with...")
-      name: "Credentials",
-      // The credentials is used to generate a suitable form on the sign in page.
-      // You can specify whatever fields you are expecting to be submitted.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
-      credentials: {
-        email: {
-          label: "Email Address",
-          type: "email",
-          placeholder: "Your email address",
-        },
-        password: {
-          label: "Password",
-          type: "password",
-          placeholder: "Your password",
-        },
-        totpCode: { label: "Two-factor Code", type: "input", placeholder: "Code from authenticator app" },
-        backupCode: { label: "Backup Code", type: "input", placeholder: "Two-factor backup code" },
-      },
-      async authorize(credentials, _req) {
+    ...(EMAIL_AUTH_ENABLED
+      ? [
+          CredentialsProvider({
+            id: "credentials",
+            // The name to display on the sign in form (e.g. "Sign in with...")
+            name: "Credentials",
+            // The credentials is used to generate a suitable form on the sign in page.
+            // You can specify whatever fields you are expecting to be submitted.
+            // e.g. domain, username, password, 2FA token, etc.
+            // You can pass any HTML attribute to the <input> tag through the object.
+            credentials: {
+              email: {
+                label: "Email Address",
+                type: "email",
+                placeholder: "Your email address",
+              },
+              password: {
+                label: "Password",
+                type: "password",
+                placeholder: "Your password",
+              },
+              totpCode: { label: "Two-factor Code", type: "input", placeholder: "Code from authenticator app" },
+              backupCode: { label: "Backup Code", type: "input", placeholder: "Two-factor backup code" },
+            },
+            async authorize(credentials, _req) {
         // Use email for rate limiting when available, fall back to "unknown_user" for credential validation
         const identifier = credentials?.email || "unknown_user"; // NOSONAR // We want to check for empty strings
 
@@ -390,7 +393,9 @@ export const authOptions: NextAuthOptions = {
           emailVerified: user.emailVerified,
         };
       },
-    }),
+    })
+    ]
+    : []),
     CredentialsProvider({
       id: "token",
       // The name to display on the sign in form (e.g. "Sign in with...")

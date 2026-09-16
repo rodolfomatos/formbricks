@@ -15,6 +15,7 @@ import { getFormattedErrorMessage } from "@/lib/utils/helper";
 import { createEmailTokenAction } from "@/modules/auth/actions";
 import { buildVerificationRequestedPath } from "@/modules/auth/lib/verification-links";
 import { SSOOptions } from "@/modules/auth/sso/components/sso-options";
+import { OIDC_ONLY } from "@/lib/constants";
 import { TwoFactor } from "@/modules/ee/two-factor-auth/components/two-factor";
 import { TwoFactorBackup } from "@/modules/ee/two-factor-auth/components/two-factor-backup";
 import { Alert, AlertDescription, AlertTitle } from "@/modules/ui/components/alert";
@@ -175,7 +176,7 @@ export const LoginForm = ({
     }
   };
 
-  const [showLogin, setShowLogin] = useState(false);
+  const [showLogin, setShowLogin] = useState(!OIDC_ONLY);
   const [totpLogin, setTotpLogin] = useState(false);
   const [totpBackup, setTotpBackup] = useState(false);
   const [lastLoggedInWith, setLastLoggedInWith] = useState("");
@@ -210,6 +211,8 @@ export const LoginForm = ({
     return null;
   }, [form, totpBackup, totpLogin]);
 
+  const isOidcPrimary = OIDC_ONLY && oidcOAuthEnabled;
+
   return (
     <FormProvider {...form}>
       <div className="text-center">
@@ -224,9 +227,38 @@ export const LoginForm = ({
         )}
 
         <div className="space-y-2">
+          {isSsoEnabled && (
+            <SSOOptions
+              googleOAuthEnabled={googleOAuthEnabled}
+              githubOAuthEnabled={githubOAuthEnabled}
+              azureOAuthEnabled={azureOAuthEnabled}
+              oidcOAuthEnabled={oidcOAuthEnabled}
+              oidcDisplayName={oidcDisplayName}
+              samlSsoEnabled={samlSsoEnabled}
+              samlTenant={samlTenant}
+              samlProduct={samlProduct}
+              returnToUrl={resolvedCallbackUrl}
+              source="signin"
+              oidcPrimary={isOidcPrimary}
+            />
+          )}
+
+          {emailAuthEnabled && OIDC_ONLY && (
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200 dark:border-slate-700" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-[#D9F6F4] dark:bg-slate-900 px-2 text-slate-500">
+                  {t("auth.login.or_continue_with_email")}
+                </span>
+              </div>
+            </div>
+          )}
+
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             {TwoFactorComponent}
-            {showLogin && (
+            {(showLogin || !OIDC_ONLY) && (
               <div className={cn(totpLogin && "hidden", "space-y-2")}>
                 <FormField
                   control={form.control}
@@ -288,18 +320,10 @@ export const LoginForm = ({
                 )}
               </div>
             )}
-            {emailAuthEnabled && (
+
+            {emailAuthEnabled && !OIDC_ONLY && (
               <Button
-                type={showLogin ? "submit" : "button"}
-                onClick={
-                  showLogin
-                    ? undefined
-                    : () => {
-                        setShowLogin(true);
-                        // Add a slight delay before focusing the input field to ensure it's visible
-                        setTimeout(() => emailRef.current?.focus(), 100);
-                      }
-                }
+                type="submit"
                 className="relative w-full justify-center"
                 loading={form.formState.isSubmitting}>
                 {totpLogin ? t("common.submit") : t("auth.login.login_with_email")}
@@ -308,22 +332,20 @@ export const LoginForm = ({
                 ) : null}
               </Button>
             )}
+
+            {emailAuthEnabled && OIDC_ONLY && (
+              <Button
+                type="button"
+                onClick={() => setShowLogin(true)}
+                className="relative w-full justify-center"
+                variant="ghost">
+                {t("auth.login.login_with_email")}
+                {lastLoggedInWith && lastLoggedInWith === "Email" ? (
+                  <span className="absolute right-3 text-xs opacity-50">{t("auth.last_used")}</span>
+                ) : null}
+              </Button>
+            )}
           </form>
-          {isSsoEnabled && (
-            <SSOOptions
-              googleOAuthEnabled={googleOAuthEnabled}
-              githubOAuthEnabled={githubOAuthEnabled}
-              azureOAuthEnabled={azureOAuthEnabled}
-              oidcOAuthEnabled={oidcOAuthEnabled}
-              oidcDisplayName={oidcDisplayName}
-              samlSsoEnabled={samlSsoEnabled}
-              samlTenant={samlTenant}
-              samlProduct={samlProduct}
-              returnToUrl={resolvedCallbackUrl}
-              source="signin"
-            />
-          )}
-        </div>
 
         {publicSignUpEnabled && !totpLogin && isMultiOrgEnabled && (
           <div className="mt-9 text-center text-xs">
@@ -376,6 +398,7 @@ export const LoginForm = ({
           </button>
         </div>
       )}
+      </div>
     </FormProvider>
   );
 };

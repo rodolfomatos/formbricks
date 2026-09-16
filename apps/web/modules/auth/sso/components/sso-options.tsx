@@ -15,6 +15,7 @@ interface SSOOptionsProps {
   samlProduct: string;
   returnToUrl: string;
   source: "signin" | "signup";
+  oidcPrimary?: boolean;
 }
 
 /**
@@ -33,53 +34,62 @@ export const SSOOptions = ({
   samlProduct: _samlProduct,
   returnToUrl,
   source: _source,
+  oidcPrimary = false,
 }: Readonly<SSOOptionsProps>) => {
   const { t } = useTranslation();
 
+  const providers = [
+    oidcOAuthEnabled && {
+      id: "openid",
+      label: t("auth.continue_with_oidc", { oidcDisplayName: oidcDisplayName || "OpenID" }),
+      variant: oidcPrimary ? "default" : "secondary",
+      priority: oidcPrimary ? 0 : 3,
+    },
+    googleOAuthEnabled && {
+      id: "google",
+      label: t("auth.continue_with_google"),
+      variant: "secondary",
+      priority: 1,
+    },
+    githubOAuthEnabled && {
+      id: "github",
+      label: t("auth.continue_with_github"),
+      variant: "secondary",
+      priority: 2,
+    },
+    azureOAuthEnabled && {
+      id: "azure-ad",
+      label: t("auth.continue_with_azure"),
+      variant: "secondary",
+      priority: 4,
+    },
+    samlSsoEnabled && {
+      id: "saml",
+      label: t("auth.continue_with_saml"),
+      variant: "secondary",
+      priority: 5,
+    },
+  ].filter(Boolean) as Array<{
+    id: string;
+    label: string;
+    variant: "default" | "secondary";
+    priority: number;
+  }>;
+
+  providers.sort((a, b) => a.priority - b.priority);
+
   return (
-    <div className="space-y-2">
-      {googleOAuthEnabled && (
+    <div className="space-y-2" role="list">
+      {providers.map((provider) => (
         <Button
+          key={provider.id}
           className="relative w-full justify-center"
-          variant="secondary"
-          onClick={() => signIn("google", { callbackUrl: returnToUrl })}>
-          {t("auth.continue_with_google")}
+          variant={provider.variant}
+          role="listitem"
+          onClick={() => signIn(provider.id, { callbackUrl: returnToUrl })}>
+        {provider.label}
         </Button>
-      )}
-      {githubOAuthEnabled && (
-        <Button
-          className="relative w-full justify-center"
-          variant="secondary"
-          onClick={() => signIn("github", { callbackUrl: returnToUrl })}>
-          {t("auth.continue_with_github")}
-        </Button>
-      )}
-      {azureOAuthEnabled && (
-        <Button
-          className="relative w-full justify-center"
-          variant="secondary"
-          onClick={() => signIn("azure-ad", { callbackUrl: returnToUrl })}>
-          {t("auth.continue_with_azure")}
-        </Button>
-      )}
-      {oidcOAuthEnabled && (
-        <Button
-          className="relative w-full justify-center"
-          variant="secondary"
-          onClick={() => signIn("openid", { callbackUrl: returnToUrl })}>
-          {t("auth.continue_with_oidc", {
-            oidcDisplayName: oidcDisplayName || "OpenID",
-          })}
-        </Button>
-      )}
-      {samlSsoEnabled && (
-        <Button
-          className="relative w-full justify-center"
-          variant="secondary"
-          onClick={() => signIn("saml", { callbackUrl: returnToUrl })}>
-          {t("auth.continue_with_saml")}
-        </Button>
-      )}
+      ))}
     </div>
   );
 };
