@@ -364,6 +364,12 @@ services:
     environment:
       <<: *app-environment
       SKIP_STARTUP_MIGRATION: "true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/v2/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # Run Hub DB migrations (goose + river) before the API starts. Uses same image; migrations are idempotent.
   # Default tracks :latest so self-host updates (compose pull) advance Hub alongside the app image.
