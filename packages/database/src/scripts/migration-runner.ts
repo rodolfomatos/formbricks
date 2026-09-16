@@ -325,9 +325,52 @@ export async function applyMigrations(): Promise<void> {
         isBuilt ? "dist" : "src"
       })`
     );
+
+    // Drift detection: compare filesystem migrations vs applied migrations
+    await checkMigrationDrift(allMigrations, prisma);
+
     await runMigrations(allMigrations);
   } finally {
     await prisma.$disconnect();
+  }
+}
+
+async function checkMigrationDrift(
+  allMigrations: MigrationScript[],
+  prismaClient: PrismaClient
+): Promise<void> {
+  const schemaMigrations = allMigrations.filter((m) => m.type === "schema");
+  const schemaCount = schemaMigrations.length;
+
+  try {
+    const appliedResult = await prismaClient.$queryRaw<
+      { count: bigint }[]
+    >`SELECT count(*) as count FROM _prisma_migrations WHERE finished_at IS NOT NULL`;
+    const appliedCount = Number(appliedResult[0]?.count ?? 0);
+
+    if (schemaCount !== appliedCount) {
+      const diff = schemaCount - appliedCount;
+      logger.warn(
+        `Migration drift detected: ${schemaCount} schema migrations in filesystem vs ${appliedCount} applied in database (diff: ${diff > 0 ? "+" : ""}${diff})`
+      );
+
+      if (diff > 5) {
+        logger.warn(
+          `Drift exceeds threshold (5). Consider running missing migrations or documenting skipped ones in aes/migrations/SKIPPED.md`
+        );
+        // List missing migrations
+        const appliedNames = await prismaClient.$queryRaw<
+          { migration_name: string }[]
+        >`SELECT migration_name FROM _prisma_migrations WHERE finished_at IS NOT NULL`;
+        const appliedSet = new Set(appliedNames.map((r) => r.migration_name));
+        const missing = schemaMigrations.filter((m) => !appliedSet.has(m.name)).map((m) => m.name);
+        if (missing.length > 0) {
+          logger.warn(`Missing migrations (${missing.length}): ${missing.join(", ")}`);
+        }
+      }
+    }
+  } catch (error) {
+    logger.warn(error, "Could not check migration drift (database may not be initialized)");
   }
 }
 
